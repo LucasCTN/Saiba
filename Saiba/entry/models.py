@@ -25,8 +25,11 @@ class Entry(models.Model):
     type = models.CharField(max_length=100)
     origin = models.CharField(max_length=100)
     additional_references = models.CharField(max_length=100)
-    hidden = models.BooleanField(default=False)
     icon = models.ImageField(blank=True, upload_to='icon/')
+    hidden = models.BooleanField(default=False)
+    images_locked = models.BooleanField(default=False)
+    videos_locked = models.BooleanField(default=False)
+    comments_locked = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:

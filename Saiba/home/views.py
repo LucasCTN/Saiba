@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.utils.html import escape
+from entry.models import Entry
 
 def index(request):
-    testes = [1, 2, 3, 4, 5, 6]
-    return render(request, escape('home/index.html'), {'testes': testes})
+    entries = Entry.objects.all()
+    return render(request, escape('home/index.html'), {'entries': entries})

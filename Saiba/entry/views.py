@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 #from .forms import AlbumForm, SongForm, UserForm
-from .models import Entry, Revision
+from .models import Entry, Revision, Category
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from entry.serializers import EntrySerializer, RevisionSerializer
@@ -58,4 +58,6 @@ def revision(request, revision_id):
     return render(request, escape('entry/revision.html'), {'revision': revision})
 
 def create_entry(request):
-    return render(request, escape('entry/create-entry.html'))
+    categories = Category.objects.all()
+    entries = Entry.objects.all()
+    return render(request, escape('entry/create-entry.html'), {'categories': categories, 'entries': entries})

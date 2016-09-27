@@ -1,5 +1,61 @@
 {% extends 'home/base.html' %}
 
 {% block body %}
-    Mil tretas
+    <div class="col-md-12">
+        <div class="bs-docs-header text-center">
+            <h2>Foruns</h2>
+            (Pagina inicial)
+        </div>
+
+        <div class="col-md-5" role="main" style='background-color: #93c47d;'>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Foruns</th>
+                        <th>Topicos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div><a href="#">Nome do Forum</a></div>
+                            <div>descricao do forum</div>
+                            <div><b><a href='#'>| Nome da Secao</a></b></div>
+                        </td>
+                        <td>Quantidade de topicos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-7" role="main" style='background-color: #8ebdd9;'>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mais recentes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div><b><a href='#'>Titulo do Topico</a></b></div>
+                            <div>Forum: <a href='#'>Nome do Forum</a>
+                                Secao: <a href='#'>Nome da Secao</a></div>
+                        </td>
+
+                        <td>
+                            <div><a href='#'>Nome do autor</a></div>                                        
+                            <div>Tempo do post</div>
+                        </td>
+
+                        <td>
+                            <div>
+                                <img src='#'/>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

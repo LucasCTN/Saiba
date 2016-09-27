@@ -22,3 +22,9 @@ def historic(request, entry_slug):
 def revision(request, revision_id):
     revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
     return render(request, escape('entry/revision.html'), {'revision': revision})
+
+def upload_image(request):
+    return render(request, escape('gallery/upload-image.html'))
+
+def upload_video(request):
+    return render(request, escape('gallery/upload-video.html'))

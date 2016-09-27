@@ -4,7 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>Saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
-    <InterpreterId>{c45046d6-4bec-485e-aa71-396c602a137f}</InterpreterId>
+    <InterpreterId>{a42104ec-a92e-4930-8b6e-efd78bfd2076}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -148,6 +148,8 @@
     <Content Include="forum\templates\forum\index.html" />
     <Content Include="gallery\templates\gallery\image.html" />
     <Content Include="gallery\templates\gallery\index.html" />
+    <Content Include="gallery\templates\gallery\upload-video.html" />
+    <Content Include="gallery\templates\gallery\upload-image.html" />
     <Content Include="home\templates\home\base.html" />
     <Content Include="home\templates\home\index.html" />
     <Content Include="home\templates\home\sidebar.html" />
@@ -191,15 +193,15 @@
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
-      <Id>{c45046d6-4bec-485e-aa71-396c602a137f}</Id>
-      <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>
+      <Id>{a42104ec-a92e-4930-8b6e-efd78bfd2076}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
       <Version>2.7</Version>
-      <Description>env (Python 64-bit 2.7)</Description>
+      <Description>env (Python 2.7)</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <LibraryPath>Lib\</LibraryPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>Amd64</Architecture>
+      <Architecture>X86</Architecture>
     </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />

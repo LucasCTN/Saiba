@@ -1,0 +1,34 @@
+﻿{% extends 'home/base.html'%}
+
+{% block body %}
+    <form method="POST" class="form-horizontal col-md-8 col-sm-offset-2" role="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        * representa um campo obrigatório.
+        <div class="form-group">
+            <label for="video-url" class="control-label">Url do Vídeo*</label>
+            <input name="video-url" type="text" class="form-control" id="video-url" placeholder="Prencha com o link do vídeo.">
+            <small id="videoHelp" class="form-text text-muted">Apenas YouTube, Facebook e Vine são suportados.</small>
+        </div>
+        <div class="form-group">
+            <label for="article" class="control-label">Artigo</label>
+            <input name="article" type="text" class="form-control" id="article" placeholder="Esse vídeo se associa à algum artigo existente?">
+        </div>
+        <div class="form-group">
+            <label for="video-title" class="control-label">Título*</label>
+            <input name="video-title" type="text" class="form-control" id="video-title" aria-describedby="nameHelp" placeholder="Título do vídeo">
+        </div>
+        <div class="form-group">
+            <label for="tags" class="control-label">Marcações</label>
+            <input name="tags" type="text" class="form-control" id="tags" aria-describedby="nameHelp" placeholder="Que palavras-chaves estão associadas ao vídeo?">
+        </div>
+        <div class="form-group">
+            <label for="notes" class="control-label">Notas</label>
+            <textarea name="notes" class="form-control" id="notes" rows="3"></textarea>
+        </div>
+        <div class="checkbox">
+            <label><input name="nsfw" id="nsfw" class="control-label" value="confirmed" type="checkbox">NSFW</label>
+            <label><input name="spoiler" id="spoiler" class="control-label" value="confirmed" type="checkbox">Spoiler</label>
+        </div>
+        <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+    </form>
+{% endblock %}

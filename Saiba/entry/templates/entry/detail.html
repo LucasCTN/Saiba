@@ -37,7 +37,7 @@
         <section id="conteudo-artigo" class="container col-md-12">
             <div id="infobox" class="pull-right" style="width:180px">
                 <dl class="table-bordered" style="padding: 5px; margin: 0px 0px 15px 15px;">
-                <dt colspan="2" style="text-align:center;">{{ entry.category }}</dt>
+                    <dt colspan="2" style="text-align:center;">{{ entry.category }}</dt>
                     <dt>Status</dt>
                     <dd><small>{{ entry.status }}</small></dd>
                     <dt>Tipo</dt>
@@ -46,7 +46,7 @@
                     <dd><small>{{ entry.year }}</small></dd>
                     <dt>Origem</dt>
                     <dd><small>{{ entry.origin }}</small></dd>
-                    <dt> <hr/> </dt>
+                    <hr/>
                     Marcacoes
                     <dd></dd>
                     <dt>Referencias Adicionais</dt>
@@ -58,18 +58,23 @@
 
         <section id="galeria-video" class="container media col-md-12">
             <hr/>
+            <h2>Videos recentes</h2>            
         </section>
 
         <section id="galeria-imagem" class="container media col-md-12">
+            <hr/>
             <h2>Imagens recentes <small>({{ images|length }})</small></h2>
             {% for image in images %}
-            <a href="{% url 'gallery:image_detail' image.id %}"><img class='media-object' src='{{ image.file.url }}' alt='image.title' height='100'/></a>
-            <a href="{% url 'gallery:image_detail' image.id %}">{{ image.title }}</a>
+                <div class='inline-block col-md-4'>
+                    <a href="{% url 'gallery:image_detail' image.id %}"><img class='media-object' src='{{ image.file.url }}' alt='image.title' height='100'/></a>
+                    <a href="{% url 'gallery:image_detail' image.id %}">{{ image.title }}</a>
+                </div>
             {% endfor %}
-            <hr/>
         </section>
       
         <section id="comentarios" class="container col-md-12">
+            <hr/>
+            <h2>Comentários </h2>
         </section>
 
     </section>
