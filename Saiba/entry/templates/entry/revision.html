@@ -1,0 +1,14 @@
+﻿{% extends 'entry/base.html' %}
+{% block title %}{{ revision.entry.title }} - Saiba{% endblock %}
+{% block body %}  
+    <div class="panel panel-default col-md-12">
+        <!-- Default panel contents -->
+        <div class="panel-heading h1">Revisão #{{ revision.id }} - {{ revision.entry.title }}</div>
+        <small class="">Versão por {{ revision.author.username }}</small>
+
+        <div class="">Body</div>
+        <div class="panel-heading">
+            {{ revision.content }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+﻿{% extends 'home/base.html' %}
+{% block title %}{{ image.title }} - Saiba{% endblock %}
+{% block body %}  
+    <section id="conteudo" class="container col-md-9">
+        <img id="imagem" class='media-object img-thumbnail' src='{{ image.file.url }}'>
+    </section>
+
+    <section id="informacao" class="container media col-md-12">
+        <h3>
+            {{ image.title }} - <a href="{% url 'entry:detail' image.entry.slug %}">{{image.entry.title}}</a><br/>
+            <small>Uploaded by {{ image.author.username }}</small>
+        </h3>
+        <span>Source: {{ image.source }}</span>
+    </section>
+
+    <section id="comentarios" class="container col-md-12">
+    </section>
+{% endblock %}

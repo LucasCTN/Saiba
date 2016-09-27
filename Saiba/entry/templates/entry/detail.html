@@ -1,0 +1,76 @@
+﻿{% extends 'home/base.html' %}
+
+{% block title %}{{ entry.title }} - Saiba{% endblock %}
+{% block body %}  
+    <section id="contexto" class="container media col-md-9">
+        <section id="informação" class="container media col-md-12">
+            <div class="media-left media-middle">
+                {% if entry.icon %}
+                <img class='media-object' src='{{entry.icon.url}}' width='100' height='100'>
+                {% endif %}
+            </div>
+            <div class="media-body media-middle">
+                <h3 class="media-heading">{{ entry.title }}</h3>
+                <p style="font-size:11px;">Criado {{ first_revision.date }} por {{ first_revision.author.username }}<br/>
+                Atualizado {{ last_revision.date }} por {{ last_revision.author.username }}.</p>        
+            </div>
+            <div class="media-right media-middle">
+                <p><span class="glyphicon glyphicon-eye-open"></span></p>
+            </div>
+            <hr>
+            <div class="media-right media-middle">
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <a href='$entry_slug/editar'><button type='button' class='btn btn-default'>Editar</button></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href='{% url 'entry:historic' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">Sugerir</button>
+                </div>
+                </div>
+            </div>
+            <hr>
+        </section>
+      
+        <section id="conteudo-artigo" class="container col-md-12">
+            <div id="infobox" class="pull-right" style="width:180px">
+                <dl class="table-bordered" style="padding: 5px; margin: 0px 0px 15px 15px;">
+                <dt colspan="2" style="text-align:center;">{{ entry.category }}</dt>
+                    <dt>Status</dt>
+                    <dd><small>{{ entry.status }}</small></dd>
+                    <dt>Tipo</dt>
+                    <dd><small>{{ entry.type }}</small></dd>
+                    <dt>Ano</dt>
+                    <dd><small>{{ entry.year }}</small></dd>
+                    <dt>Origem</dt>
+                    <dd><small>{{ entry.origin }}</small></dd>
+                    <dt> <hr/> </dt>
+                    Marcacoes
+                    <dd></dd>
+                    <dt>Referencias Adicionais</dt>
+                    <dd>{{ entry.additional_references }}</dd>
+                </dl>
+            </div>
+            {{ last_revision.content }}
+        </section>
+
+        <section id="galeria-video" class="container media col-md-12">
+            <hr/>
+        </section>
+
+        <section id="galeria-imagem" class="container media col-md-12">
+            <h2>Imagens recentes <small>({{ images|length }})</small></h2>
+            {% for image in images %}
+            <a href="{% url 'gallery:image_detail' image.id %}"><img class='media-object' src='{{ image.file.url }}' alt='image.title' height='100'/></a>
+            <a href="{% url 'gallery:image_detail' image.id %}">{{ image.title }}</a>
+            {% endfor %}
+            <hr/>
+        </section>
+      
+        <section id="comentarios" class="container col-md-12">
+        </section>
+
+    </section>
+{% endblock %}
