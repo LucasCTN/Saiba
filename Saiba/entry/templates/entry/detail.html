@@ -21,7 +21,7 @@
             <div class="media-right media-middle">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
-                    <a href='$entry_slug/editar'><button type='button' class='btn btn-default'>Editar</button></a>
+                    <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
                 </div>
                 <div class="btn-group" role="group">
                     <a href='{% url 'entry:historic' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>

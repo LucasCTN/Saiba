@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 #from .forms import AlbumForm, SongForm, UserForm
 from .models import Entry, Revision, Category
+from .forms import EntryForm, RevisionForm
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from entry.serializers import EntrySerializer, RevisionSerializer
@@ -53,6 +54,11 @@ def historic(request, entry_slug):
     revisions = Revision.objects.filter(entry=entry, hidden=False)
     return render(request, escape('entry/historic.html'), {'revisions': revisions, 'entry_name':entry.title})
 
+def edit(request, entry_slug):
+    entry = get_object_or_404(Entry, slug=entry_slug)
+    revisions = Revision.objects.filter(entry=entry, hidden=False)
+    return render(request, escape('entry/edit.html'), {'revisions': revisions, 'entry_name':entry.title})
+
 def revision(request, revision_id):
     revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
     return render(request, escape('entry/revision.html'), {'revision': revision})
@@ -61,3 +67,27 @@ def create_entry(request):
     categories = Category.objects.all()
     entries = Entry.objects.all()
     return render(request, escape('entry/create-entry.html'), {'categories': categories, 'entries': entries})
+
+def send_entry(request):
+    entry_form = EntryForm(request.POST or None)
+    revision_form = RevisionForm(request.POST or None)
+
+    if entry_form.is_valid() and revision.form.is_valid():
+        entry = entry_form.save(commit=False)
+        entry.save()
+
+        revision = revision_form.save(commit=False)
+        revision.entry = entry
+        revision.save()
+
+        last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
+        first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
+        last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
+        return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
+                                                   'first_revision':first_revision, 'images':last_images})
+
+        #return render(request, 'entry/detail.html')
+
+    context = { "entry_form": entry_form, "revision_form": revision_form }
+
+    return render(request, 'entry/create_entry.html', context)

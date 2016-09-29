@@ -25,7 +25,7 @@ class Entry(models.Model):
     type = models.CharField(max_length=100)
     origin = models.CharField(max_length=100)
     additional_references = models.CharField(max_length=100)
-    icon = models.ImageField(blank=True, upload_to='icon/')
+    icon = models.ImageField(blank=True, upload_to='icon/', default='icon/índice.png')
     hidden = models.BooleanField(default=False)
     images_locked = models.BooleanField(default=False)
     videos_locked = models.BooleanField(default=False)
@@ -43,7 +43,7 @@ class Entry(models.Model):
 class Revision(models.Model):
     author = models.ForeignKey(User, default=1)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-    content = models.CharField(max_length=2500, blank=True)
+    content = models.TextField(max_length=2500, blank=True)
     date = models.DateTimeField(auto_now_add=True, blank=True)
     hidden = models.BooleanField(default=False)
 
