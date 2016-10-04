@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'forum.apps.forumConfig',
     'api.apps.apiConfig',
     'feedback.apps.feedbackConfig',
+    'profile.apps.profileConfig',
     'rest_framework',
     'app',
     # Add your apps here to enable them

@@ -17,19 +17,19 @@ class Category(models.Model):
         return self.label
 
 class Entry(models.Model):
-    author = models.ForeignKey(User, default=1)
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, default="", blank=True)
-    status = models.ForeignKey(Status, default=1)
-    category = models.ForeignKey(Category, default=1)
-    type = models.CharField(max_length=100)
-    origin = models.CharField(max_length=100)
-    additional_references = models.CharField(max_length=100)
-    icon = models.ImageField(blank=True, upload_to='icon/', default='icon/índice.png')
-    hidden = models.BooleanField(default=False)
-    images_locked = models.BooleanField(default=False)
-    videos_locked = models.BooleanField(default=False)
-    comments_locked = models.BooleanField(default=False)
+    author                  = models.ForeignKey(User, default=1)
+    title                   = models.CharField(max_length=250)
+    slug                    = models.SlugField(max_length=250, default="", blank=True)
+    status                  = models.ForeignKey(Status, default=1)
+    category                = models.ForeignKey(Category, default=1)
+    type                    = models.CharField(max_length=100)
+    origin                  = models.CharField(max_length=100)
+    additional_references   = models.CharField(max_length=100)
+    icon                    = models.ImageField(blank=True, upload_to='icon/', default='icon/indice.png')
+    hidden                  = models.BooleanField(default=False)
+    images_locked           = models.BooleanField(default=False)
+    videos_locked           = models.BooleanField(default=False)
+    comments_locked         = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:

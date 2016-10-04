@@ -1,0 +1,18 @@
+﻿{% extends 'home/base.html' %}
+{% block title %}{{ image.title }} - Saiba{% endblock %}
+{% block body %}  
+    <section id="conteudo" class="container col-md-9">
+        <iframe id="vídeo" class='media-object' width="560" height="315" src="{{ video.link }}" frameborder="0" allowfullscreen></iframe>
+    </section>
+
+    <section id="informacao" class="container media col-md-12">
+        <h3>
+            {{ video.title }} - <a href="{% url 'entry:detail' video.entry.slug %}">{{video.entry.title}}</a><br/>
+            <small>Uploaded by {{ video.author.username }}</small>
+        </h3>
+        <span>Source: {{ video.source }}</span>
+    </section>
+
+    <section id="comentarios" class="container col-md-12">
+    </section>
+{% endblock %}

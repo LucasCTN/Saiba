@@ -1,34 +1,12 @@
 ﻿{% extends 'home/base.html'%}
 
 {% block body %}
-    <form method="POST" class="form-horizontal col-md-8 col-sm-offset-2" role="form" enctype="multipart/form-data">
+    <form class="form-horizontal col-md-8 col-sm-offset-2" role="form" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         * representa um campo obrigatório.
-        <div class="form-group">
-            <label for="image" class="control-label">Imagem*</label>
-            <input name="image" type="file" class="form-control-file" id="image" aria-describedby="iconHelp" accept=".gif, .png, .jpg">
-            <small id="iconHelp" class="form-text text-muted">Este ícone aparecerá no topo do artigo e na seção trending.</small>
-        </div>
-        <div class="form-group">
-            <label for="article" class="control-label">Artigo</label>
-            <input name="article" type="text" class="form-control" id="article" placeholder="Esse vídeo se associa à algum artigo existente?">
-        </div>
-        <div class="form-group">
-            <label for="image-title" class="control-label">Título*</label>
-            <input name="image-title" type="text" class="form-control" id="image-title" aria-describedby="nameHelp" placeholder="Título da imagem">
-        </div>
-        <div class="form-group">
-            <label for="tags" class="control-label">Marcações</label>
-            <input name="tags" type="text" class="form-control" id="tags" aria-describedby="nameHelp" placeholder="Que palavras-chaves estão associadas à imagem?">
-        </div>
-        <div class="form-group">
-            <label for="notes" class="control-label">Notas</label>
-            <textarea name="notes" class="form-control" id="notes" rows="3"></textarea>
-        </div>
-        <div class="checkbox">
-            <label><input name="nsfw" id="nsfw" class="control-label" value="confirmed" type="checkbox">NSFW</label>
-            <label><input name="spoiler" id="spoiler" class="control-label" value="confirmed" type="checkbox">Spoiler</label>
-        </div>
+
+        {% include 'home/form_template.html'%}
+
         <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
     </form>
 {% endblock %}

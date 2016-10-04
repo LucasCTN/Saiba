@@ -21,8 +21,8 @@ urlpatterns = [
     url(r'^', include('home.urls')),
     url(r'^entrada/', include('entry.urls')),
     url(r'^galeria/', include('gallery.urls')),
-    url(r'^forum/', include('forum.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^perfil/', include('profile.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

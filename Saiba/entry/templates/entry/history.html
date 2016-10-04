@@ -1,14 +1,15 @@
 ﻿{% extends 'home/base.html' %}
 {% block title %}{{ entry_name }} - Saiba{% endblock %}
 {% block body %}  
-    <div class="panel panel-default col-md-8">
+    <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Revisões do artigo</div>
+        <div class="panel-heading">Revisões da entrada - <a href='{% url 'entry:detail' entry_slug %}'>{{ entry_name }}</a></div>
 
         <!-- Table -->
         <table class="table">
             <thead>
                 <tr>
+                    <th>Versão</th>
                     <th>Data</th>
                     <th>Autor</th>
                 </tr>
@@ -16,7 +17,8 @@
             <tbody>
                 {% for revision in revisions %}
                         <tr>
-                            <td><a href='{% url 'entry:revision' revision.id %}'>{{revision.date}}</a></td>
+                            <td><a href='#'>#{{ forloop.revcounter }}</a></td>
+                            <td><a href='{% url 'entry:revision' entry_slug revision.id %}'>{{ revision.date }}</a></td>
                             <td><a href='#'>{{revision.author.username}}</a></td>
                         </tr>                   
                 {% endfor %}
