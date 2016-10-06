@@ -1,23 +1,31 @@
-﻿<form method="post" class="form-horizontal" role="form">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="content" class="control-label">Comentando como:</label>
-        <textarea name="content" class="form-control" id="id_content" rows="3"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary col-md-1" name="submit">Enviar</button>
-</form>
-<br/>
-{% for parent_comment, replies in comments.items %}
-    <div id="comment-{{ parent_comment.pk }}" class='parent-comment comment'>
-        <span class="comment-author" style="font-weight: bold;"><a href='#'>{{ parent_comment.author.username }}</a></span><br/>
-        <span class="comment-date">{{parent_comment.creation_date}} (Editado em {{parent_comment.update_date}})</span><br/>
-        {{ parent_comment.content }}
-            {% for reply in replies %}
-                <div id="reply-{{ reply.pk }}" class='reply comment col-md-12'>
-                    <span class="comment-author" style="font-weight: bold;"><a href='#'>{{ reply.author.username }}</a></span><br/>
-                    <span class="comment-date">{{reply.creation_date}} (Editado em {{reply.update_date}})</span><br/>
-                    {{ reply.content }}
+﻿<section id="comentarios" class="container col-md-12">
+    <hr/>            
+    <h2>Comentários</h2>
+    <form method="post" class="form-horizontal" role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="content" class="control-label">Comentando como:</label>
+            <textarea name="content" class="form-control" id="id_content" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary col-md-1" name="submit">Enviar</button>
+    </form>
+    <br/><br/><br/>
+    {% for parent_comment, replies in comments.items %}
+        <div id="comment-{{ parent_comment.pk }}" class='parent-comment comment'>
+            <span class="comment-author" style="font-weight: bold;"><a href='#'>{{ parent_comment.author.username }}</a></span><br/>
+            <span class="comment-date">{{parent_comment.creation_date}} (Editado em {{parent_comment.update_date}})</span><br/>
+            {{ parent_comment.content }}
+            {% if replies|length > 0 %}
+                <div id="reply" class='reply-box col-md-12'>
+                    {% for reply in replies %}
+                        <div id="reply-{{ reply.pk }}" class='reply comment'>
+                            <span class="comment-author" style="font-weight: bold;"><a href='#'>{{ reply.author.username }}</a></span><br/>
+                            <span class="comment-date">{{reply.creation_date}} (Editado em {{reply.update_date}})</span><br/>
+                            {{ reply.content }}
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-    </div>            
-{% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+</section>
