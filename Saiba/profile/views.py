@@ -5,3 +5,7 @@ from .models import Profile
 def index(request, name_slug):
     profile = get_object_or_404(Profile, slug=name_slug)
     return render(request, 'profile/index.html', {"profile":profile})
+
+def detail(request, name_slug):
+    profile = get_object_or_404(Profile, slug=name_slug)
+    return render(request, 'profile/detail.html', {"profile":profile})

@@ -8,7 +8,7 @@ class Profile(models.Model):
     avatar      = models.ImageField(blank=True, upload_to='icon/', default='icon/perfil.png')
     gender      = models.CharField(max_length = 500, blank=True)
     location    = models.CharField(max_length = 500)
-    about       = models.CharField(max_length = 1500)
+    about       = models.CharField(max_length = 1500)    
 
     def save(self, *args, **kwargs):
         if not self.id:

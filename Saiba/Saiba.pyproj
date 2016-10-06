@@ -172,6 +172,7 @@
     <Content Include="home\templates\home\index.html" />
     <Content Include="home\templates\home\sidebar.html" />
     <Content Include="home\templates\home\trending.html" />
+    <Content Include="profile\templates\profile\detail.html" />
     <Content Include="profile\templates\profile\index.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />

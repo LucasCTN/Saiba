@@ -10,8 +10,8 @@
         </div>
         <div class="media-body media-middle">
             <h3 class="media-heading"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></h3>
-            <span class="">Criado em {{ first_revision.date }} por {{ first_revision.author.username }}</span><br/>
-            <span class="">Atualizado {{ last_revision.date }} por {{ last_revision.author.username }}</span>
+            <span class="">Criado em {{ first_revision.date }} por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
+            <span class="">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
         </div>
         <div class="media-right media-middle">
             <p><span class="glyphicon glyphicon-eye-open"></span></p>
