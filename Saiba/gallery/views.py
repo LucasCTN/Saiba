@@ -13,6 +13,10 @@ def index(request):
 
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
+
+    args = {'image': image,
+            'comments':comments}
+
     return render(request, 'gallery/image.html', {'image': image})
 
 def video_detail(request, video_id):
