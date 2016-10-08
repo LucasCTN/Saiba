@@ -50,7 +50,6 @@
     <Compile Include="entry\forms.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="entry\migrations\__init__.py" />
     <Compile Include="entry\models.py" />
     <Compile Include="entry\serializers.py" />
     <Compile Include="entry\tests.py" />
@@ -103,6 +102,9 @@
     </Compile>
     <Compile Include="profile\views.py" />
     <Compile Include="profile\__init__.py" />
+    <Compile Include="Saiba\saibadown.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Saiba\__init__.py" />
     <Compile Include="Saiba\settings.py" />
     <Compile Include="Saiba\urls.py" />

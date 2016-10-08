@@ -51,7 +51,9 @@
                 <dd class="infobox-content">{{ entry.additional_references }}</dd>
             </dl>
         </div>
-        {{ last_revision.content }}
+        <div id="conteudo">
+            {{ last_revision.content|safe }}
+        </div>
     </section>
 
     <section id="galeria-video" class="container media col-md-12"><hr/>

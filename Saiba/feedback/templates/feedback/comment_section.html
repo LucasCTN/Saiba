@@ -12,16 +12,36 @@
     <br/><br/><br/>
     {% for parent_comment, replies in comments.items %}
         <div id="comment-{{ parent_comment.pk }}" class='parent-comment comment'>
-            <span class="comment-author" style="font-weight: bold;"><a href='#'>{{ parent_comment.author.username }}</a></span><br/>
+            <span class="comment-author" style="font-weight: bold;"><a href='{% url 'profile:detail' parent_comment.author.profile.slug %}'>{{ parent_comment.author.username }}</a></span><br/>
             <span class="comment-date">{{parent_comment.creation_date}} (Editado em {{parent_comment.update_date}})</span><br/>
             {{ parent_comment.content }}
+            <br/>
+            <span style="color:grey">
+                Reply
+                <button type="button" class="btn btn-default btn-sm" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default btn-sm" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                </button>
+            </span>
             {% if replies|length > 0 %}
                 <div id="reply" class='reply-box col-md-12'>
                     {% for reply in replies %}
                         <div id="reply-{{ reply.pk }}" class='reply comment'>
-                            <span class="comment-author" style="font-weight: bold;"><a href='#'>{{ reply.author.username }}</a></span><br/>
+                            <span class="comment-author" style="font-weight: bold;"><a href='{% url 'profile:detail' reply.author.profile.slug %}'>{{ reply.author.username }}</a></span><br/>
                             <span class="comment-date">{{reply.creation_date}} (Editado em {{reply.update_date}})</span><br/>
                             {{ reply.content }}
+                            <br/>
+                            <span style="color:grey">
+                                Reply
+                                <button type="button" class="btn btn-default btn-sm" aria-label="Left Align">
+                                  <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" aria-label="Left Align">
+                                  <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                                </button>
+                            </span>
                         </div>
                     {% endfor %}
                 </div>

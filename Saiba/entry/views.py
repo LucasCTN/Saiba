@@ -2,17 +2,18 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 #from .forms import AlbumForm, SongForm, UserForm
 from .models import Entry, Revision, Category
-from .forms import EntryForm, RevisionForm, CommentForm
+from .forms import EntryForm, RevisionForm, EntryCommentForm
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
-from feedback.models import Comment
+from feedback.models import EntryComment
+import markdown2, Saiba.saibadown
 
 def index(request):
     '''if not request.user.is_authenticated():
@@ -50,10 +51,14 @@ def detail(request, entry_slug):
     last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False).order_by('-id')[:10]
 
-    comment_form = CommentForm(request.POST or None)
+    formatted_text = markdown2.markdown(last_revision.content, extras=["footnotes"])
+    formatted_text = Saiba.saibadown.parse(formatted_text)
+    last_revision.content = formatted_text
+
+    comment_form = EntryCommentForm(request.POST or None)
     
-    raw_parent_comments = Comment.objects.filter(entry=entry, parent_comment=None, hidden=False).order_by('creation_date')
-    raw_reply_comments = Comment.objects.filter(Q(entry=entry) & Q(hidden=False) & ~Q(parent_comment=None)).order_by('creation_date')
+    raw_parent_comments = EntryComment.objects.filter(entry=entry, parent_comment=None, hidden=False).order_by('creation_date')
+    raw_reply_comments = EntryComment.objects.filter(Q(entry=entry) & Q(hidden=False) & ~Q(parent_comment=None)).order_by('creation_date')
 
     comments = dict()
 
@@ -102,8 +107,7 @@ def edit(request, entry_slug):
         last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
         
         last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
-        return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
-                                                   'first_revision':first_revision, 'images':last_images})
+        return redirect('entry:detail', entry_slug=entry_slug)
 
     context = { "entry_form": entry_form, "revision_form": revision_form, "entry":entry }
 

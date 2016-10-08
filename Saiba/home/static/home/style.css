@@ -39,3 +39,33 @@
     padding: 1% 0px 1% 2%;
     background-color: #dfdfef;
 }
+
+#conteudo h1{
+    font-size: 25px;
+}
+
+#conteudo h2{
+    font-size: 22px;
+}
+
+#conteudo h3{
+    font-size: 20px;
+}
+
+#conteudo h4{
+    font-size: 18px;
+}
+
+#conteudo h5{
+    font-size: 15px;
+}
+
+#conteudo h6{
+    font-size: 10px;
+}
+
+#conteudo img, #conteudo iframe, #conteudo twitterwidget{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

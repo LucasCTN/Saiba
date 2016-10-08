@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from .models import Entry, Revision
-from feedback.models import Comment
+from feedback.models import EntryComment, ImageComment
 
 class EntryForm(ModelForm):
     class Meta:
@@ -12,7 +12,12 @@ class RevisionForm(ModelForm):
         model = Revision
         fields = [ "content" ]
 
-class CommentForm(ModelForm):
+class EntryCommentForm(ModelForm):
     class Meta:
-        model = Comment
+        model = EntryComment
         fields = [ "content" ]
+
+class ImageCommentForm(ModelForm):
+    class Meta:
+        model = ImageComment
+        fields = [ "content" ]        
