@@ -48,4 +48,11 @@ class Revision(models.Model):
     hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '#' + str(self.pk) + ' - ' + self.entry.title
+        return "#{} - {}".format(str(self.pk), self.entry.title)
+
+class EditorList(models.Model):
+    user    = models.ForeignKey(User, default=1)
+    entry   = models.ForeignKey(Entry, default=1)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.user.username, self.entry.title)

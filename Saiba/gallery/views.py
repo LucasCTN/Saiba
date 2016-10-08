@@ -54,21 +54,27 @@ def revision(request, revision_id):
     return render(request, 'entry/revision.html', {'revision': revision})
 
 def upload_image(request):
-    image_form = ImageForm(request.POST or None)
+    if not request.user.is_authenticated():
+        return redirect('home:login')
+    else:
+        image_form = ImageForm(request.POST or None)
 
-    if image_form.is_valid():
-        image_form = ImageForm(request.POST, request.FILES)
-        image = image_form.save()
-        return render(request, 'gallery/image.html', {'image': image})
+        if image_form.is_valid():
+            image_form = ImageForm(request.POST, request.FILES)
+            image = image_form.save()
+            return render(request, 'gallery/image.html', {'image': image})
 
     return render(request, 'gallery/upload-image.html', {"form": image_form})
 
 def upload_video(request):
-    video_form = VideoForm(request.POST or None)
+    if not request.user.is_authenticated():
+        return redirect('home:login')
+    else:
+        video_form = VideoForm(request.POST or None)
 
-    if video_form.is_valid():
-        video_form = VideoForm(request.POST, request.FILES)
-        video = video_form.save()
-        return render(request, 'gallery/video.html', {'video': video})
+        if video_form.is_valid():
+            video_form = VideoForm(request.POST, request.FILES)
+            video = video_form.save()
+            return render(request, 'gallery/video.html', {'video': video})
 
     return render(request, 'gallery/upload-video.html', {"form": video_form})

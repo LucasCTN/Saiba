@@ -46,8 +46,13 @@
                         </div>
                     </form>
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Entrar</a></li>
+                        {% if not user.is_authenticated %}
+                        <li><a href="{% url 'home:login' %}">Entrar</a></li>
                         <li><a href="#">Registrar-se</a></li>
+                        {% else %}
+                        <li>Bem vindo(a), <a href="{% url 'profile:detail' user.profile.slug %}">{{ user.username }}</a></li>
+                        <li><a href="{% url 'home:logout' %}">Sair</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

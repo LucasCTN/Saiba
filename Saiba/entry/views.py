@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 #from .forms import AlbumForm, SongForm, UserForm
-from .models import Entry, Revision, Category
+from .models import Entry, Revision, Category, EditorList
 from .forms import EntryForm, RevisionForm, EntryCommentForm
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
@@ -89,27 +89,36 @@ def history(request, entry_slug):
     return render(request, escape('entry/history.html'), {'revisions': revisions, 'entry_name':entry.title, 'entry_slug':entry.slug})
 
 def edit(request, entry_slug):
-    entry = Entry.objects.get(slug=entry_slug)
-    last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
-    first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
-
-    entry_form = EntryForm(request.POST or None, initial=model_to_dict(entry))
-    revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
-
-    if entry_form.is_valid() and revision_form.is_valid():
-        entry_form = EntryForm(request.POST, instance = entry)
-        entry_form.save()
-
-        revision = revision_form.save(commit=False)
-        revision.entry = entry
-        revision.save()
-
+    if not request.user.is_authenticated():
+        return redirect('home:login')
+    else:
+        user = request.user
+        entry = Entry.objects.get(slug=entry_slug)
         last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
-        
-        last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
-        return redirect('entry:detail', entry_slug=entry_slug)
+        first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
 
-    context = { "entry_form": entry_form, "revision_form": revision_form, "entry":entry }
+        is_editor = EditorList.objects.filter(entry=entry, user=user)
+
+        entry_form = EntryForm(request.POST or None, initial=model_to_dict(entry))
+        revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
+
+        if entry_form.is_valid() and revision_form.is_valid() and is_editor.exists():
+            entry_form = EntryForm(request.POST, instance = entry)
+            entry = entry_form.save(commit=False)
+            entry.author = user
+            entry.save()
+
+            revision = revision_form.save(commit=False)
+            revision.entry = entry
+            revision.author = user
+            revision.save()
+
+            last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
+        
+            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
+            return redirect('entry:detail', entry_slug=entry_slug)
+
+        context = { "entry_form": entry_form, "revision_form": revision_form, "entry":entry, "user":user }
 
     return render(request, 'entry/edit.html', context)
 
@@ -118,23 +127,34 @@ def revision(request, entry_slug, revision_id):
     return render(request, escape('entry/revision.html'), { 'revision': revision })
 
 def create_entry(request):
-    entry_form = EntryForm(request.POST or None)
-    revision_form = RevisionForm(request.POST or None)
+    if not request.user.is_authenticated():
+        return redirect('home:login')
+    else:
+        user = request.user
+        entry_form = EntryForm(request.POST or None)
+        revision_form = RevisionForm(request.POST or None)
+        
+        if entry_form.is_valid() and revision_form.is_valid():
+            editorList = EditorList()
+            editorList.user = user
+            editorList.entry = entry
+            editorList.save()
 
-    if entry_form.is_valid() and revision_form.is_valid():
-        entry = entry_form.save(commit=False)
-        entry.save()
+            entry = entry_form.save(commit=False)
+            entry.author = user
+            entry.save()
 
-        revision = revision_form.save(commit=False)
-        revision.entry = entry
-        revision.save()
+            revision = revision_form.save(commit=False)
+            revision.entry = entry
+            revision.author = user
+            revision.save()
 
-        last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
-        first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
-        last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
-        return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
-                                                   'first_revision':first_revision, 'images':last_images})
+            last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
+            first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
+            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
+            return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
+                                                       'first_revision':first_revision, 'images':last_images})
 
-    context = { "entry_form": entry_form, "revision_form": revision_form }
+        context = { "entry_form": entry_form, "revision_form": revision_form }
 
     return render(request, 'entry/create_entry.html', context)

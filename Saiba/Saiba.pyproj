@@ -84,6 +84,9 @@
     <Compile Include="gallery\__init__.py" />
     <Compile Include="home\admin.py" />
     <Compile Include="home\apps.py" />
+    <Compile Include="home\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="home\migrations\__init__.py" />
     <Compile Include="home\models.py" />
     <Compile Include="home\tests.py" />
@@ -172,6 +175,9 @@
     <Content Include="home\templates\home\base.html" />
     <Content Include="home\templates\home\form_template.html" />
     <Content Include="home\templates\home\index.html" />
+    <Content Include="home\templates\home\register.html" />
+    <Content Include="home\templates\home\logout.html" />
+    <Content Include="home\templates\home\login.html" />
     <Content Include="home\templates\home\sidebar.html" />
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
