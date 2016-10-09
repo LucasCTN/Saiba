@@ -46,9 +46,15 @@ def generate_youtube_video(yt_match):
     result = '<iframe id="ytplayer" type="text/html" width={} height={} src="http://www.youtube.com/embed/{}?origin={}" frameborder="0"></iframe>'.format(youtube_video_width, youtube_video_height, video_url, origin)
     return result
 
+def resize_image(image_match):
+    image_match = re.sub(r' =(\d+)x(\d+)(.+)\/>', r'\3width="\1" height="\2"/>', image_match.group(0))
+    image = re.sub(r' =(center|right|left)(.+)\/>', r'\2 align="\1"/>', image_match)
+    return image
+
 def parse(text):
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds
+    #text = re.sub(r'<img src=".+?\/>'       , resize_image          , text) # Resizing images (the worst way possible)
 
     return text

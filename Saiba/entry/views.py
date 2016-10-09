@@ -13,7 +13,7 @@ from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
 from feedback.models import EntryComment
-import markdown2, Saiba.saibadown
+import markdown2, Saiba.saibadown, textile
 
 def index(request):
     '''if not request.user.is_authenticated():
@@ -51,9 +51,11 @@ def detail(request, entry_slug):
     last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False).order_by('-id')[:10]
 
-    formatted_text = markdown2.markdown(last_revision.content, extras=["footnotes"])
-    formatted_text = Saiba.saibadown.parse(formatted_text)
-    last_revision.content = formatted_text
+    #formatted_text = markdown2.markdown(last_revision.content, extras=["footnotes"])
+    #formatted_text = Saiba.saibadown.parse(formatted_text)
+    #formatted_text = Saiba.saibadown.parse(formatted_text)
+    
+    last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
 
     comment_form = EntryCommentForm(request.POST or None)
     
