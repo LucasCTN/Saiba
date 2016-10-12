@@ -44,15 +44,13 @@ def detail(request, entry_slug):
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
     last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False).order_by('-id')[:10]
-
-    #formatted_text = markdown2.markdown(last_revision.content, extras=["footnotes"])
-    #formatted_text = Saiba.saibadown.parse(formatted_text)
-    #formatted_text = Saiba.saibadown.parse(formatted_text)
     
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
 
     raw_parent_comments = EntryComment.objects.filter(entry=entry, parent_comment=None, hidden=False).order_by('creation_date')
     raw_reply_comments = EntryComment.objects.filter(Q(entry=entry) & Q(hidden=False) & ~Q(parent_comment=None)).order_by('creation_date')
+
+    editor_list = EditorList.objects.filter(entry=entry)
 
     comments = dict()
 
@@ -67,7 +65,8 @@ def detail(request, entry_slug):
             'first_revision':first_revision, 
             'images':last_images,
             'videos':last_videos,
-            'comments':comments}
+            'comments':comments,
+            'editor_list':editor_list}
 
     if 'post-comment' in request.POST:
         comment_form = EntryCommentForm(request.POST or None)
@@ -86,7 +85,7 @@ def detail(request, entry_slug):
             if request.user.is_authenticated():
                 vote = vote_form.save(commit=False)
                 vote.author = request.user
-                vote.is_positive = vote_form.value
+                vote.direction = vote_form.value
                 #vote.comment = get_object_or_404(EntryComment, pk=vote_form.name)
                 vote.save()
                 return redirect('entry:detail', entry_slug)
@@ -170,3 +169,16 @@ def create_entry(request):
         context = { "entry_form": entry_form, "revision_form": revision_form }
 
     return render(request, 'entry/create_entry.html', context)
+
+def editorship(request, entry_slug):
+    entry = get_object_or_404(Entry, slug=entry_slug)
+    editor_list = EditorList.objects.filter(entry=entry)
+    
+    user_editor_list = list()
+        
+    for user_in_list in editor_list:
+        user_editor_list.append(user_in_list.user)
+
+    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
+
+    return render(request, 'entry/editorship.html', context)

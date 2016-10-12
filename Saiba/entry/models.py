@@ -53,6 +53,7 @@ class Revision(models.Model):
 class EditorList(models.Model):
     user    = models.ForeignKey(User, default=1)
     entry   = models.ForeignKey(Entry, default=1)
+    date = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return "{} - {}".format(self.user.username, self.entry.title)

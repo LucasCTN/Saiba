@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Entry, Revision
+from .models import Entry, Revision, EditorList
 from feedback.models import EntryComment, ImageComment, CommentVote
 
 class EntryForm(ModelForm):
@@ -25,4 +25,9 @@ class ImageCommentForm(ModelForm):
 class EntryVoteForm(ModelForm):
     class Meta:
         model = CommentVote
-        fields = [ "author", "type", "is_positive", "comment" ]  
+        fields = [ "author", "type", "direction", "comment" ]
+
+class EditorListForm(ModelForm):
+    class Meta:
+        model = EditorList
+        fields = [ "user" ]  

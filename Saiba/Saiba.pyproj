@@ -160,6 +160,7 @@
     <Content Include="entry\templates\entry\detail.html" />
     <Content Include="entry\templates\entry\edit.html" />
     <Content Include="entry\templates\entry\form_template.html" />
+    <Content Include="entry\templates\entry\editorship.html" />
     <Content Include="entry\templates\entry\history.html" />
     <Content Include="entry\templates\entry\revision.html" />
     <Content Include="feedback\templates\feedback\comment_section.html" />

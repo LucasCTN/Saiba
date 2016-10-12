@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment
+from feedback.models import CommentVote, EntryComment
 from feedback.serializers import CommentSerializer
 
 class EntryDetail(APIView):
@@ -35,12 +35,12 @@ class HistoricDetail(APIView):
         return Response(serializer.data)
 
 class CommentDetail(APIView):
-
-    def get(self, request, slug):
+    pass
+    '''def get(self, request, slug):
         #entries = Entry.objects.all()
-        index = int(request.GET.get('index'))
+        comments_each_page = 5
 
-        
+        index = int(request.GET.get('index'))        
 
         if index:
             entry = get_object_or_404(Entry, slug=slug)
@@ -54,6 +54,23 @@ class CommentDetail(APIView):
         
         if serializer.is_valid():
             serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
+
+class CommentVote(APIView):
+    def post(self, request):
+        if request.GET.get('id'):
+            comment_id      = int(request.GET.get('id'))
+            direction       = int(request.GET.get('direction'))
+            comment         = EntryComment.objects.get(pk=comment_id)
+
+            vote            = CommentVote()
+            vote.comment    = comment
+            vote.author     = request.user
+            vote.direction  = direction
+            vote.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -32,7 +32,7 @@ class Vote(models.Model):
     author      = models.ForeignKey(User, default=1)
     date        = models.DateTimeField(auto_now=True, blank=True)
     type        = models.CharField(max_length=250)
-    is_positive = models.BooleanField(default=True)
+    direction   = models.IntegerField(default=0)
 
     def __unicode__(self):
         text = '#' + str(self.id) + ' - ' + str(self.author.username)

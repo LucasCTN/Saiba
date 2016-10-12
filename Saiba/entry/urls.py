@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^(?P<entry_slug>[\w-]+)/historico$', views.history, name='history'),
     url(r'^(?P<entry_slug>[\w-]+)/editar', views.edit, name='edit'),
     url(r'^(?P<entry_slug>[\w-]+)/revisoes/(?P<revision_id>[0-9]+)', views.revision, name='revision'),
-
+    url(r'^(?P<entry_slug>[\w-]+)/editoria$', views.editorship, name='editorship'),
 ]

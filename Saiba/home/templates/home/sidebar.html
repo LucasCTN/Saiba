@@ -1,3 +1,11 @@
 ﻿<div style="background-color: ghostwhite; ">
     Teste
 </div>
+{% if editor_list %}
+<section id="lista-editores" class="panel panel-default">
+    <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a>({{editor_list|length}})</div>
+    {% for editor in editor_list %}
+        <div class="panel-body"><a href="{% url 'profile:detail' editor.user.profile.slug %}">{{editor.user.username}}</a></div>
+    {% endfor %}
+</section>
+{% endif %}
