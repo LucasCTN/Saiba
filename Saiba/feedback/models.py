@@ -41,11 +41,11 @@ class Vote(models.Model):
     class Meta:
         abstract = True
 
-class EntryCommentVote(Vote):
-    comment = models.ForeignKey(EntryComment, default=1)
-
 class ImageVote(Vote):
     media = models.ForeignKey(Image, default=1)
 
 class VideoVote(Vote):
     media = models.ForeignKey(Video, default=1)
+
+class CommentVote(Vote):
+    comment = models.ForeignKey(EntryComment, default=1)   

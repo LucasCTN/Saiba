@@ -1,13 +1,29 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
+from .models import Post
+from .forms import PostForm
 from entry.models import Entry
 from profile.models import Profile
 from django.contrib.auth import authenticate, login, logout
 
 def index(request):
     entries = Entry.objects.all()
-    return render(request, 'home/index.html', {'entries': entries})
+    posts = Post.objects.all().order_by('-date')
+
+    text_form = PostForm(request.POST or None)
+
+    if text_form.is_valid():
+        post = text_form.save(commit=False)
+        post.author = request.user
+        post.save()
+        return redirect('home:index')
+
+    args = {'entries': entries, 
+            'posts': posts,
+            'form': text_form}
+
+    return render(request, 'home/base.html', args)
 
 def user_login(request):
     username = password = ''

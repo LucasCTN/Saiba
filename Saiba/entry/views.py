@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 #from .forms import AlbumForm, SongForm, UserForm
 from .models import Entry, Revision, Category, EditorList
-from .forms import EntryForm, RevisionForm, EntryCommentForm
+from .forms import EntryForm, RevisionForm, EntryCommentForm, EntryVoteForm
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
@@ -39,12 +39,6 @@ def index(request):
     return render(request, 'entry/index.html')
 
 def detail(request, entry_slug):
-    '''if not request.user.is_authenticated():
-        return render(request, 'music/login.html')
-    else:
-        user = request.user
-        album = get_object_or_404(Album, pk=album_id)
-        return render(request, 'music/detail.html', {'album': album, 'user': user})'''
     entry = get_object_or_404(Entry, slug=entry_slug)
     last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
@@ -57,8 +51,6 @@ def detail(request, entry_slug):
     
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
 
-    comment_form = EntryCommentForm(request.POST or None)
-    
     raw_parent_comments = EntryComment.objects.filter(entry=entry, parent_comment=None, hidden=False).order_by('creation_date')
     raw_reply_comments = EntryComment.objects.filter(Q(entry=entry) & Q(hidden=False) & ~Q(parent_comment=None)).order_by('creation_date')
 
@@ -77,13 +69,31 @@ def detail(request, entry_slug):
             'videos':last_videos,
             'comments':comments}
 
-    if comment_form.is_valid():
-        comment_form = CommentForm(request.POST)        
-        comment = comment_form.save(commit=False)
-        comment.entry = entry
-        comment.save()
+    if 'post-comment' in request.POST:
+        comment_form = EntryCommentForm(request.POST or None)
+        if comment_form.is_valid():
+            if request.user.is_authenticated():        
+                comment = comment_form.save(commit=False)
+                comment.author = request.user
+                comment.entry = entry
+                comment.save()
+                return redirect('entry:detail', entry_slug)
+            else:
+                return redirect('home:login')
+    else:
+        vote_form = EntryVoteForm(request.POST or None)
+        if vote_form.is_valid():
+            if request.user.is_authenticated():
+                vote = vote_form.save(commit=False)
+                vote.author = request.user
+                vote.is_positive = vote_form.value
+                #vote.comment = get_object_or_404(EntryComment, pk=vote_form.name)
+                vote.save()
+                return redirect('entry:detail', entry_slug)
+            else:
+                return redirect('home:login')
 
-    return render(request, escape('entry/detail.html'), args)
+    return render(request, 'entry/detail.html', args)
 
 def history(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)

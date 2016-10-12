@@ -1,15 +1,18 @@
 ﻿<section id="comentarios" class="container col-md-12">
     <hr/>            
     <h2>Comentários</h2>
+
     <form method="post" class="form-horizontal" role="form">
         {% csrf_token %}
         <div class="form-group">
             <label for="content" class="control-label">Comentando como:</label>
             <textarea name="content" class="form-control" id="id_content" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary col-md-1" name="submit">Enviar</button>
+        <button type="submit" class="btn btn-primary col-md-1" name="post-comment">Enviar</button>
     </form>
+
     <br/><br/><br/>
+
     {% for parent_comment, replies in comments.items %}
         <div id="comment-{{ parent_comment.pk }}" class='parent-comment comment'>
             <span class="comment-author" style="font-weight: bold;"><a href='{% url 'profile:detail' parent_comment.author.profile.slug %}'>{{ parent_comment.author.username }}</a></span><br/>
@@ -18,12 +21,15 @@
             <br/>
             <span style="color:grey">
                 Reply
-                <button type="button" class="btn btn-default btn-sm" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-default btn-sm" aria-label="Left Align">
-                  <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                </button>
+                <form method="post" class="form-horizontal" role="form">
+                    {% csrf_token %}
+                    <button type="submit" method="post" name="{{ parent_comment.pk }}" value="1" class="btn btn-default btn-sm" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="submit" method="post" name="{{ parent_comment.pk }}" value="2" class="btn btn-default btn-sm" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    </button>
+                </form>
             </span>
             {% if replies|length > 0 %}
                 <div id="reply" class='reply-box col-md-12'>

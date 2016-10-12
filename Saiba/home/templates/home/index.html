@@ -1,5 +1,35 @@
 {% extends 'home/base.html' %}
 
 {% block body %}
-    Body vai ficar aqui
+    <section id="posts" class="container col-md-12">
+        <div class="container col-md-12">
+            {% for post in posts %}
+                <div id="post-{{ post.pk }}" class='post'>
+                    <h3>{{ post.category }} - {{ post.title }}</h3>
+                    {% if post.image %}
+                        <a href="{% url 'gallery:image_detail' post.image.pk %}">
+                            <img id='imagem' class='media-object img-thumbnail' src='{{ post.image.file.url }}' style="width: 550px; height: 375px">
+                        </a>
+                        <br/>
+                    {% endif %}
+
+                    {% if post.video %}
+                        {{ post.video }}
+                        <br/>
+                    {% endif %}
+
+                    {{ post.content }}
+                    <br/>
+                    <h6>Data: {{ post.date }}</h6>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+
+        <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'home/form_template.html'%}
+            <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+        </form>
+    </section>
 {% endblock %}
