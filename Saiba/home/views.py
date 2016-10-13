@@ -23,7 +23,7 @@ def index(request):
             'posts': posts,
             'form': text_form}
 
-    return render(request, 'home/base.html', args)
+    return render(request, 'home/index.html', args)
 
 def user_login(request):
     username = password = ''
