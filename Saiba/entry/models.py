@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Permission, User
 from django.template.defaultfilters import slugify
 from django.db import models
+from feedback.models import Comment, Vote
+from gallery.models import Image, Video
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
@@ -17,7 +19,7 @@ class Category(models.Model):
         return self.label
 
 class Entry(models.Model):
-    author                  = models.ForeignKey(User, default=1)
+    author                  = models.ForeignKey(User, default=1, related_name="authored")
     title                   = models.CharField(max_length=250)
     slug                    = models.SlugField(max_length=250, default="", blank=True)
     status                  = models.ForeignKey(Status, default=1)
@@ -30,6 +32,10 @@ class Entry(models.Model):
     images_locked           = models.BooleanField(default=False)
     videos_locked           = models.BooleanField(default=False)
     comments_locked         = models.BooleanField(default=False)
+    comments                = models.ManyToManyField(Comment, blank=True)
+    editors                 = models.ManyToManyField(User, related_name="editorship_entry")
+    images                  = models.ManyToManyField(Image)
+    videos                  = models.ManyToManyField(Video)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -49,11 +55,3 @@ class Revision(models.Model):
 
     def __unicode__(self):
         return "#{} - {}".format(str(self.pk), self.entry.title)
-
-class EditorList(models.Model):
-    user    = models.ForeignKey(User, default=1)
-    entry   = models.ForeignKey(Entry, default=1)
-    date = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{} - {}".format(self.user.username, self.entry.title)

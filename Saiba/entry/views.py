@@ -5,15 +5,14 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 #from .forms import AlbumForm, SongForm, UserForm
-from .models import Entry, Revision, Category, EditorList
-from .forms import EntryForm, RevisionForm, EntryCommentForm, EntryVoteForm
+from .models import Entry, Revision, Category
+from .forms import EntryForm, RevisionForm
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
-from feedback.models import EntryComment
-import markdown2, Saiba.saibadown, textile
+import Saiba.saibadown, textile
 
 def index(request):
     '''if not request.user.is_authenticated():
@@ -47,7 +46,7 @@ def detail(request, entry_slug):
     
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
 
-    raw_parent_comments = EntryComment.objects.filter(entry=entry, parent_comment=None, hidden=False).order_by('creation_date')
+    '''raw_parent_comments = EntryComment.objects.filter(entry=entry, parent_comment=None, hidden=False).order_by('creation_date')
     raw_reply_comments = EntryComment.objects.filter(Q(entry=entry) & Q(hidden=False) & ~Q(parent_comment=None)).order_by('creation_date')
 
     editor_list = EditorList.objects.filter(entry=entry)
@@ -58,7 +57,7 @@ def detail(request, entry_slug):
         comments[comment] = list()
 
     for reply in raw_reply_comments:
-        comments[reply.parent_comment].append(reply)
+        comments[reply.parent_comment].append(reply)'''
 
     args = {'entry': entry, 
             'last_revision':last_revision,                                                   
@@ -68,7 +67,7 @@ def detail(request, entry_slug):
             'comments':comments,
             'editor_list':editor_list}
 
-    if 'post-comment' in request.POST:
+    '''if 'post-comment' in request.POST:
         comment_form = EntryCommentForm(request.POST or None)
         if comment_form.is_valid():
             if request.user.is_authenticated():        
@@ -90,7 +89,7 @@ def detail(request, entry_slug):
                 vote.save()
                 return redirect('entry:detail', entry_slug)
             else:
-                return redirect('home:login')
+                return redirect('home:login')'''
 
     return render(request, 'entry/detail.html', args)
 

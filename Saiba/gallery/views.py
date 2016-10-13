@@ -7,8 +7,8 @@ from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from .models import Image, Video
 from .forms import ImageForm, VideoForm
-from entry.forms import EntryCommentForm, ImageCommentForm
-from feedback.models import ImageComment
+#from entry.forms import EntryCommentForm, ImageCommentForm
+#from feedback.models import ImageComment
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -16,7 +16,7 @@ def index(request):
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
     
-    comment_form = ImageCommentForm(request.POST or None)
+    '''comment_form = ImageCommentForm(request.POST or None)
     
     raw_parent_comments = ImageComment.objects.filter(image=image, parent_comment=None, hidden=False).order_by('creation_date')
     raw_reply_comments = ImageComment.objects.filter(Q(image=image) & Q(hidden=False) & ~Q(parent_comment=None)).order_by('creation_date')
@@ -36,7 +36,7 @@ def image_detail(request, image_id):
         comment_form = ImageCommentForm(request.POST)        
         comment = comment_form.save(commit=False)
         comment.image = image
-        comment.save()
+        comment.save()'''
 
     return render(request, 'gallery/image.html', {'image': image})
 

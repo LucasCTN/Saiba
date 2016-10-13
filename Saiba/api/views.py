@@ -1,15 +1,17 @@
+#from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import CommentVote, EntryComment
-from feedback.serializers import CommentSerializer
+from gallery.models import Image, Video
+from feedback.serializers import CommentSerializer, VoteSerializer
+from feedback.models import Vote, Comment
 
 class EntryDetail(APIView):
-
     def get(self, request, slug):
         #entries = Entry.objects.all()
         entry = get_object_or_404(Entry, slug=slug)
@@ -35,7 +37,25 @@ class HistoricDetail(APIView):
         return Response(serializer.data)
 
 class CommentDetail(APIView):
-    pass
+    def get(self, request):        
+        content_id      = self.request.query_params.get('id', None)
+        entry_slug      = self.request.query_params.get('slug', None)
+        content_type    = self.request.query_params.get('type', None)
+        
+        if entry_slug is not None:
+            entry = Entry.objects.get(slug=entry_slug)
+            comments = entry.comments.filter(hidden=False)
+        elif content_id is not None and content_type is not None:
+            if content_type == "image":
+                image = Image.objects.get(pk=content_id)
+                comments = image.comments.filter(hidden=False)
+            elif content_type == "video":
+                video = Video.objects.get(pk=content_id)
+                comments = video.comments.filter(hidden=False)
+
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
     '''def get(self, request, slug):
         #entries = Entry.objects.all()
         comments_each_page = 5
@@ -58,19 +78,25 @@ class CommentDetail(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
+
 class CommentVote(APIView):
+    def get(self, request):
+        comment_id = self.request.query_params.get('id', None)
+        
+        if comment_id is not None:
+            comment = Comment.objects.get(id=comment_id)
+
+        serializer = CommentSerializer(comment, many=False)
+        return Response(serializer.data)
+
     def post(self, request):
-        if request.GET.get('id'):
-            comment_id      = int(request.GET.get('id'))
-            direction       = int(request.GET.get('direction'))
-            comment         = EntryComment.objects.get(pk=comment_id)
-
-            vote            = CommentVote()
-            vote.comment    = comment
-            vote.author     = request.user
-            vote.direction  = direction
-            vote.save()
-
+        data = request.data.copy()
+        data["target_id"]           = data["id"]
+        #data["target_content_type"] = ContentType.objects.get_for_model(Comment).id
+        serializer = VoteSerializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
