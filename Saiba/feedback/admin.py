@@ -1,8 +1,5 @@
 from django.contrib import admin
-from .models import EntryComment, ImageComment, CommentVote, ImageVote, VideoVote
+from .models import Comment, Vote
 
-admin.site.register(EntryComment)
-admin.site.register(ImageComment)
-admin.site.register(CommentVote)
-admin.site.register(ImageVote)
-admin.site.register(VideoVote)
+admin.site.register(Comment)
+admin.site.register(Vote)

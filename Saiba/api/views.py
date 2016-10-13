@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import CommentVote, EntryComment
+from feedback.models import Comment, Vote
 from feedback.serializers import CommentSerializer
 
 class EntryDetail(APIView):
@@ -59,7 +59,8 @@ class CommentDetail(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
 class CommentVote(APIView):
-    def post(self, request):
+    pass
+    '''def post(self, request):
         if request.GET.get('id'):
             comment_id      = int(request.GET.get('id'))
             direction       = int(request.GET.get('direction'))
@@ -73,4 +74,4 @@ class CommentVote(APIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
