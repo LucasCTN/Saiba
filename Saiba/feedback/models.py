@@ -4,14 +4,15 @@ from entry.models import Entry
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.utils import timezone
 
 class Vote(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     target_id           = models.PositiveIntegerField(null=True, blank=True)
     target              = GenericForeignKey('target_content_type', 'target_id')
     author              = models.ForeignKey(User, default=1)
-    date                = models.DateTimeField(auto_now=True, blank=True)
-    type                = models.CharField(max_length=250)
+    creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
+    update_date         = models.DateTimeField(auto_now=True, blank=True)
     direction           = models.IntegerField(default=0)
 
     def __unicode__(self):
