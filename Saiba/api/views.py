@@ -7,6 +7,7 @@ from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
 from feedback.models import Comment, Vote
 from feedback.serializers import CommentSerializer
+from django.contrib.contenttypes.models import ContentType
 
 class EntryDetail(APIView):
 
@@ -35,21 +36,20 @@ class HistoricDetail(APIView):
         return Response(serializer.data)
 
 class CommentDetail(APIView):
-    pass
-    '''def get(self, request, slug):
-        #entries = Entry.objects.all()
-        comments_each_page = 5
+    def get(self, request):
+        comment_target_id   = request.GET.get('id')
+        comment_target_slug = request.GET.get('slug')
+        comment_target_type = request.GET.get('type')
 
-        index = int(request.GET.get('index'))        
-
-        if index:
-            entry = get_object_or_404(Entry, slug=slug)
-            comments = list(Comment.objects.all().filter(entry=entry, hidden=False).order_by('-creation_date'))[index-1:index+1]
+        if comment_target_type is not None and comment_target_type == "entry" and comment_target_slug is not None:
+            entry_type_id    = ContentType.objects.get_for_model(Entry).id
+            entry       = get_object_or_404(Entry, slug=comment_target_slug)
+            comments = Comment.objects.filter(target_id=entry.id, target_content_type=entry_type_id)
             serializer = CommentSerializer(comments, many=True)
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request, slug):
+    '''def post(self, request, slug):
         serializer = EntrySerializer(data=request.data)
         
         if serializer.is_valid():
