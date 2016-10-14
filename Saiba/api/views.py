@@ -88,6 +88,21 @@ class CommentDetail(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self, request):
+        """Parameters: id and content"""
+        data = request.data.copy()
+
+        if data['id'] is not None:
+            vote = get_object_or_404(Vote, pk=data['id'])
+
+        serializer = VoteSerializer(vote, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VoteDetail(APIView):
     def get(self, request):
@@ -119,9 +134,6 @@ class VoteDetail(APIView):
     def post(self, request):
         data = request.data.copy()
 
-        print "Seeing things"
-        print "ID is {} and direction is {}. Is valid? {}".format(data['id'], data['direction'], str(Saiba.utils.is_valid_direction(data['direction'])))
-
         if data['type'] is not None and data['id'] is not None and Saiba.utils.is_valid_direction(data['direction']):
             vote_target_type = data['type']
             data["target_id"] = data['id']
@@ -139,5 +151,20 @@ class VoteDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self, request):
+        """Parameters: id and direction"""
+        data = request.data.copy()
+
+        if data['id'] is not None:
+            vote = get_object_or_404(Vote, pk=data['id'])
+
+        serializer = VoteSerializer(vote, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
