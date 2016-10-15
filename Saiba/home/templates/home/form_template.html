@@ -1,4 +1,84 @@
-﻿{% for field in form %}
+﻿<div class="form-horizontal">
+    <div class="col-sm-offset-2 col-sm-10">
+        <span class="text-danger small">{{ form.errors }}</span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="field">Label:</label>
+        <div class="col-sm-3">
+            <select name="label" class="form-control">    
+                {% for label in labels %}
+                    <option>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="field">Title:</label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" name="title">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="field">Content:</label>
+        <div class="col-sm-6">
+            <textarea class="form-control" rows="9" type="text" name="content"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="field">Hidden:</label>
+        <div class="col-sm-6">
+            <input type="checkbox" name="hidden" value="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="entry">Entry:</label>
+        <div class="col-sm-3">
+            <select name="entry" class="form-control">    
+                {% for entry in entries %}
+                    <option>{{ entry }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="entry">Gallery Image:</label>
+        <div class="col-sm-3">
+            <select name="image" class="form-control">    
+                {% for image in images %}
+                    <option>{{ image }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="video">Gallery Video:</label>
+        <div class="col-sm-3">
+            <select name="video" class="form-control">    
+                {% for video in videos %}
+                    <option>{{ video }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="fixed">Fixed:</label>
+        <div class="col-sm-6">
+            <input type="checkbox" name="fixed" value="">
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% for field in form %}
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <span class="text-danger small">{{ field.errors }}</span>

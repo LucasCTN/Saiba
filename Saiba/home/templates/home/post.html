@@ -1,43 +1,45 @@
-<h3><img id='imagem' src='{{ post.label.icon.url }}'> - {{ post.title }}</h3>
+<div id="post-{{ post.pk }}" class='post' style="border-left-color:{{ post.label.color }};">
+    <h3>{{ post.title }}</h3>
 
-{% if post.video != None %}
-    {% if post.entry == None and post.image == None %}
-        <iframe width="560" height="315" src="{{ post.video.link }}" frameborder="0" allowfullscreen></iframe>
-        <br/><br/>
-    {% else %}
-        <div class="alert alert-warning">
-            <strong>Alerta!</strong> Foi postado alguma outra midia juntamente ao video e este teve que ser removido. Por favor resolva este conflito imediatamente.
-        </div>
+    {% if post.video != None %}
+        {% if post.entry == None and post.image == None %}
+            <iframe class="video-from-post" width="560" height="315" src="{{ post.video.link }}" frameborder="0" allowfullscreen></iframe>
+            <br/><br/>
+        {% else %}
+            <div class="alert alert-warning">
+                <strong>Alerta!</strong> Foi postado alguma outra midia juntamente ao video e este teve que ser removido. Por favor resolva este conflito imediatamente.
+            </div>
+        {% endif %}
     {% endif %}
-{% endif %}
 
-{% if post.entry != None %}
-    <a href="{% url 'entry:detail' post.entry.slug %}">
-{% elif post.image != None%}
-    <a href="{% url 'gallery:image_detail' post.image.pk %}">
-{% endif %}
-
-{% if post.image != None%}
-        <img id='imagem' class='media-object img-thumbnail' src='{{ post.image.file.url }}' style="width: 550px; height: 375px">
-    </a>
-    <br/>
-{% elif post.entry != None %}
-        <img id='imagem' class='media-object img-thumbnail' src='{{ post.entry.icon.url }}' style="width: 550px; height: 375px">
-    </a>
-    <br/>
-{% endif %}
-
-{% if post.content != None %}
-    {{ post.content }}
-{% endif %}
-                    
-<br/>
-<h6>
-    Data: {{ post.date }}
-                        
     {% if post.entry != None %}
-        <a class="col-md-offset-8" href="{% url 'entry:detail' post.entry.slug %}">Comentarios</a>
+        <a href="{% url 'entry:detail' post.entry.slug %}">
     {% elif post.image != None%}
-        <a class="col-md-offset-8" href="{% url 'gallery:image_detail' post.image.pk %}">Comentarios</a>
+        <a href="{% url 'gallery:image_detail' post.image.pk %}">
     {% endif %}
-</h6>
+
+    {% if post.image != None%}
+            <img id='imagem' class='media-object img-thumbnail image-from-post' src='{{ post.image.file.url }}'>
+        </a>
+        <br/>
+    {% elif post.entry != None %}
+            <img id='imagem' class='media-object img-thumbnail image-from-post' src='{{ post.entry.icon.url }}'>
+        </a>
+        <br/>
+    {% endif %}
+
+    {% if post.content != None %}
+        {{ post.content }}
+    {% endif %}
+                    
+    <br/>
+    <h6>
+        Data: {{ post.date }}
+                        
+        {% if post.entry != None %}
+            <a class="col-md-offset-8" href="{% url 'entry:detail' post.entry.slug %}">Comentarios</a>
+        {% elif post.image != None%}
+            <a class="col-md-offset-8" href="{% url 'gallery:image_detail' post.image.pk %}">Comentarios</a>
+        {% endif %}
+    </h6>
+</div>

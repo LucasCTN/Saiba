@@ -1,25 +1,28 @@
 {% extends 'home/base.html' %}
 
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}"/>
+{% endblock %}
+
 {% block body %}
-    <section id="posts" class="container col-md-12">
-        <div class="container col-md-12">
-            {% for post in fixed_posts %}
-                <div id="post-{{ post.pk }}" class='post' style="background-color:#cbcbdd">
-                    {% include 'home/post.html'%}
-                </div>
-                {% if forloop.counter != fixed_posts|length %}
-                <hr>
-                {% endif %}
-            {% endfor %}
+    <section id="post-content" class="container col-md-12">
+        <div id="all-posts" class="container col-md-12">
+            <div id="fixed-posts">
+                {% for post in fixed_posts %}
+                    {% include 'home/post.html' %}
+                    {% if forloop.counter != fixed_posts|length %} <hr> {% endif %}
+                {% endfor %}
 
-            <hr style="border-top: 4px solid #000000;">
+                <hr id="fixed-block-hr">
+            </div>
 
-            {% for post in normal_posts %}
-                <div id="post-{{ post.pk }}" class='post'>
-                    {% include 'home/post.html'%}
-                </div>
-                <hr>
-            {% endfor %}
+            <div id="normal-posts">
+                {% for post in normal_posts %}
+                    {% include 'home/post.html' %}
+                    <hr>
+                {% endfor %}
+            </div>
         </div>
 
         <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
