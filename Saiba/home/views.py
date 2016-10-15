@@ -10,7 +10,8 @@ from django.contrib.auth import authenticate, login, logout
 def index(request):
     entries = Entry.objects.all()
     posts = Post.objects.all().order_by('-date')
-
+    fixed_posts = Post.objects.filter(fixed=True).order_by('-date')
+    normal_posts = Post.objects.filter(fixed=False).order_by('-date')
     text_form = PostForm(request.POST or None)
 
     if text_form.is_valid():
@@ -19,8 +20,10 @@ def index(request):
         post.save()
         return redirect('home:index')
 
-    args = {'entries': entries, 
+    args = {'entries': entries,
             'posts': posts,
+            'fixed_posts': fixed_posts,
+            'normal_posts': normal_posts,
             'form': text_form}
 
     return render(request, 'home/index.html', args)

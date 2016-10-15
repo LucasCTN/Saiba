@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^galeria/', include('gallery.urls')),
     url(r'^api/', include('api.urls')),
     url(r'^perfil/', include('profile.urls')),
+    url(r'^staff/', include('staff.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
