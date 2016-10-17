@@ -7,6 +7,12 @@
 
 {% block body %}
     <section id="post-content" class="container col-md-12">
+        <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'home/form_template.html'%}
+            <button type="submit" class="btn btn-primary col-sm-offset-4 col-md-4" name="submit">Enviar</button>
+        </form>
+
         <div id="all-posts" class="container col-md-12">
             <div id="fixed-posts">
                 {% for post in fixed_posts %}
@@ -24,11 +30,5 @@
                 {% endfor %}
             </div>
         </div>
-
-        <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% include 'home/form_template.html'%}
-            <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
-        </form>
     </section>
 {% endblock %}

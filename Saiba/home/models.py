@@ -14,7 +14,7 @@ class Label(models.Model):
 
 class Post(models.Model):
     author      = models.ForeignKey(User, default=1)
-    label       = models.ForeignKey(Label, default=1)
+    label       = models.ForeignKey(Label, blank=True)
     title       = models.CharField(max_length=250)
     content     = models.TextField(max_length=2500, blank=True)
     hidden      = models.BooleanField(default=False)

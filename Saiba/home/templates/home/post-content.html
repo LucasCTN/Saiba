@@ -1,0 +1,32 @@
+{% if post.entry == None and post.video == None and post.image == None %}
+{% elif post.video != None %}
+    {% if post.image != None %}
+        <div class="alert alert-warning">
+            <strong>Alerta!</strong> Foi postado alguma outra midia juntamente ao video e ela teve que ser removida. Por favor resolva este conflito imediatamente.
+        </div>
+    {% endif %}
+    <br>
+    <iframe class="video-from-post" width="560" height="315" src="{{ post.video.link }}" frameborder="0" allowfullscreen></iframe>
+    <br/><br/>
+{% else %}
+    {% if post.image != None %}
+        <br>
+        {% if post.entry != None %}
+            <a href="{% url 'entry:detail' post.entry.slug %}">
+        {% else %}
+            <a href="{% url 'gallery:image_detail' post.image.pk %}">
+        {% endif %}
+        <img id='imagem' class='media-object img-thumbnail image-from-post' src='{{ post.image.file.url }}'>
+    {% else %}
+        {% if post.entry != None %}
+            <a href="{% url 'entry:detail' post.entry.slug %}">
+                <img id='imagem' class='media-object img-thumbnail image-from-post' src='{{ post.entry.icon.url }}'>
+        {% endif %}
+    {% endif %}
+        </a>
+        <br/>
+{% endif %}
+
+{% if post.content != None %}
+    {{ post.content }}
+{% endif %}
