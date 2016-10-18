@@ -6,9 +6,11 @@ from rest_framework import status
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
 from feedback.models import Comment, Vote
-from feedback.serializers import CommentSerializer, VoteSerializer
+from feedback.serializers import CommentSerializer, VoteSerializer, CommentPageSerializer
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
+from django.core.paginator import Paginator
+from rest_framework.pagination import PageNumberPagination
 import Saiba.utils
 
 class EntryDetail(APIView):
@@ -168,3 +170,60 @@ class VoteDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CommentPageDetail(APIView):
+    def get(self, request):
+        comment_target_id   = request.GET.get('id')
+        comment_target_slug = request.GET.get('slug')
+        comment_target_type = request.GET.get('type')
+        comments = []
+
+        if comment_target_type is not None:
+            if comment_target_type == "entry" and comment_target_slug is not None:
+                entry_type_id   = ContentType.objects.get_for_model(Entry).id
+                entry           = get_object_or_404(Entry, slug=comment_target_slug)
+                comments        = Comment.objects.filter(target_id=entry.id, target_content_type=entry_type_id)
+            elif comment_target_type == "image" and comment_target_id is not None:
+                image_type_id   = ContentType.objects.get_for_model(Image).id
+                image           = get_object_or_404(Image, slug=comment_target_slug)
+                comments        = Comment.objects.filter(target_id=image.id, target_content_type=image_type_id)
+            elif comment_target_type == "video" and comment_target_id is not None:                
+                video_type_id   = ContentType.objects.get_for_model(Video).id
+                video           = get_object_or_404(Image, slug=comment_target_slug)
+                comments        = Comment.objects.filter(target_id=video.id, target_content_type=video_type_id)
+
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(comments, request)
+
+        serializer = CommentSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)        
+        #return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class CommentThreadDetail(APIView):
+    def get(self, request):
+        comment_target_id   = request.GET.get('id')
+        comment_target_slug = request.GET.get('slug')
+        comment_target_type = request.GET.get('type')
+        reply_limit         = request.GET.get('limit')
+
+        if comment_target_type is not None:
+            if comment_target_type == "entry" and comment_target_slug is not None:
+                entry_type_id   = ContentType.objects.get_for_model(Entry).id
+                entry           = get_object_or_404(Entry, slug=comment_target_slug)
+                comments        = Comment.objects.filter(target_id=entry.id, target_content_type=entry_type_id)
+                serializer      = CommentSerializer(comments, many=True, context={"limit":reply_limit})
+                return Response(serializer.data)
+            elif comment_target_type == "image" and comment_target_id is not None:
+                image_type_id   = ContentType.objects.get_for_model(Image).id
+                image           = get_object_or_404(Image, slug=comment_target_slug)
+                comments        = Comment.objects.filter(target_id=image.id, target_content_type=image_type_id)
+                serializer      = CommentSerializer(comments, many=True, context={"limit":reply_limit})
+                return Response(serializer.data)
+            elif comment_target_type == "video" and comment_target_id is not None:                
+                video_type_id   = ContentType.objects.get_for_model(Video).id
+                video           = get_object_or_404(Image, slug=comment_target_slug)
+                comments        = Comment.objects.filter(target_id=video.id, target_content_type=video_type_id)
+                serializer      = CommentSerializer(comments, many=True, context={"limit":reply_limit})
+                return Response(serializer.data)
+        
+        return Response(status=status.HTTP_400_BAD_REQUEST)
