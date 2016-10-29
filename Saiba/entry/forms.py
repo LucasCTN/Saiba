@@ -1,6 +1,5 @@
 from django.forms import ModelForm
-from .models import Entry, Revision
-from feedback.models import Vote, Comment
+from .models import Entry, Revision, EditorList
 
 class EntryForm(ModelForm):
     class Meta:
@@ -11,3 +10,8 @@ class RevisionForm(ModelForm):
     class Meta:
         model = Revision
         fields = [ "content" ]
+
+class EditorListForm(ModelForm):
+    class Meta:
+        model = EditorList
+        fields = [ "user" ]  

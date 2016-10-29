@@ -108,6 +108,9 @@
     <Compile Include="Saiba\saibadown.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Saiba\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Saiba\__init__.py" />
     <Compile Include="Saiba\settings.py" />
     <Compile Include="Saiba\urls.py" />

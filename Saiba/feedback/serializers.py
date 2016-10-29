@@ -1,24 +1,52 @@
-from rest_framework import serializers
-from .models import Comment, Vote
+from rest_framework import pagination, serializers
+from .models import Comment, Vote, Reply
+
+class VoteSerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        representation = super(VoteSerializer, self).to_representation(obj)
+        representation.pop('target_content_type')
+        representation.pop('target_id')
+        return representation
+
+    class Meta:
+        model = Vote
+        field = ('author', 'date', 'direction', 'creation_date', 'update_date')
+
+class ReplySerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        representation = super(ReplySerializer, self).to_representation(obj)
+        representation.pop('hidden')
+        return representation    
+
+    class Meta:
+        model = Reply
+        field = ('author', 'content', 'creation_date', 'update_date', 'comment')
 
 class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        field = ('content', 'creation_date', 'update_date', 'parent_comment')
+    replies = serializers.SerializerMethodField()
+
+    def get_replies(self, obj):
+        if 'reply_limit' in self.context:
+            limit = int(self.context['reply_limit'])
+
+            if limit == 0:
+                query = Reply.objects.all()
+            else:
+                query = Reply.objects.all()[:limit]
+
+            serializer = ReplySerializer(query, many=True)
+            return serializer.data
+        else:
+            return None
 
     def to_representation(self, obj):
-        ret = super(CommentSerializer, self).to_representation(obj)
-        ret.pop('votes')
-        ret.pop('hidden')
-        return ret 
+        representation = super(CommentSerializer, self).to_representation(obj)
+        representation.pop('hidden')
+        representation.pop('target_content_type')
+        representation.pop('target_id')
+        return representation    
 
-class VoteSerializer(serializers.ModelSerializer):    
     class Meta:
-        model = Vote
+        model = Comment
         #field = '__all__'
-        field = ('target', 'direction')
-
-class CommentVoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vote
-        field = ('target', 'direction')
+        field = ('author', 'content', 'creation_date', 'update_date', 'parent_comment', 'replies')
