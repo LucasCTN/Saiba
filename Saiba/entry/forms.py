@@ -14,4 +14,4 @@ class RevisionForm(ModelForm):
 class EditorListForm(ModelForm):
     class Meta:
         model = EditorList
-        fields = [ "user" ]  
+        fields = [ "user" ]

@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'api.apps.apiConfig',
     'feedback.apps.feedbackConfig',
     'profile.apps.profileConfig',
-    'staff.apps.staffConfig',
     'rest_framework',
     'app',
     # Add your apps here to enable them
