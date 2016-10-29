@@ -163,6 +163,7 @@ class CommentPageDetail(APIView):
         comment_target_id   = request.GET.get('id')
         comment_target_slug = request.GET.get('slug')
         comment_target_type = request.GET.get('type')
+        reply_limit     = request.GET.get('reply_limit')
         comments = []
 
         if comment_target_type is not None:
@@ -182,6 +183,6 @@ class CommentPageDetail(APIView):
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
 
-        serializer = CommentSerializer(result_page, many=True)
+        serializer = CommentSerializer(result_page, many=True, context={"reply_limit":reply_limit})
         return paginator.get_paginated_response(serializer.data)        
         #return Response(status=status.HTTP_400_BAD_REQUEST)

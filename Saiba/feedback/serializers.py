@@ -26,15 +26,18 @@ class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
 
     def get_replies(self, obj):
-        limit = int(self.context['reply_limit'])
+        if 'reply_limit' in self.context:
+            limit = int(self.context['reply_limit'])
 
-        if limit == 0:
-            query = Reply.objects.all()
+            if limit == 0:
+                query = Reply.objects.all()
+            else:
+                query = Reply.objects.all()[:limit]
+
+            serializer = ReplySerializer(query, many=True)
+            return serializer.data
         else:
-            query = Reply.objects.all()[:limit]
-
-        serializer = ReplySerializer(query, many=True)
-        return serializer.data
+            return None
 
     def to_representation(self, obj):
         representation = super(CommentSerializer, self).to_representation(obj)
