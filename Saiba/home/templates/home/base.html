@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}"/>
         <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+        {% block css %}
+        {% endblock %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
@@ -37,6 +39,7 @@
                             <li><a href="{% url 'gallery:upload_video' %}">Video</a></li>
                         </ul>
                     </li>
+                    <li><a href="/staff">Staff</a></li>
                 </ul>
                 <div class="nav navbar-nav navbar-right">
                     <form class="navbar-form navbar-left" action="#" method="get">

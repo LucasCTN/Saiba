@@ -13,4 +13,4 @@ class ProfileForm(forms.Form):
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = [ "category", "title", "content", "hidden", "entry", "image", "video"]
+        fields = [ "label", "title", "content", "hidden", "entry", "image", "video", "fixed"]

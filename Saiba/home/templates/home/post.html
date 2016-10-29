@@ -1,0 +1,26 @@
+<div id="post-{{ post.pk }}" class='post' style="border-left-color:{{ post.label.color }};">
+    
+    {% if post.entry != None %}
+        <h3><a href="{% url 'entry:detail' post.entry.slug %}">{{ post.title }}</a></h3>
+        {% include "home/post-content.html" %}
+        <br/><br/>
+        <h6>Data: {{ post.date }}
+        <a class="col-md-offset-8" href="{% url 'entry:detail' post.entry.slug %}">Comentarios</a></h6>
+    {% elif post.video != None %}
+        <h3><a href="{% url 'gallery:video_detail' post.video.pk %}">{{ post.title }}</a></h3>
+        {% include "home/post-content.html" %}
+        <br/><br/>
+        <h6>Data: {{ post.date }}
+        <a class="col-md-offset-8" href="{% url 'gallery:video_detail' post.video.pk %}">Comentarios</a></h6>
+    {% elif post.image != None %}
+        <h3><a href="{% url 'gallery:image_detail' post.image.pk %}">{{ post.title }}</a></h3>
+        {% include "home/post-content.html" %}
+        <br/><br/>
+        <h6>Data: {{ post.date }}
+        <a class="col-md-offset-8" href="{% url 'gallery:image_detail' post.image.pk %}">Comentarios</a></h6>
+    {% else %}
+        <h3>{{ post.title }}</h3>   
+        {% include "home/post-content.html" %}
+        <h6>Data: {{ post.date }}</h6>
+    {% endif %}
+</div>

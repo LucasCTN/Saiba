@@ -1,0 +1,11 @@
+﻿{% extends 'home/base.html' %}
+
+{% block body %}
+    <section id="panel" class="container col-md-12">
+        <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'home/form_template.html'%}
+            <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+        </form>
+    </section>
+{% endblock %}

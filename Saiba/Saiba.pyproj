@@ -115,6 +115,16 @@
     <Compile Include="Saiba\settings.py" />
     <Compile Include="Saiba\urls.py" />
     <Compile Include="Saiba\wsgi.py" />
+    <Compile Include="staff\admin.py" />
+    <Compile Include="staff\apps.py" />
+    <Compile Include="staff\migrations\__init__.py" />
+    <Compile Include="staff\models.py" />
+    <Compile Include="staff\tests.py" />
+    <Compile Include="staff\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="staff\views.py" />
+    <Compile Include="staff\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="api\" />
@@ -156,6 +166,10 @@
     <Folder Include="profile\templates\" />
     <Folder Include="profile\templates\profile\" />
     <Folder Include="Saiba\" />
+    <Folder Include="staff\" />
+    <Folder Include="staff\migrations\" />
+    <Folder Include="staff\templates\" />
+    <Folder Include="staff\templates\staff\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="api\templates\index.html" />
@@ -174,9 +188,12 @@
     <Content Include="gallery\templates\gallery\index.html" />
     <Content Include="gallery\templates\gallery\upload-video.html" />
     <Content Include="gallery\templates\gallery\upload-image.html" />
+    <Content Include="home\static\home\index.css" />
     <Content Include="home\static\home\style.css" />
     <Content Include="home\templates\home\base.html" />
     <Content Include="home\templates\home\form_template.html" />
+    <Content Include="home\templates\home\post-content.html" />
+    <Content Include="home\templates\home\post.html" />
     <Content Include="home\templates\home\index.html" />
     <Content Include="home\templates\home\register.html" />
     <Content Include="home\templates\home\logout.html" />
@@ -215,6 +232,7 @@
     <Content Include="app\templates\app\layout.html" />
     <Content Include="app\templates\app\login.html" />
     <Content Include="app\templates\app\loginpartial.html" />
+    <Content Include="staff\templates\staff\index.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.mht">
