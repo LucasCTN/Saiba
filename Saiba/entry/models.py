@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Permission, User
 from django.template.defaultfilters import slugify
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
@@ -42,7 +43,7 @@ class Entry(models.Model):
 
 class Revision(models.Model):
     author = models.ForeignKey(User, default=1)
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="revisions")
     content = models.TextField(max_length=2500, blank=True)
     date = models.DateTimeField(auto_now_add=True, blank=True)
     hidden = models.BooleanField(default=False)

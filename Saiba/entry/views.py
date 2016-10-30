@@ -3,9 +3,10 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
+from django.db.models import Q, Count, Max
 #from .forms import AlbumForm, SongForm, UserForm
 from .models import Entry, Revision, Category, EditorList
+from feedback.models import Comment
 from .forms import EntryForm, RevisionForm
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
@@ -13,6 +14,7 @@ from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
 import Saiba.saibadown, textile
+from django.contrib.contenttypes.models import ContentType
 
 def index(request):
     '''if not request.user.is_authenticated():
@@ -38,6 +40,7 @@ def index(request):
     return render(request, 'entry/index.html')
 
 def detail(request, entry_slug):
+    trending_entries = get_trending_entries()
     entry = get_object_or_404(Entry, slug=entry_slug)
     last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
@@ -145,3 +148,40 @@ def editorship(request, entry_slug):
     context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
 
     return render(request, 'entry/editorship.html', context)
+
+def get_trending_entries():
+    entry_content_type = ContentType.objects.get_for_model(Entry).id
+
+    #Criteria: recent number of views, was recently updated, was recently commented
+    latest_revisions_ids    = Entry.objects.annotate(latest_revision=Max('revisions__id')).values_list('latest_revision', flat=True)
+    latest_revised_entries  = Entry.objects.filter(revisions__id__in=latest_revisions_ids).order_by('-revisions__date')
+   
+    #get entries ordered by the dates of comments that are the most recent
+    print "====#===== entries ====#====="
+    for entry in latest_revised_entries:
+        print entry.title
+
+
+'''
+    recently_revised_entries = Entry.objects.filter(hidden=False).annotate(num_revisions=Count('revisions')).order_by('-num_revisions')
+    
+    if not request.user.is_authenticated():
+        return render(request, 'music/login.html')
+    else:
+        albums = Album.objects.filter(user=request.user)
+        song_results = Song.objects.all()
+        query = request.GET.get("q")
+        if query:
+            albums = albums.filter(
+                Q(album_title__icontains=query) |
+                Q(artist__icontains=query)
+            ).distinct()
+            song_results = song_results.filter(
+                Q(song_title__icontains=query)
+            ).distinct()
+            return render(request, 'music/index.html', {
+                'albums': albums,
+                'songs': song_results,
+            })
+        else:
+    return render(request, 'music/index.html', {'albums': albums})'''
