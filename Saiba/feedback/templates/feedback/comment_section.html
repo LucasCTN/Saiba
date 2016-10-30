@@ -2,17 +2,18 @@
     <hr/>            
     <h2>Comentários</h2>
 
-    <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
+    <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
 
-    <form method="post" class="form-horizontal" role="form" action="{% url 'api:api_comments' %}" target="dummyframe">
+    <!--<form id="comment-form" method="post" class="form-horizontal" role="form" action="{% url 'api:api_comments' %}" target="dummyframe">-->
+    <form id="comment-form" method="post" class="form-horizontal" role="form" target="dummyframe">
         {% csrf_token %}
         <div class="form-group">
             <label for="content" class="control-label">Comentando como:</label>
-            <textarea name="content" class="form-control" id="id_content" rows="3"></textarea>
+            <textarea name="content" class="form-control" id="post_content" rows="3"></textarea>
         </div>
-        <input type="hidden" name="type" value="entry" />
+        <input type="hidden" name="type" value="{{type}}" />
         <input type="hidden" name="slug" value="{{entry.slug}}" />
-        <button type="submit" class="btn btn-primary col-md-1" name="post-comment">Enviar</button>
+        <button type="submit" class="btn btn-primary col-md-1" id="post-comment">Enviar</button>
     </form>
 
     <br/><br/><br/>
@@ -21,135 +22,20 @@
     </div>
 
     <script>
+        var sendCommentapiEndpoint  = "{% url 'api:api_comments' %}";
+        var getCommentapiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=3&page=1&slug={{entry.slug}}&type={{type}}";
 
-        function comment_page(json_comments){
-            for (i = 0; i < json_comments.results.length; i++) {
-                var comment = create_comment(json_comments.results[i].id, json_comments.results[i].author,
-                                            json_comments.results[i].update_date, json_comments.results[i].content);
-
-                
-                $("#comment-section").append(comment);
-
-                for (j = 0; j < json_comments.results[i].replies.length; j++) {
-                    var reply = create_reply(json_comments.results[i].replies[j].id, 
-                                            json_comments.results[i].replies[j].author, 
-                                            json_comments.results[i].replies[j].update_date,
-                                            json_comments.results[i].replies[j].content);   
-                    
-                    $('#comment-' + (i + 1) + ' #replies').append(reply.cloneNode(true));
-                }
-            }
-        }
-
-        function create_comment(id, author, date, content){
-            var div_comment     = document.createElement('div');
-            var span_author     = document.createElement('span');
-            var span_date       = document.createElement('span');
-            var span_content    = document.createElement('span');
-            var div_replies     = document.createElement('div');
-
-            div_comment.className   += "col-md-12";
-            span_author.className   += "col-md-12";
-            span_date.className     += "col-md-12";
-            span_content.className  += "col-md-12";
-            div_replies.className   += "col-md-12";
-
-            div_comment.id          = "comment-" + id;
-            div_replies.id          = "replies";
-
-            span_author.innerHTML   = author
-            span_date.innerHTML     = date
-            span_content.innerHTML  = content
-
-            div_comment.appendChild(span_author.cloneNode(true));
-            div_comment.appendChild(span_date.cloneNode(true));
-            div_comment.appendChild(span_content.cloneNode(true));
-            div_comment.appendChild(div_replies.cloneNode(true));
-
-            return div_comment;
-        }
-
-        function create_reply(id, author, date, content){
-            var div_reply       = document.createElement('div');
-            var span_author     = document.createElement('span');
-            var span_date       = document.createElement('span');
-            var span_content    = document.createElement('span');
-
-            div_reply.className     += "col-md-12";
-            span_author.className   += "col-md-12";
-            span_date.className     += "col-md-12";
-            span_content.className  += "col-md-12";
-
-            div_reply.id          = "reply-" + id;
-
-            span_author.innerHTML   = author;
-            span_date.innerHTML     = date;
-            span_content.innerHTML  = content;
-
-            div_reply.appendChild(span_author.cloneNode(true));
-            div_reply.appendChild(span_date.cloneNode(true));
-            div_reply.appendChild(span_content.cloneNode(true));
-            
-            return div_reply;
-        }
-
-        var xmlhttp;
-        if (window.XMLHttpRequest) {
-            xmlhttp = new XMLHttpRequest();
-        }
-
-        xmlhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                json_comments = JSON.parse(this.responseText);
-                comment_page(json_comments);
-            }
-        };
-
-        var api_url = "{% url 'api:api_comment_page' %}?reply_limit=3&page=1&slug={{entry.slug}}&type=entry";
-        xmlhttp.open("GET", api_url, true);
-        xmlhttp.send();        
-
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });    
-
-        // using jQuery
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        $( "#post-comment" ).click(function() {
-          alert( "Handler for .click() called." );
+        $(document).ready(function () {
+            updateCommentSection("#comment-section", getCommentapiEndpoint);
         });
 
-        function postComment(entry_slug, content){
-            var csrftoken = getCookie('csrftoken');
-            $.post('{% url 'api:api_comments' %}', { slug: entry_slug, type : "entry", content:content}, 
-                function(returnedData){
-                     console.log(returnedData);
-            });
-        }
-        
+        $('#post-comment').click(function(){
+
+            var type    = $("[name='type']").val();
+            var slug    = $("[name='slug']").val();
+            var content = $("[name='content']").val();
+            
+            sendComment(type, slug, content, sendCommentapiEndpoint, getCommentapiEndpoint);
+        });
     </script>
 </section>

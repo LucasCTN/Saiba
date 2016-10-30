@@ -52,7 +52,8 @@ def detail(request, entry_slug):
             'first_revision':first_revision, 
             'images':last_images,
             'videos':last_videos,
-            'editor_list':editor_list}
+            'editor_list':editor_list,
+            'type':'entry'}
 
     return render(request, 'entry/detail.html', args)
 
