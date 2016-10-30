@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^v1/historicos/(?P<slug>[\w-]+)/$', views.HistoricDetail.as_view(), name='api_historic'),
     url(r'^v1/comment/$', views.CommentDetail.as_view(), name='api_comments'),
     url(r'^v1/comment_page/$', views.CommentPageDetail.as_view(), name='api_comment_page'),
+    url(r'^v1/reply/$', views.ReplyDetail.as_view(), name='api_replies'),
     url(r'^v1/vote/$', views.VoteDetail.as_view(), name='api_vote'),
 ]
