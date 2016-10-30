@@ -190,6 +190,7 @@
     <Content Include="gallery\templates\gallery\upload-image.html" />
     <Content Include="home\static\home\index.css" />
     <Content Include="home\static\home\style.css" />
+    <Content Include="home\static\home\scripts.js" />
     <Content Include="home\templates\home\base.html" />
     <Content Include="home\templates\home\form_template.html" />
     <Content Include="home\templates\home\post-content.html" />

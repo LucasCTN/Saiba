@@ -27,7 +27,6 @@ class Comment(models.Model):
     content             = models.CharField(max_length=250)
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     update_date         = models.DateTimeField(auto_now=True, blank=True)
-    #parent_comment      = models.ForeignKey('self', default=None, blank=True, null=True, related_name="replies")
     hidden              = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -40,6 +39,7 @@ class Reply(models.Model):
     creation_date   = models.DateTimeField(auto_now_add=True, blank=True)
     update_date     = models.DateTimeField(auto_now=True, blank=True)
     comment         = models.ForeignKey(Comment, default=None, blank=True, null=True, related_name="replies")
+    response_to     = models.ForeignKey('self', default=None, blank=True, null=True, related_name="responses")
     hidden          = models.BooleanField(default=False)
 
     def __unicode__(self):

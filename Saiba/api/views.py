@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment, Vote
-from feedback.serializers import CommentSerializer, VoteSerializer
+from feedback.models import Comment, Vote, Reply
+from feedback.serializers import CommentSerializer, VoteSerializer, ReplySerializer
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
@@ -87,6 +87,42 @@ class CommentDetail(APIView):
             vote = get_object_or_404(Vote, pk=data['id'])
 
         serializer = VoteSerializer(vote, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReplyDetail(APIView):
+    def get(self, request):
+        reply_id      = request.GET.get('id')
+
+        if reply_id is not None:
+            reply = get_object_or_404(Reply, pk=comment_id)
+            serializer = ReplySerializer(reply, many=False)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        data = request.data.copy()
+        serializer = ReplySerializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self, request):
+        """Parameters: id and content"""
+        data = request.data.copy()
+
+        if data['id'] is not None:
+            reply = get_object_or_404(Reply, pk=data['id'])
+
+        serializer = ReplySerializer(vote, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()

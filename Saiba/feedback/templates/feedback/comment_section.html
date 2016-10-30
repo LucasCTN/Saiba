@@ -22,11 +22,12 @@
     </div>
 
     <script>
-        var sendCommentapiEndpoint  = "{% url 'api:api_comments' %}";
-        var getCommentapiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=3&page=1&slug={{entry.slug}}&type={{type}}";
+        var sendCommentApiEndpoint  = "{% url 'api:api_comments' %}";
+        var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=3&page=1&slug={{entry.slug}}&type={{type}}";
+        var sendReplyApiEndpoint  = "{% url 'api:api_replies' %}";
 
         $(document).ready(function () {
-            updateCommentSection("#comment-section", getCommentapiEndpoint);
+            updateCommentSection("#comment-section", getCommentApiEndpoint);
         });
 
         $('#post-comment').click(function(){
@@ -35,7 +36,7 @@
             var slug    = $("[name='slug']").val();
             var content = $("[name='content']").val();
             
-            sendComment(type, slug, content, sendCommentapiEndpoint, getCommentapiEndpoint);
+            sendComment(type, slug, content, sendCommentApiEndpoint, getCommentApiEndpoint);
         });
     </script>
 </section>
