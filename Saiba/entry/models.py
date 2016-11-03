@@ -17,6 +17,9 @@ class Category(models.Model):
     def __unicode__(self):
         return self.label
 
+    class Meta:
+        verbose_name_plural = "comentaries"
+
 class Entry(models.Model):
     author                  = models.ForeignKey(User, default=1)
     title                   = models.CharField(max_length=250)

@@ -44,8 +44,8 @@ def detail(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)
     last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
-    last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
-    last_videos = Video.objects.filter(hidden=False).order_by('-id')[:10]
+    last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
+    last_videos = Video.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
     
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
     editor_list = EditorList.objects.filter(entry=entry)

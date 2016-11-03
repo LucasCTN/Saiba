@@ -203,18 +203,19 @@ class CommentPageDetail(APIView):
         reply_limit     = request.GET.get('reply_limit')
         comments = []
 
+
         if comment_target_type is not None:
-            if comment_target_type == "entry" and comment_target_slug is not None:
+            if comment_target_type == "entry" and comment_target_slug:
                 entry_type_id   = ContentType.objects.get_for_model(Entry).id
                 entry           = get_object_or_404(Entry, slug=comment_target_slug)
                 comments        = Comment.objects.filter(target_id=entry.id, target_content_type=entry_type_id)
-            elif comment_target_type == "image" and comment_target_id is not None:
+            elif comment_target_type == "image" and comment_target_id:
                 image_type_id   = ContentType.objects.get_for_model(Image).id
-                image           = get_object_or_404(Image, slug=comment_target_slug)
+                image           = get_object_or_404(Image, id=comment_target_id)
                 comments        = Comment.objects.filter(target_id=image.id, target_content_type=image_type_id)
-            elif comment_target_type == "video" and comment_target_id is not None:                
+            elif comment_target_type == "video" and comment_target_id:                
                 video_type_id   = ContentType.objects.get_for_model(Video).id
-                video           = get_object_or_404(Image, slug=comment_target_slug)
+                video           = get_object_or_404(Image, id=comment_target_id)
                 comments        = Comment.objects.filter(target_id=video.id, target_content_type=video_type_id)
 
         paginator = PageNumberPagination()

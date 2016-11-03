@@ -1,7 +1,7 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
@@ -12,21 +12,13 @@ def index(request):
     return render(request, 'entry/index.html')
 
 def image_detail(request, image_id):
-    image = get_object_or_404(Image, pk=image_id)
-    
-    comments = dict()
+    image = get_object_or_404(Image, pk=image_id)   
 
-    for comment in raw_parent_comments:
-        comments[comment] = list()
+    args = {'image' : image,
+            'type'  : 'image',
+            'id'    : image.pk}
 
-    for reply in raw_reply_comments:
-        comments[reply.parent_comment].append(reply)
-
-    args = {'image': image,
-            'comments':comments}
-
-
-    return render(request, 'gallery/image.html', {'image': image})
+    return render(request, 'gallery/image.html', args)
 
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
