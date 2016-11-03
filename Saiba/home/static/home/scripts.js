@@ -1,4 +1,4 @@
-﻿function sendComment(formType, formSlug, formContent, sendCommentApiEndpoint, getCommentApiEndpoint) {
+﻿function sendComment(formId, formType, formSlug, formContent, sendCommentApiEndpoint, getCommentApiEndpoint) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -11,7 +11,7 @@
     $.ajax({
         type: "POST",
         url: sendCommentApiEndpoint,
-        data: { type: formType, slug: formSlug, content: formContent },
+        data: { type: formType, slug: formSlug, content: formContent, id: formId },
         success: function (data) {
             updateCommentSection("#comment-section", getCommentApiEndpoint);
         }

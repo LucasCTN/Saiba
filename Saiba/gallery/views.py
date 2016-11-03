@@ -12,17 +12,20 @@ def index(request):
     return render(request, 'entry/index.html')
 
 def image_detail(request, image_id):
-    image = get_object_or_404(Image, pk=image_id)   
+    image = get_object_or_404(Image, pk=image_id)
+    context = { 'image' : image,
+                'type'  : 'image',
+                'id'    : image.pk}
 
-    args = {'image' : image,
-            'type'  : 'image',
-            'id'    : image.pk}
-
-    return render(request, 'gallery/image.html', args)
+    return render(request, 'gallery/image.html', context)
 
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
-    return render(request, 'gallery/video.html', {'video': video})
+    context = { 'video' : video,
+                'type'  : 'video',
+                'id'    : video.pk}
+
+    return render(request, 'gallery/video.html', context)
 
 def historic(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)

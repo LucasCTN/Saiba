@@ -50,13 +50,13 @@ def detail(request, entry_slug):
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
     editor_list = EditorList.objects.filter(entry=entry)
 
-    args = {'entry': entry, 
-            'last_revision':last_revision,                                                   
-            'first_revision':first_revision, 
-            'images':last_images,
-            'videos':last_videos,
-            'editor_list':editor_list,
-            'type':'entry'}
+    args = {'entry'             : entry, 
+            'last_revision'     : last_revision,                                                   
+            'first_revision'    : first_revision, 
+            'images'            : last_images,
+            'videos'            : last_videos,
+            'editor_list'       : editor_list,
+            'type'              : 'entry'}
 
     return render(request, 'entry/detail.html', args)
 

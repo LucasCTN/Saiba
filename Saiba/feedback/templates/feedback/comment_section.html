@@ -13,6 +13,7 @@
         </div>
         <input type="hidden" name="type" value="{{type}}" />
         <input type="hidden" name="slug" value="{{entry.slug}}" />
+        <input type="hidden" name="id" value="{{id}}" />
         <button type="submit" class="btn btn-primary col-md-1" id="post-comment">Enviar</button>
     </form>
 
@@ -23,7 +24,7 @@
 
     <script>
         var sendCommentApiEndpoint  = "{% url 'api:api_comments' %}";
-        var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=3&page=1&slug={{entry.slug}}&type={{type}}&id={{id}}";
+        var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=5&page=1&slug={{entry.slug}}&type={{type}}&id={{id}}";
         var sendReplyApiEndpoint  = "{% url 'api:api_replies' %}";
 
         $(document).ready(function () {
@@ -35,8 +36,9 @@
             var type    = $("[name='type']").val();
             var slug    = $("[name='slug']").val();
             var content = $("[name='content']").val();
+            var id      = $("[name='id']").val();
             
-            sendComment(type, slug, content, sendCommentApiEndpoint, getCommentApiEndpoint);
+            sendComment(id, type, slug, content, sendCommentApiEndpoint, getCommentApiEndpoint);
         });
     </script>
 </section>
