@@ -29,10 +29,10 @@ class CommentSerializer(serializers.ModelSerializer):
         if 'reply_limit' in self.context:
             limit = int(self.context['reply_limit'])
 
-            if limit == 0:
-                query = Reply.objects.all()
-            else:
-                query = Reply.objects.all()[:limit]
+            query = Reply.objects.filter(comment=obj).order_by('id')
+
+            if limit != 0:
+                query = query[:limit]
 
             serializer = ReplySerializer(query, many=True)
             return serializer.data

@@ -14,6 +14,12 @@
         data: { type: formType, slug: formSlug, content: formContent, id: formId },
         success: function (data) {
             updateCommentSection("#comment-section", getCommentApiEndpoint);
+
+            $(document).ajaxStop(function () {
+                $('html, body').animate({
+                    scrollTop: $("#comment-" + data.id).offset().top
+                }, 2000);
+            });            
         }
     })
 }
@@ -64,16 +70,17 @@ function createCommentSection(commentSectionId, json_comments) {
         var comment = createComment(json_comments.results[i].id, json_comments.results[i].author,
                                     json_comments.results[i].update_date, json_comments.results[i].content);
 
-
+        var commentId = json_comments.results[i].id;
         $(commentSectionId).append(comment);
 
         for (j = 0; j < json_comments.results[i].replies.length; j++) {
+
             var reply = createReply(json_comments.results[i].replies[j].id,
                                     json_comments.results[i].replies[j].author,
                                     json_comments.results[i].replies[j].update_date,
                                     json_comments.results[i].replies[j].content);
-
-            $('#comment-' + (i + 1) + ' #replies').append(reply);
+            
+            $('#comment-' + commentId + ' #replies').append(reply);
         };
     }
 }
