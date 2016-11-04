@@ -16,7 +16,7 @@ class Vote(models.Model):
     direction           = models.IntegerField(default=0)
 
     def __unicode__(self):
-        text = '#' + str(self.id) + ' - ' + str(self.author.username)
+        text = "#{} - {}".format(self.id, self.author.username)
         return text
 
 class Comment(models.Model):
@@ -30,7 +30,7 @@ class Comment(models.Model):
     hidden              = models.BooleanField(default=False)
 
     def __unicode__(self):
-        text = '#' + str(self.id) + ' - ' + str(self.author.username)
+        text = "#{} - {}".format(self.id, self.author.username)
         return text
 
 class Reply(models.Model):    
@@ -43,7 +43,7 @@ class Reply(models.Model):
     hidden          = models.BooleanField(default=False)
 
     def __unicode__(self):
-        text = '#' + str(self.id) + ' - ' + str(self.author.username)
+        text = "#{} - {}".format(self.id, self.author.username)
         return text
 
     class Meta:

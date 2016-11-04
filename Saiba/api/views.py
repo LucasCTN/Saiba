@@ -98,8 +98,8 @@ class ReplyDetail(APIView):
     def get(self, request):
         reply_id      = request.GET.get('id')
 
-        if reply_id is not None:
-            reply = get_object_or_404(Reply, pk=comment_id)
+        if reply_id:
+            reply = get_object_or_404(Reply, pk=reply_id)
             serializer = ReplySerializer(reply, many=False)
             return Response(serializer.data)
         else:

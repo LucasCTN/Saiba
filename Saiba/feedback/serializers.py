@@ -20,7 +20,7 @@ class ReplySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reply
-        field = ('author', 'content', 'creation_date', 'update_date', 'comment')
+        field = ('author', 'content', 'creation_date', 'update_date', 'comment', 'response_to')
 
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
