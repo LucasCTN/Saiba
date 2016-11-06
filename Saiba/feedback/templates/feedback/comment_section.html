@@ -25,8 +25,9 @@
     <script>
         var sendCommentApiEndpoint  = "{% url 'api:api_comments' %}";
         var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=5&page=1&slug={{entry.slug}}&type={{type}}&id={{id}}";
-        var sendReplyApiEndpoint  = "{% url 'api:api_replies' %}";
-
+        var sendReplyApiEndpoint    = "{% url 'api:api_replies' %}";
+        var voteApiEndpoint         = "{% url 'api:api_vote' %}";
+        
         $(document).ready(function () {
             updateCommentSection("#comment-section", getCommentApiEndpoint);
         });

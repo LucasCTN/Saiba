@@ -1,4 +1,5 @@
 from rest_framework import pagination, serializers
+from django.contrib.contenttypes.models import ContentType
 from .models import Comment, Vote, Reply
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -13,6 +14,8 @@ class VoteSerializer(serializers.ModelSerializer):
         field = ('author', 'date', 'direction', 'creation_date', 'update_date')
 
 class ReplySerializer(serializers.ModelSerializer):
+    points = serializers.IntegerField(required=False)
+
     def to_representation(self, obj):
         representation = super(ReplySerializer, self).to_representation(obj)
         representation.pop('hidden')
@@ -20,10 +23,11 @@ class ReplySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reply
-        field = ('author', 'content', 'creation_date', 'update_date', 'comment', 'response_to')
+        field = ('author', 'content', 'creation_date', 'update_date', 'comment', 'response_to', 'points')
 
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
+    points  = serializers.IntegerField(required=False)
 
     def get_replies(self, obj):
         if 'reply_limit' in self.context:
@@ -49,4 +53,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         #field = '__all__'
-        field = ('author', 'content', 'creation_date', 'update_date', 'parent_comment', 'replies')
+        field = ('author', 'content', 'creation_date', 'update_date', 'parent_comment', 'replies', 'points')
+
+class PointsSerializer(serializers.Serializer):
+    points              = serializers.IntegerField()
+    target_id           = serializers.IntegerField(required=False)
+    target_content_type = serializers.IntegerField(required=False)

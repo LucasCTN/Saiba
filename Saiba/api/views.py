@@ -1,4 +1,4 @@
-#from django.contrib.contenttypes.models import ContentType
+from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from rest_framework import generics
@@ -8,7 +8,7 @@ from rest_framework import status
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
 from feedback.models import Comment, Vote, Reply
-from feedback.serializers import CommentSerializer, VoteSerializer, ReplySerializer
+from feedback.serializers import CommentSerializer, VoteSerializer, ReplySerializer, PointsSerializer
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
@@ -57,6 +57,7 @@ class CommentDetail(APIView):
 
     def post(self, request):
         data = request.data.copy()
+        data['points'] = 0
 
         if data['type'] is not None:
             comment_target_type = data['type']
@@ -107,6 +108,8 @@ class ReplyDetail(APIView):
 
     def post(self, request):
         data = request.data.copy()
+        data['points'] = 0
+
         serializer = ReplySerializer(data=data)
         
         if serializer.is_valid():
@@ -136,19 +139,19 @@ class VoteDetail(APIView):
         vote_target_type = request.GET.get('type')
 
         if vote_target_type is not None:
-            if vote_target_type == "comment" and vote_target_id is not None:
+            if vote_target_type == "comment" and vote_target_id:
                 comment_type_id = ContentType.objects.get_for_model(Comment).id
                 comment         = get_object_or_404(Comment, pk=vote_target_id)
                 votes           = Vote.objects.filter(target_id=comment.id, target_content_type=comment_type_id)
                 serializer      = VoteSerializer(votes, many=True)
                 return Response(serializer.data)
-            elif vote_target_type == "image" and vote_target_id is not None:
+            elif vote_target_type == "image" and vote_target_id:
                 image_type_id   = ContentType.objects.get_for_model(Image).id
                 image           = get_object_or_404(Image, pk=vote_target_id)
                 votes           = Vote.objects.filter(target_id=image.id, target_content_type=image_type_id)
                 serializer      = VoteSerializer(votes, many=True)
                 return Response(serializer.data)
-            elif vote_target_type == "video" and vote_target_id is not None:                
+            elif vote_target_type == "video" and vote_target_id:                
                 video_type_id   = ContentType.objects.get_for_model(Video).id
                 video           = get_object_or_404(Image, pk=vote_target_id)
                 votes           = Vote.objects.filter(target_id=video.id, target_content_type=video_type_id)
@@ -160,10 +163,13 @@ class VoteDetail(APIView):
     def post(self, request):
         data = request.data.copy()
 
-        if data['type'] is not None and data['id'] is not None and Saiba.utils.is_valid_direction(data['direction']):
-            vote_target_type = data['type']
-            data["target_id"] = data['id']
+        id = request.POST.get('id', False)
+        type = request.POST.get('type', False)
+        direction = request.POST.get('direction', False)
 
+        if type and id and Saiba.utils.is_valid_direction(direction):
+            vote_target_type = type
+            data["target_id"] = id
 
             if vote_target_type == "comment":
                 data["target_content_type"] = ContentType.objects.get_for_model(Comment).id
@@ -200,7 +206,7 @@ class CommentPageDetail(APIView):
         comment_target_id   = request.GET.get('id')
         comment_target_slug = request.GET.get('slug')
         comment_target_type = request.GET.get('type')
-        reply_limit     = request.GET.get('reply_limit')
+        reply_limit         = request.GET.get('reply_limit')
         comments = []
 
         target_type_id = 0
@@ -223,9 +229,40 @@ class CommentPageDetail(APIView):
             comments = Comment.objects.filter(target_id=target_id, 
                                               target_content_type=target_type_id).order_by('-creation_date')
 
+        for comment in comments:
+            comment_type_id = ContentType.objects.get_for_model(Comment).id
+            comment.points = (Vote.objects.filter(target_id=comment.pk, 
+                                              target_content_type=comment_type_id).aggregate(Sum('direction')))['direction__sum']
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
 
         serializer = CommentSerializer(result_page, many=True, context={"reply_limit":reply_limit})
         return paginator.get_paginated_response(serializer.data)        
         #return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class PointsDetail(APIView):
+    def get(self, request):
+        vote_target_id   = request.GET.get('id')
+        vote_target_slug = request.GET.get('slug')
+        vote_target_type = request.GET.get('type')
+
+        target_type_id = None
+        target_id      = None
+
+        type_content_map = {'comment': Comment, 'reply': Reply }
+
+        if vote_target_type is not None:
+            target_type = type_content_map[vote_target_type]
+
+            target         = get_object_or_404(target_type, id=vote_target_id)
+            target_type_id = ContentType.objects.get_for_model(target_type).id
+            target_id       = target.id
+
+        points = {}
+        points['points'] = (Vote.objects.filter(target_id=target_id, target_content_type=target_type_id)
+                            .aggregate(Sum('direction')))['direction__sum']
+
+        serializer = PointsSerializer(points)        
+        return Response(serializer.data)
+        
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)

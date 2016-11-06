@@ -44,6 +44,46 @@ function sendReply(parentCommentId, parentReplyId, formContent, sendReplyApiEndp
     })
 }
 
+function getVote(contentId, type) {
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                var csrftoken = getCookie("csrftoken");
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: voteApiEndpoint,
+        data: 'type=' + type + '&id=' + contentId,
+        success: function (data) {
+            createCommentSection(commentSectionId, data);
+        }
+    })
+}
+
+function sendVote(contentId, type, direction) {
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                var csrftoken = getCookie("csrftoken");
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: voteApiEndpoint,
+        data: { id: contentId, type: type, direction: direction },
+        success: function (data) {
+            updateCommentSection("#comment-section", getCommentApiEndpoint);
+        }
+    })
+}
+
 function updateCommentSection(commentSectionId, getCommentApiEndpoint) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
@@ -67,8 +107,9 @@ function updateCommentSection(commentSectionId, getCommentApiEndpoint) {
 function createCommentSection(commentSectionId, json_comments) {
     $(commentSectionId).empty();
     for (i = 0; i < json_comments.results.length; i++) {
-        var comment = createComment(json_comments.results[i].id, json_comments.results[i].author,
-                                    json_comments.results[i].update_date, json_comments.results[i].content);
+        var comment = createComment(json_comments.results[i].id,            json_comments.results[i].author,
+                                    json_comments.results[i].update_date,   json_comments.results[i].content,
+                                    json_comments.results[i].points);
 
         var commentId = json_comments.results[i].id;
         $(commentSectionId).append(comment);
@@ -80,20 +121,21 @@ function createCommentSection(commentSectionId, json_comments) {
                                     json_comments.results[i].replies[j].response_to,
                                     json_comments.results[i].replies[j].author,
                                     json_comments.results[i].replies[j].update_date,
-                                    json_comments.results[i].replies[j].content
-                                    );
+                                    json_comments.results[i].replies[j].content);
             
             $('#comment-' + commentId + ' #replies').append(reply);
         };
     }
 }
 
-function createComment(id, author, date, content) {
+function createComment(id, author, date, content, points) {
+    points = points || 0;
     var div_comment = $('<div />').addClass('col-md-12').attr('id', 'comment-' + id).attr("data-id", id);
     var span_author = $('<span />').addClass('col-md-12').html(author);
     var span_date = $('<span />').addClass('col-md-12').html(date);
     var span_content = $('<span />').addClass('col-md-12').html(content);
 
+    var span_points = $('<span />').addClass('').html(points).attr('id', 'points-' + id);
     var button_upvote = $('<button />').addClass('btn btn-default btn-xs').html("Cimavoto");
     var button_downvote = $('<button />').addClass('btn btn-default btn-xs').html("Baixovoto");
 
@@ -113,17 +155,19 @@ function createComment(id, author, date, content) {
         sendReply(id, null, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
     });
 
-    div_comment.append(span_author).append(span_date).append(span_content).append(button_upvote).append(button_downvote)
+    div_comment.append(span_author).append(span_date).append(span_content).append(span_points).append(button_upvote).append(button_downvote)
                 .append(button_reply).append(textarea_reply).append(button_send).append(div_replies);
     return div_comment;
 }
 
-function createReply(id, parentCommentId, parentReplyId, author, date, content) {
+function createReply(id, parentCommentId, parentReplyId, author, date, content, points) {
+    points = points || 0;
     var div_reply = $('<div />').addClass('col-md-12').attr('id', 'reply-' + id).attr("data-id", id);
     var span_author = $('<span />').addClass('col-md-12').html(author);
     var span_date = $('<span />').addClass('col-md-12').html(date);
     var span_content = $('<span />').addClass('col-md-12').html(content);
 
+    var span_points = $('<span />').addClass('').html(points).attr('id', 'points-' + id);
     var button_upvote = $('<button />').addClass('btn btn-default btn-xs').html("Cimavoto");
     var button_downvote = $('<button />').addClass('btn btn-default btn-xs').html("Baixovoto");
 
@@ -141,8 +185,8 @@ function createReply(id, parentCommentId, parentReplyId, author, date, content) 
         sendReply(parentCommentId, id, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
     });
 
-    div_reply.append(span_author).append(span_date).append(span_content).append(button_upvote).append(button_downvote)
-                .append(button_reply).append(textarea_reply).append(button_send);
+    div_reply.append(span_author).append(span_date).append(span_content).append(span_points).append(button_upvote)
+                .append(button_downvote).append(button_reply).append(textarea_reply).append(button_send);
 
     return div_reply;
 }
