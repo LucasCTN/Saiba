@@ -55,7 +55,7 @@
                         <li><a href="{% url 'home:login' %}">Entrar</a></li>
                         <li><a href="#">Registrar-se</a></li>
                         {% else %}
-                        <li>Bem vindo(a), <a href="{% url 'profile:detail' user.profile.slug %}">{{ user.username }}</a></li>
+                        <li><a href="{% url 'profile:detail' user.profile.slug %}">Bem vindo(a), {{ user.username }}</a></li>
                         <li><a href="{% url 'home:logout' %}">Sair</a></li>
                         {% endif %}
                     </ul>
