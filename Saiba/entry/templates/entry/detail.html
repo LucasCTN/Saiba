@@ -46,15 +46,28 @@
                 <dd class="infobox-content"><small>{{ entry.year }}</small></dd>
                 <dt class="infobox-label">Origem</dt>
                 <dd class="infobox-content"><small>{{ entry.origin }}</small></dd>
-                <hr/> Marcações
+                <hr/>
                 <dd></dd>
-                <dt class="infobox-label">Referências Adicionais</dt>
-                <dd class="infobox-content">{{ entry.additional_references }}</dd>
+                <dt class="infobox-label">Marcações</dt>
+                <dd class="infobox-content">
+                    {% for tag in entry.tags.all %}
+                        {{ tag.label }}, 
+                    {% endfor %}
+                </dd>
             </dl>
         </div>
         <div id="conteudo">
             {{ last_revision.content|safe }}
         </div>
+    </section>
+
+    <section id="relacionados" class="container media col-md-12"><hr/>
+        <h2>Entradas relacionadas <small>({{ related_entries|length }})</small></h2>
+        {% for related_entry in related_entries %}
+            <div class='inline-block col-md-4'>
+                <a href="{% url 'entry:detail' related_entry.id %}">{{ related_entry.title }}</a>
+            </div>
+        {% endfor %}
     </section>
 
     <section id="galeria-video" class="container media col-md-12"><hr/>

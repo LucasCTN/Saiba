@@ -47,6 +47,9 @@ def detail(request, entry_slug):
     last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
     
+    related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
+                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
+
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
     editor_list = EditorList.objects.filter(entry=entry)
 
@@ -55,6 +58,7 @@ def detail(request, entry_slug):
             'first_revision'    : first_revision, 
             'images'            : last_images,
             'videos'            : last_videos,
+            'related_entries'   : related_entries,
             'editor_list'       : editor_list,
             'type'              : 'entry'}
 
