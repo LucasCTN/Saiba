@@ -3,14 +3,24 @@
 {% block body %}  
     <section id="conteudo" class="container col-md-9">
         <img id="imagem" class='media-object img-thumbnail' src='{{ image.file.url }}'>
-    </section>
+    </section>   
 
     <section id="informacao" class="container media col-md-12">
         <h3>
             {{ image.title }} - <a href="{% url 'entry:detail' image.entry.slug %}">{{image.entry.title}}</a><br/>
             <small>Uploaded by {{ image.author.username }}</small>
         </h3>
-        <span>Source: {{ image.source }}</span>
+        <p>Source: {{ image.source }}</p>
+        <p>Tags: {% for tag in image.tags.all %} {{ tag.label }}, {% endfor %}</p>
+    </section>
+
+    <section id="relacionados" class="container media col-md-12"><hr/>
+        <h2>Imagens relacionadas <small>({{ related_images|length }})</small></h2>
+        {% for related_image in related_images %}
+            <div class='inline-block col-md-4'>
+                <a href="{% url 'gallery:image_detail' related_image.id %}">{{ related_image.title }}</a>
+            </div>
+        {% endfor %}
     </section>
 
     {% include "feedback/comment_section.html" %}

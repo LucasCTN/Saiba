@@ -21,6 +21,7 @@ class Image(models.Model):
     file        = models.ImageField(blank=True, upload_to='icon/')
     description = models.CharField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
+    tags        = models.ManyToManyField('home.Tag', blank=True)
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
@@ -35,6 +36,7 @@ class Video(models.Model):
     link        = models.CharField(max_length=250)
     description = models.CharField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
+    tags        = models.ManyToManyField('home.Tag', blank=True)
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title

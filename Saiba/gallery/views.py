@@ -1,8 +1,8 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
+from django.db.models import Q, Count, Max
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from .models import Image, Video
@@ -13,17 +13,25 @@ def index(request):
 
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
-    context = { 'image' : image,
-                'type'  : 'image',
-                'id'    : image.pk}
+    related_images = Image.objects.filter(hidden=False, tags__in=image.tags.all()).\
+                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
+
+    context = { 'image'         : image,
+                'type'          : 'image',
+                'id'            : image.pk,
+                'related_images': related_images}    
 
     return render(request, 'gallery/image.html', context)
 
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
-    context = { 'video' : video,
-                'type'  : 'video',
-                'id'    : video.pk}
+    related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\
+                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
+
+    context = { 'video'         : video,
+                'type'          : 'video',
+                'id'            : video.pk,
+                'related_videos': related_videos}
 
     return render(request, 'gallery/video.html', context)
 

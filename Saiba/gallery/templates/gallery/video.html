@@ -10,7 +10,17 @@
             {{ video.title }} - <a href="{% url 'entry:detail' video.entry.slug %}">{{video.entry.title}}</a><br/>
             <small>Uploaded by {{ video.author.username }}</small>
         </h3>
-        <span>Source: {{ video.source }}</span>
+        <p>Source: {{ video.source }}</p>
+        <p>Tags: {% for tag in image.tags.all %} {{ tag.label }}, {% endfor %}</p>
+    </section>
+
+    <section id="relacionados" class="container media col-md-12"><hr/>
+        <h2>Videos relacionadas <small>({{ related_videos|length }})</small></h2>
+        {% for related_video in related_videos %}
+            <div class='inline-block col-md-4'>
+                <a href="{% url 'gallery:video_detail' related_video.id %}">{{ related_videos.title }}</a>
+            </div>
+        {% endfor %}
     </section>
 
     <section id="comentarios" class="container col-md-12">

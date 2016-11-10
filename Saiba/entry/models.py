@@ -34,6 +34,7 @@ class Entry(models.Model):
     images_locked           = models.BooleanField(default=False)
     videos_locked           = models.BooleanField(default=False)
     comments_locked         = models.BooleanField(default=False)
+    tags                    = models.ManyToManyField('home.Tag', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
