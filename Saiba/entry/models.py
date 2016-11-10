@@ -2,7 +2,6 @@ from django.contrib.auth.models import Permission, User
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
-#from home.models import Tag
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
@@ -35,7 +34,7 @@ class Entry(models.Model):
     images_locked           = models.BooleanField(default=False)
     videos_locked           = models.BooleanField(default=False)
     comments_locked         = models.BooleanField(default=False)
-    tags                    = models.ManyToManyField('home.Tag')
+    tags                    = models.ManyToManyField('home.Tag', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
