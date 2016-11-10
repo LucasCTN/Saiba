@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import Permission, User
 from entry.models import Entry
 from gallery.models import Image, Video
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 class Label(models.Model):
     name        = models.CharField(max_length=2500, blank=True)
@@ -29,3 +31,10 @@ class Post(models.Model):
             return "[Fixed] " + self.title
         else:
             return self.title
+
+class Tag(models.Model):
+    label   = models.CharField(max_length=2500, blank=True)
+    hidden  = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.label
