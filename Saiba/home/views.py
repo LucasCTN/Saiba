@@ -3,6 +3,7 @@ from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
 from .models import Post, Label
 from .forms import PostForm
+from profile.forms import LoginForm
 from entry.models import Entry
 from gallery.models import Image, Video
 from profile.models import Profile
@@ -61,22 +62,29 @@ def modify_form(form):
     form.fields['content'].widget.attrs['rows'] = '4'
 
 def user_login(request):
-    print "Funcionou"
-    return redirect('home:index')
-
-def user_login(request):
     username = password = ''
-    if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
+    profile_form = LoginForm(request.POST or None)
+    login_error = False
+
+    if profile_form.is_valid():
+        print "teste"
+        if request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
                 login(request, user)
                 return redirect('home:index')
+            else:
+                login_error = True
 
-    return render(request, 'home/login.html')
+    args = {'form': profile_form,
+            'error': login_error}
+
+    return render(request, 'home/login.html', args)
 
 def user_logout(request):
     if request.user.is_authenticated():
@@ -88,4 +96,4 @@ def user_register(request):
     if request.user.is_authenticated():
         logout(request)
 
-    return redirect('home:index')
+    return render(request, 'home/register.html')

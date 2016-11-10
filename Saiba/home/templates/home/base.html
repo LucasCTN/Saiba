@@ -53,7 +53,7 @@
                     <ul class="nav navbar-nav">
                         {% if not user.is_authenticated %}
                         <li><a href="{% url 'home:login' %}">Entrar</a></li>
-                        <li><a href="#">Registrar-se</a></li>
+                        <li><a href="{% url 'home:register' %}">Registrar-se</a></li>
                         {% else %}
                         <li><a href="{% url 'profile:detail' user.profile.slug %}">Bem vindo(a), {{ user.username }}</a></li>
                         <li><a href="{% url 'home:logout' %}">Sair</a></li>
