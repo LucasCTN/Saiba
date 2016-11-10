@@ -65,7 +65,7 @@
         <h2>Entradas relacionadas <small>({{ related_entries|length }})</small></h2>
         {% for related_entry in related_entries %}
             <div class='inline-block col-md-4'>
-                <a href="{% url 'entry:detail' related_entry.id %}">{{ related_entry.title }}</a>
+                <a href="{% url 'entry:detail' related_entry.slug %}">{{ related_entry.title }}</a>
             </div>
         {% endfor %}
     </section>
