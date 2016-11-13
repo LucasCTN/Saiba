@@ -1,31 +1,43 @@
 ﻿{% extends 'home/base.html' %}
-{% block title %}Entrar{% endblock %}
+{% block title %}Registrar{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
     <div id="login">
-        <form class="form-horizontal" name="LoginForm" action="/login/" method="post">
-        {% csrf_token %}
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-        {% endif %}
-        <div class="control-group">
-            <label class="control-label" for="username">Username</label>
-            <div class="controls">
-                <input type="text" id="username" name="username"  placeholder="Username">
+        <form class="form-horizontal" name="RegisterForm" action="{% url 'home:register' %}" method="post">
+            {% csrf_token %}
+
+            {% if user_form.errors %}
+                <div class="alert alert-warning">
+                {% for field in user_form %}
+                    {% for error in field.errors %}
+                        <strong>{{ error|escape }}</strong>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in user_form.non_field_errors %}
+                    <strong>{{ error|escape }}</strong>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <label class="control-label col-sm-2" for="field">{{ user_form.username.label_tag }}</label>
+            <div class="col-sm-4">{{ user_form.username }}</div>
+
+            <label class="control-label col-sm-1" for="field">{{ user_form.password.label_tag }}</label>
+            <div class="col-sm-2">{{ user_form.password }}</div>
+
+            <label class="control-label col-sm-1" for="field">{{ user_form.email.label_tag }}</label>
+            <div class="col-sm-2">{{ user_form.email }}</div>
+
+            <label class="control-label col-sm-1" for="field">{{ profile_form.gender.label_tag }}</label>
+            <div class="col-sm-2">{{ profile_form.gender }}</div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary">Registrar-se</button>
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="password">Password</label>
-            <div class="controls">
-                <input type="password" name="password" id="password" placeholder="Password">
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" class="btn">Login</button>
-            </div>
-        </div>
+
         </form>
     </div>
 </div>

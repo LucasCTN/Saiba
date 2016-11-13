@@ -3,7 +3,7 @@ from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
 from .models import Post, Label
 from .forms import PostForm
-from profile.forms import LoginForm
+from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
 from entry.models import Entry
 from gallery.models import Image, Video
 from profile.models import Profile
@@ -65,10 +65,8 @@ def user_login(request):
     username = password = ''
 
     profile_form = LoginForm(request.POST or None)
-    login_error = False
 
     if profile_form.is_valid():
-        print "teste"
         if request.POST:
             username = request.POST['username']
             password = request.POST['password']
@@ -78,13 +76,8 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 return redirect('home:index')
-            else:
-                login_error = True
 
-    args = {'form': profile_form,
-            'error': login_error}
-
-    return render(request, 'home/login.html', args)
+    return render(request, 'home/login.html', {'form': profile_form})
 
 def user_logout(request):
     if request.user.is_authenticated():
@@ -93,7 +86,29 @@ def user_logout(request):
     return redirect('home:index')
 
 def user_register(request):
-    if request.user.is_authenticated():
-        logout(request)
+    register_profile_form = RegisterProfileForm(request.POST or None)
+    register_user_form = RegisterUserForm(request.POST or None)
+    register_user_form.fields['email'].required = True
 
-    return render(request, 'home/register.html')
+    login_error = 0
+
+    if request.POST:
+        if register_user_form.is_valid():
+            if register_profile_form.is_valid():
+                username = request.POST['username']
+                email = request.POST['email']
+
+                if(User.objects.filter(username=username) or User.objects.filter(email=email)):
+                    login_error = 0
+                else:
+                    pass
+            else:
+                login_error = 0
+        else:
+            login_error = 1
+    
+    args = {'user_form': register_user_form,
+            'profile_form': register_profile_form,
+            'error': login_error}
+
+    return render(request, 'home/register.html', args)
