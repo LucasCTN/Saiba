@@ -89,26 +89,21 @@ def user_register(request):
     register_profile_form = RegisterProfileForm(request.POST or None)
     register_user_form = RegisterUserForm(request.POST or None)
     register_user_form.fields['email'].required = True
-
-    login_error = 0
-
+    
     if request.POST:
         if register_user_form.is_valid():
             if register_profile_form.is_valid():
                 username = request.POST['username']
+                password = request.POST['password']
                 email = request.POST['email']
-
-                if(User.objects.filter(username=username) or User.objects.filter(email=email)):
-                    login_error = 0
+                gender = request.POST['gender']
+                
+                if(User.objects.filter(email=email)):
+                    pass
                 else:
                     pass
-            else:
-                login_error = 0
-        else:
-            login_error = 1
     
     args = {'user_form': register_user_form,
-            'profile_form': register_profile_form,
-            'error': login_error}
-
+            'profile_form': register_profile_form}
+    
     return render(request, 'home/register.html', args)

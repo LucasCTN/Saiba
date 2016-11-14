@@ -19,17 +19,19 @@
                 {% endfor %}
                 </div>
             {% endif %}
+                        
+            <div class="col-md-12">
+            	<label class="control-label col-sm-2" for="field">{{ form.username.label_tag }}</label>
+            	{{ form.username }}
+            </div>
+            
+            <div class="col-md-12">
+            	<label class="control-label col-sm-2" for="field">{{ form.password.label_tag }}</label>
+            	{{ form.password }}
+            </div>
 
-            <label class="control-label col-sm-2" for="field">{{ form.username.label_tag }}</label>
-            <div class="col-sm-4">{{ form.username }}</div>
-
-            <label class="control-label col-sm-1" for="field">{{ form.password.label_tag }}</label>
-            <div class="col-sm-2">{{ form.password }}</div>
-
-            <div class="control-group">
-                <div class="controls">
-                    <button type="submit" class="btn btn-primary">Entrar</button>
-                </div>
+            <div class="control-group col-md-12 col-md-offset-2">
+				<button type="submit" class="btn btn-primary col-md-2">Entrar</button>
             </div>
 
         </form>

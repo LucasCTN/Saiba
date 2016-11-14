@@ -20,22 +20,30 @@
                 </div>
             {% endif %}
 
-            <label class="control-label col-sm-2" for="field">{{ user_form.username.label_tag }}</label>
-            <div class="col-sm-4">{{ user_form.username }}</div>
+			<div class="col-md-12">
+            	<label class="control-label col-sm-2" for="field">{{ user_form.username.label_tag }}</label>
+            	{{ user_form.username }}
+            </div>
+            
+            <div class="col-md-12">
+            	<label class="control-label col-sm-2" for="field">{{ user_form.password.label_tag }}</label>
+            	{{ user_form.password }}
+            </div>
 
-            <label class="control-label col-sm-1" for="field">{{ user_form.password.label_tag }}</label>
-            <div class="col-sm-2">{{ user_form.password }}</div>
+            
+            <div class="col-md-12">
+            	<label class="control-label col-sm-2" for="field">{{ user_form.email.label_tag }}</label>
+            	{{ user_form.email }}
+            </div>
 
-            <label class="control-label col-sm-1" for="field">{{ user_form.email.label_tag }}</label>
-            <div class="col-sm-2">{{ user_form.email }}</div>
+            
+            <div class="col-md-12">
+				<label class="control-label col-sm-2" for="field">{{ profile_form.gender.label_tag }}</label>
+				{{ profile_form.gender }}
+			</div>
 
-            <label class="control-label col-sm-1" for="field">{{ profile_form.gender.label_tag }}</label>
-            <div class="col-sm-2">{{ profile_form.gender }}</div>
-
-            <div class="control-group">
-                <div class="controls">
-                    <button type="submit" class="btn btn-primary">Registrar-se</button>
-                </div>
+            <div class="control-group col-md-12 col-md-offset-2">
+                <button type="submit" class="btn btn-primary col-md-2">Registrar-se</button>
             </div>
 
         </form>
