@@ -138,6 +138,12 @@ def create_entry(request):
 
         context = { "entry_form": entry_form, "revision_form": revision_form }
 
+    entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
+    entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
+    entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
+    entry_form.fields['additional_references'].widget.attrs['class'] = 'form-control form-additional_references'
+    revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
+
     return render(request, 'entry/create_entry.html', context)
 
 def editorship(request, entry_slug):

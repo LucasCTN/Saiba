@@ -13,12 +13,67 @@
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
-                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                    <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% include 'entry/form_template.html' %}
+
+                        {% if entry_form.errors or revision_form.errors %}
+                            <div class="alert alert-warning">
+                                <strong>{{ custom_error }}</strong>
+
+                                {% for field in entry_form %}
+                                    {% for error in field.errors %}
+                                        <strong>{{ error|escape }}</strong>
+                                    {% endfor %}
+                                {% endfor %}
+
+                                {% for field in revision_form %}
+                                    {% for error in field.errors %}
+                                        <strong>{{ error|escape }}</strong>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in entry_form.non_field_errors %}
+                                    <strong>{{ error|escape }}</strong>
+                                {% endfor %}
+
+                                {% for error in revision_form.non_field_errors %}
+                                    <strong>{{ error|escape }}</strong>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+            	            <label class="control-label col-sm-2" for="field">{{ entry_form.title.label_tag }}</label>
+                            <div class="col-md-7">{{ entry_form.title }}</div>
+                        </div>
+
+                        <div class="form-group">
+            	            <label class="control-label col-sm-2" for="field">{{ entry_form.category.label_tag }}</label>
+                            <div class="col-md-7">{{ entry_form.category }}</div>
+                        </div>
+
+                        <div class="form-group">
+            	            <label class="control-label col-sm-2" for="field">{{ entry_form.origin.label_tag }}</label>
+                            <div class="col-md-7">{{ entry_form.origin }}</div>
+                        </div>
+
+                        <div class="form-group">
+            	            <label class="control-label col-sm-2" for="field">{{ entry_form.additional_references.label_tag }}</label>
+                            <div class="col-md-7">{{ entry_form.additional_references }}</div>
+                        </div>
+
+                        <div class="form-group">
+            	            <label class="control-label col-sm-2" for="field">{{ entry_form.icon.label_tag }}</label>
+                            <div class="col-md-7">{{ entry_form.icon }}</div>
+                        </div>
+
+                        <div class="form-group">
+            	            <label class="control-label col-sm-2" for="field">{{ revision_form.content.label_tag }}</label>
+                            <div class="col-md-7">{{ revision_form.content }}</div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" class="btn btn-success">Criar nova Entrada</button>
                             </div>
                         </div>
                     </form>
