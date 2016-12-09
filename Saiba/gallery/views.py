@@ -55,12 +55,6 @@ def upload_image(request):
             image = image_form.save()
             return render(request, 'gallery/image.html', {'image': image})
 
-    image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    image_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
-    image_form.fields['tags'].widget.attrs['class'] = 'form-control form-tags'
-    image_form.fields['source'].widget.attrs['class'] = 'form-control form-source'
-    image_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
-
     return render(request, 'gallery/upload-image.html', {"form": image_form})
 
 def upload_video(request):
@@ -73,11 +67,5 @@ def upload_video(request):
             video_form = VideoForm(request.POST, request.FILES)
             video = video_form.save()
             return render(request, 'gallery/video.html', {'video': video})
-
-    video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    video_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
-    video_form.fields['link'].widget.attrs['class'] = 'form-control form-link'
-    video_form.fields['tags'].widget.attrs['class'] = 'form-control form-tags'
-    video_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
 
     return render(request, 'gallery/upload-video.html', {"form": video_form})

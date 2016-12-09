@@ -3,7 +3,6 @@ from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
 from .models import Post, Label
 from .forms import PostForm
-from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
 from entry.models import Entry
 from gallery.models import Image, Video
 from profile.models import Profile
@@ -17,16 +16,7 @@ def index(request):
     normal_posts = Post.objects.filter(fixed=False).order_by('-date')
 
     text_form = PostForm(request.POST or None)
-
-    #text_form.fields['label'].widget.attrs['style'] = 'color:red;'
-    text_form.fields['label'].widget.attrs['class'] = 'form-control form-label'
-    text_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    text_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
-    text_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
-    text_form.fields['image'].widget.attrs['class'] = 'form-control form-image'
-    text_form.fields['video'].widget.attrs['class'] = 'form-control form-video'
-
-    text_form.fields['content'].widget.attrs['rows'] = '4'
+    modify_form(text_form)
 
     if text_form.is_valid():
         post = text_form.save(commit=False)
@@ -59,35 +49,34 @@ def index(request):
 
     return render(request, 'home/index.html', args)
 
+def modify_form(form):
+    #form.fields['label'].widget.attrs['style'] = 'color:red;'
+    form.fields['label'].widget.attrs['class'] = 'form-control form-label'
+    form.fields['title'].widget.attrs['class'] = 'form-control form-title'
+    form.fields['content'].widget.attrs['class'] = 'form-control form-content'
+    form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
+    form.fields['image'].widget.attrs['class'] = 'form-control form-image'
+    form.fields['video'].widget.attrs['class'] = 'form-control form-video'
+
+    form.fields['content'].widget.attrs['rows'] = '4'
+
 def user_login(request):
-    if request.user.is_authenticated():
-        return redirect('home:index')
-    else:
-        username = password = ''
-        
-        profile_form = LoginForm(request.POST or None)
+    print "Funcionou"
+    return redirect('home:index')
 
-        if profile_form.is_valid():
-            if initialize_authentification(request):
-                return redirect('home:index')
-
-        profile_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
-        profile_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
-
-        return render(request, 'home/login.html', {'form': profile_form})
-
-def initialize_authentification(request):
+def user_login(request):
+    username = password = ''
     if request.POST:
         username = request.POST['username']
         password = request.POST['password']
 
         user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('home:index')
 
-        if user:
-            login(request, user)
-            return True
-        else:
-            return False
+    return render(request, 'home/login.html')
 
 def user_logout(request):
     if request.user.is_authenticated():
@@ -97,43 +86,6 @@ def user_logout(request):
 
 def user_register(request):
     if request.user.is_authenticated():
-        return redirect('home:index')
-    else:
-        register_profile_form = RegisterProfileForm(request.POST or None)
-        register_user_form = RegisterUserForm(request.POST or None)
-        register_user_form.fields['email'].required = True
-        custom_error = ""
+        logout(request)
 
-        if request.POST:
-            if request.POST['repeat_password'] != request.POST['password']:
-                custom_error = custom_error + "As senhas nao sao iguais."
-            else:
-                email = request.POST['email']
-
-                if(User.objects.filter(email=email)):
-                    custom_error = custom_error + "Esse email ja foi registrado."
-                else:
-                    if register_user_form.is_valid() and register_profile_form.is_valid():                
-                        user = register_user_form.save()
-                        user.set_password(user.password)
-                        user.save()
-
-                        profile = register_profile_form.save(commit=False)
-                        profile.user = user
-                        profile.save()
-
-                        if initialize_authentification(request):
-                            return redirect('home:index')
-
-        print custom_error
-
-        register_user_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
-        register_user_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
-        register_user_form.fields['email'].widget.attrs['class'] = 'form-control form-email'
-        register_profile_form.fields['gender'].widget.attrs['class'] = 'form-control form-gender'
-    
-        args = {'user_form': register_user_form,
-                'profile_form': register_profile_form,
-                'custom_error': custom_error}
-    
-        return render(request, 'home/register.html', args)
+    return redirect('home:index')
