@@ -60,6 +60,8 @@ def index(request):
     return render(request, 'home/index.html', args)
 
 def user_login(request):
+    errors_list = []
+
     if request.user.is_authenticated():
         return redirect('home:index')
     else:
@@ -70,11 +72,19 @@ def user_login(request):
         if profile_form.is_valid():
             if initialize_authentification(request):
                 return redirect('home:index')
+            else:                
+                if len(User.objects.filter(username=request.POST['username'])) <= 0:
+                    errors_list.append("Este nome de usuario nao esta registrado no sistema.")
+                else:
+                    errors_list.append("A senha digitada esta incorreta.")
 
         profile_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
         profile_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
 
-        return render(request, 'home/login.html', {'form': profile_form})
+        args = {'form': profile_form,
+                'errors_list': errors_list}
+
+        return render(request, 'home/login.html', args)
 
 def initialize_authentification(request):
     if request.POST:
@@ -102,16 +112,22 @@ def user_register(request):
         register_profile_form = RegisterProfileForm(request.POST or None)
         register_user_form = RegisterUserForm(request.POST or None)
         register_user_form.fields['email'].required = True
-        custom_error = ""
+        
+        custom_error = []
+        original_errors = {}
+        original_errors["Enter a valid email address."] = "Digite um endereco de email valido."
+        original_errors["A user with that username already exists."] = "Ja existe um usuario com este nome."
 
         if request.POST:
-            if request.POST['repeat_password'] != request.POST['password']:
-                custom_error = custom_error + "As senhas nao sao iguais."
-            else:
-                email = request.POST['email']
+            for x in register_user_form:
+                for error in x.errors:
+                    custom_error.append(original_errors[str(error)])
 
-                if(User.objects.filter(email=email)):
-                    custom_error = custom_error + "Esse email ja foi registrado."
+            if(User.objects.filter(email=request.POST['email'])):
+                custom_error.append("Esse email ja foi registrado.")
+            else:
+                if request.POST['repeat_password'] != request.POST['password']:
+                    custom_error.append("As senhas nao sao iguais.")
                 else:
                     if register_user_form.is_valid() and register_profile_form.is_valid():                
                         user = register_user_form.save()
@@ -124,8 +140,6 @@ def user_register(request):
 
                         if initialize_authentification(request):
                             return redirect('home:index')
-
-        print custom_error
 
         register_user_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
         register_user_form.fields['password'].widget.attrs['class'] = 'form-control form-password'

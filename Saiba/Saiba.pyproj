@@ -202,6 +202,7 @@
     <Content Include="home\templates\home\login.html" />
     <Content Include="home\templates\home\sidebar.html" />
     <Content Include="home\templates\home\trending.html" />
+    <Content Include="profile\templates\profile\detail - Copy.html" />
     <Content Include="profile\templates\profile\detail.html" />
     <Content Include="profile\templates\profile\index.html" />
     <Content Include="requirements.txt" />

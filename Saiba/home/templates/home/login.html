@@ -7,14 +7,9 @@
         <form class="form-horizontal col-md-12" role="form" action="{% url 'home:login' %}" method="post" enctype="multipart/form-data" name="LoginForm">
             {% csrf_token %}
 
-            {% if form.errors %}
+            {% if errors_list %}
                 <div class="alert alert-warning">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <strong>{{ error|escape }}</strong>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
+                {% for error in errors_list %}
                     <strong>{{ error|escape }}</strong>
                 {% endfor %}
                 </div>
