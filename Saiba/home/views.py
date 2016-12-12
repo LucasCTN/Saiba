@@ -151,3 +151,35 @@ def user_register(request):
                 'custom_error': custom_error}
     
         return render(request, 'home/register.html', args)
+
+def search(request):
+    if request.POST:
+        search_text = request.POST['search']
+    else:
+        search_text = ''
+
+    entries = Entry.objects.all()
+    search_entries = Entry.objects.filter(title__contains=search_text)[:10]
+
+    args = {'entries' : entries,
+            'search_entries' : search_entries}
+
+    return render(request, 'home/search.html', args)
+
+def search_results(request):
+    if request.POST:
+        search_text = request.POST['search_text']
+    else:
+        search_text = ''
+
+    entries = Entry.objects.all()
+
+    if search_text != '':
+        search_entries = Entry.objects.filter(title__contains=search_text)[:5]
+    else:
+        search_entries = None
+
+    args = {'entries' : entries,
+            'search_entries' : search_entries}
+
+    return render(request, 'home/search_ajax.html', args)

@@ -1,0 +1,14 @@
+﻿{% if search_entries %}
+    {% for entry in search_entries %}
+        <li>
+            <a href="/entrada/{{entry.slug}}/">
+                <div class="entry">
+                    <img src="/media/{{entry.icon}}" alt="{{entry.title}}" height="35">
+                    {{entry.title}}
+                </div>
+            </a>
+        </li>
+    {% endfor %}
+{% else %}
+    <li><div class="not-found">Sem entradas.</div></li>
+{% endif %}

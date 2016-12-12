@@ -171,7 +171,6 @@ def get_trending_entries():
     for entry in latest_revised_entries:
         print entry.title
 
-
 '''
     recently_revised_entries = Entry.objects.filter(hidden=False).annotate(num_revisions=Count('revisions')).order_by('-num_revisions')
     
