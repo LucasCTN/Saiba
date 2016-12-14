@@ -151,6 +151,10 @@ function createComment(id, author, date, content, points) {
         button_reply.css('display', 'none');
     });
 
+    button_upvote.click(function () {
+        sendReply(id, null, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
+    });
+
     button_send.click(function () {
         sendReply(id, null, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
     });

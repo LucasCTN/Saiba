@@ -179,6 +179,7 @@
     <Content Include="entry\templates\entry\form_template.html" />
     <Content Include="entry\templates\entry\editorship.html" />
     <Content Include="entry\templates\entry\history.html" />
+    <Content Include="entry\templates\entry\trending.html" />
     <Content Include="entry\templates\entry\revision.html" />
     <Content Include="feedback\templates\feedback\comment_section.html" />
     <Content Include="feedback\templates\feedback\index.html" />

@@ -35,6 +35,7 @@ class Entry(models.Model):
     videos_locked           = models.BooleanField(default=False)
     comments_locked         = models.BooleanField(default=False)
     tags                    = models.ManyToManyField('home.Tag', blank=True)
+    points                  = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -62,3 +63,11 @@ class EditorList(models.Model):
 
     def __unicode__(self):
         return "{} - {}".format(self.user.username, self.entry.title)
+
+class TrendingEntry(models.Model):
+    title   = models.CharField(max_length=250)
+    entry   = models.ForeignKey(Entry, default=1)
+    date    = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.entry.title, self.title)

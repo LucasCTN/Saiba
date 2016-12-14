@@ -59,7 +59,7 @@ class CommentDetail(APIView):
         data = request.data.copy()
         data['points'] = 0
 
-        if data['type'] is not None:
+        if data['type']:
             comment_target_type = data['type']
 
             if comment_target_type == "entry" and data['slug'] is not None:

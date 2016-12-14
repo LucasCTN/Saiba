@@ -161,9 +161,19 @@ def get_trending_entries():
     latest_revised_entries  = Entry.objects.filter(revisions__id__in=latest_revisions_ids).order_by('-revisions__date')
    
     #get entries ordered by the dates of comments that are the most recent
-    print "====#===== entries ====#====="
+    '''print "====#===== entries ====#====="
     for entry in latest_revised_entries:
-        print entry.title
+        print entry.title'''
+
+def trending(request):
+    entry = get_object_or_404(Entry, slug=entry_slug)    
+        
+    for user_in_list in editor_list:
+        user_editor_list.append(user_in_list.user)
+
+    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
+
+    return render(request, 'entry/trending.html', context)
 
 
 '''

@@ -14,7 +14,7 @@ class VoteSerializer(serializers.ModelSerializer):
         field = ('author', 'date', 'direction', 'creation_date', 'update_date')
 
 class ReplySerializer(serializers.ModelSerializer):
-    points = serializers.IntegerField(required=False)
+    points = serializers.IntegerField(required=False, read_only=True)
 
     def to_representation(self, obj):
         representation = super(ReplySerializer, self).to_representation(obj)
@@ -27,7 +27,10 @@ class ReplySerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
-    points  = serializers.IntegerField(required=False)
+    points  = serializers.IntegerField(required=False, read_only=True)
+    author_username = serializers.StringRelatedField(source='author.username', read_only=True)
+    author_slug = serializers.StringRelatedField(source='author.profile.slug', read_only=True)
+    author_avatar = serializers.StringRelatedField(source='author.profile.avatar', read_only=True)
 
     def get_replies(self, obj):
         if 'reply_limit' in self.context:
