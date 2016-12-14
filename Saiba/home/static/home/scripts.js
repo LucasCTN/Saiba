@@ -109,7 +109,8 @@ function createCommentSection(commentSectionId, json_comments) {
     for (i = 0; i < json_comments.results.length; i++) {
         var comment = createComment(json_comments.results[i].id,            json_comments.results[i].author,
                                     json_comments.results[i].update_date,   json_comments.results[i].content,
-                                    json_comments.results[i].points);
+                                    json_comments.results[i].author_username, json_comments.results[i].author_slug,
+                                    json_comments.results[i].author_avatar, json_comments.results[i].points);
 
         var commentId = json_comments.results[i].id;
         $(commentSectionId).append(comment);
@@ -121,27 +122,47 @@ function createCommentSection(commentSectionId, json_comments) {
                                     json_comments.results[i].replies[j].response_to,
                                     json_comments.results[i].replies[j].author,
                                     json_comments.results[i].replies[j].update_date,
-                                    json_comments.results[i].replies[j].content);
+                                    json_comments.results[i].replies[j].content,
+                                    json_comments.results[i].replies[j].author_username,
+                                    json_comments.results[i].replies[j].author_slug,   
+                                    json_comments.results[i].replies[j].author_avatar);
             
             $('#comment-' + commentId + ' #replies').append(reply);
         };
     }
 }
 
-function createComment(id, author, date, content, points) {
+function createComment(id, author, date, content, author_username, author_slug, author_avatar, points) {
     points = points || 0;
-    var div_comment = $('<div />').addClass('col-md-12').attr('id', 'comment-' + id).attr("data-id", id);
-    var span_author = $('<span />').addClass('col-md-12').html(author);
-    var span_date = $('<span />').addClass('col-md-12').html(date);
-    var span_content = $('<span />').addClass('col-md-12').html(content);
+    var div_comment = $('<div />').addClass('container media col-md-12').attr('id', 'comment-' + id).attr("data-id", id);
 
-    var span_points = $('<span />').addClass('').html(points).attr('id', 'points-' + id);
-    var button_upvote = $('<button />').addClass('btn btn-default btn-xs').html("Cimavoto");
-    var button_downvote = $('<button />').addClass('btn btn-default btn-xs').html("Baixovoto");
+    var div_avatar_container = $('<div />').addClass('col-md-1 avatar-container');
+    var img_avatar = $('<img />').addClass('col-md-12 img-rounded media-object').attr('src', "/media/" + author_avatar)
+                                .css("width", "80");
+
+    div_avatar_container.append(img_avatar);
+
+    var div_info_container = $('<div />').addClass('col-md-11 info-container');
+    var a_author = $('<a />').attr('href', '/perfil/' + author_slug).html(author_username);
+    var span_author = $('<span />').addClass('col-md-12').append(a_author);
+    var span_date = $('<span />').addClass('col-md-12 comment-date').html(date);
+    var span_content = $('<span />').addClass('col-md-12 comment-content').html(content);
+
+    div_info_container.append(span_author).append(span_date).append(span_content);
+
+    var div_feedback_container = $('<div />').addClass('col-md-12 feedback-container');
+    var span_points = $('<span />').addClass('col-md-1 comment-points').html(points).attr('id', 'points-' + id);
+    var button_upvote = $('<button />').addClass('btn btn-default btn-xs glyphicon glyphicon-chevron-up');
+    var button_downvote = $('<button />').addClass('btn btn-default btn-xs glyphicon glyphicon-chevron-down');
 
     var button_reply = $('<button />').addClass('btn btn-default btn-xs').html("Responder");
     var textarea_reply = $('<textarea />').addClass('').css('display', 'none');
     var button_send = $('<button />').addClass('btn btn-default btn-xs').css('display', 'none').html("Enviar");
+
+    div_feedback_container.append(span_points).append(button_upvote).append(button_downvote).append(button_reply)
+                        .append(textarea_reply).append(button_send);
+
+    var div_content_container = $('<div />').addClass('col-md-11 content-container').append(div_info_container).append(div_feedback_container);
 
     var div_replies = $('<div />').addClass('col-md-12').attr('id', 'replies');
 
@@ -151,29 +172,49 @@ function createComment(id, author, date, content, points) {
         button_reply.css('display', 'none');
     });
 
+    button_upvote.click(function () {
+        sendReply(id, null, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
+    });
+
     button_send.click(function () {
         sendReply(id, null, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
     });
 
-    div_comment.append(span_author).append(span_date).append(span_content).append(span_points).append(button_upvote).append(button_downvote)
-                .append(button_reply).append(textarea_reply).append(button_send).append(div_replies);
+    div_comment.append(div_avatar_container).append(div_content_container).append(div_replies);
     return div_comment;
 }
 
-function createReply(id, parentCommentId, parentReplyId, author, date, content, points) {
+function createReply(id, parentCommentId, parentReplyId, author, date, content, author_username, author_slug, author_avatar, points) {
     points = points || 0;
-    var div_reply = $('<div />').addClass('col-md-12').attr('id', 'reply-' + id).attr("data-id", id);
-    var span_author = $('<span />').addClass('col-md-12').html(author);
-    var span_date = $('<span />').addClass('col-md-12').html(date);
-    var span_content = $('<span />').addClass('col-md-12').html(content);
+    var div_reply = $('<div />').addClass('container media col-md-12').attr('id', 'reply-' + id).attr("data-id", id);
 
-    var span_points = $('<span />').addClass('').html(points).attr('id', 'points-' + id);
+    var div_avatar_container = $('<div />').addClass('col-md-1 avatar-container');
+    var img_avatar = $('<img />').addClass('col-md-12 img-rounded media-object').attr('src', "/media/" + author_avatar)
+                                .css("width", "80");
+
+    div_avatar_container.append(img_avatar);
+
+    var div_info_container = $('<div />').addClass('col-md-11 info-container');
+    var a_author = $('<a />').attr('href', '/perfil/' + author_slug).html(author_username);
+    var span_author = $('<span />').addClass('col-md-12').append(a_author);
+    var span_date = $('<span />').addClass('col-md-12 comment-date').html(date);
+    var span_content = $('<span />').addClass('col-md-12 comment-content').html(content);
+
+    div_info_container.append(span_author).append(span_date).append(span_content);
+
+    var div_feedback_container = $('<div />').addClass('col-md-12 feedback-container');
+    var span_points = $('<span />').addClass('col-md-1 comment-points').html(points).attr('id', 'points-' + id);
     var button_upvote = $('<button />').addClass('btn btn-default btn-xs').html("Cimavoto");
     var button_downvote = $('<button />').addClass('btn btn-default btn-xs').html("Baixovoto");
 
     var button_reply = $('<button />').addClass('btn btn-default btn-xs').html("Responder");
     var textarea_reply = $('<textarea />').addClass('').css('display', 'none');
     var button_send = $('<button />').addClass('btn btn-default btn-xs').css('display', 'none').html("Enviar");
+
+    div_feedback_container.append(span_points).append(button_upvote).append(button_downvote).append(button_reply)
+                        .append(textarea_reply).append(button_send);
+
+    var div_content_container = $('<div />').addClass('col-md-11 content-container').append(div_info_container).append(div_feedback_container);
 
     button_reply.click(function () {
         textarea_reply.css('display', '');
@@ -185,9 +226,7 @@ function createReply(id, parentCommentId, parentReplyId, author, date, content, 
         sendReply(parentCommentId, id, textarea_reply.val(), sendReplyApiEndpoint, getCommentApiEndpoint);
     });
 
-    div_reply.append(span_author).append(span_date).append(span_content).append(span_points).append(button_upvote)
-                .append(button_downvote).append(button_reply).append(textarea_reply).append(button_send);
-
+    div_reply.append(div_avatar_container).append(div_content_container);
     return div_reply;
 }
 

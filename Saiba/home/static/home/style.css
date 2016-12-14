@@ -79,3 +79,23 @@
     margin-right: auto;
     display: inline-block;
 }
+
+.comment-date{
+    font-style: italic;
+    font-size: smaller;
+    color: grey;
+}
+
+.comment-content{
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.comment-points{
+    width: 0px;
+    text-align: center;
+}
+
+.avatar-container{
+    width: 50px;
+}
