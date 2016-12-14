@@ -15,6 +15,9 @@ class VoteSerializer(serializers.ModelSerializer):
 
 class ReplySerializer(serializers.ModelSerializer):
     points = serializers.IntegerField(required=False, read_only=True)
+    author_username = serializers.StringRelatedField(source='author.username', read_only=True)
+    author_slug = serializers.StringRelatedField(source='author.profile.slug', read_only=True)
+    author_avatar = serializers.StringRelatedField(source='author.profile.avatar', read_only=True)
 
     def to_representation(self, obj):
         representation = super(ReplySerializer, self).to_representation(obj)
