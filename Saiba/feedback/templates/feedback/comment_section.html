@@ -5,7 +5,7 @@
     <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
 
     <!--<form id="comment-form" method="post" class="form-horizontal" role="form" action="{% url 'api:api_comments' %}" target="dummyframe">-->
-    <form id="comment-form" method="post" class="form-horizontal" role="form" target="dummyframe">
+    <form id="comment-form" method="post" class="form-horizontal col-md-10" role="form" target="dummyframe">
         {% csrf_token %}
         <div class="form-group">
             <label for="content" class="control-label">Comentando como:</label>

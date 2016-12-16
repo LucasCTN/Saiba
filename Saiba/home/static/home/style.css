@@ -99,3 +99,15 @@
 .avatar-container{
     width: 50px;
 }
+
+.reply-content{
+    padding-left: 5%;
+}
+
+.textarea{
+    padding-top: 3%;
+}
+
+.button_send{
+    padding-top: 3%;
+}

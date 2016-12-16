@@ -16,13 +16,22 @@ from rest_framework.pagination import PageNumberPagination
 import Saiba.utils
 
 class EntryDetail(APIView):
-    def get(self, request, slug):
-        #entries = Entry.objects.all()
-        entry = get_object_or_404(Entry, slug=slug)
-        serializer = EntrySerializer(entry, many=False)
-        return Response(serializer.data)
+    def get(self, request):
+        slug = request.GET.get('slug')
 
-    def post(self, request, slug):
+        entry = Entry.objects.filter(Entry, slug=slug).first()
+        serializer = EntrySerializer(entry, many=False)
+
+        if slug:
+            if entry:
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
         serializer = EntrySerializer(data=request.data)
         
         if serializer.is_valid():
@@ -138,7 +147,7 @@ class VoteDetail(APIView):
         vote_target_id   = request.GET.get('id')
         vote_target_type = request.GET.get('type')
 
-        if vote_target_type is not None:
+        if not vote_target_type:
             if vote_target_type == "comment" and vote_target_id:
                 comment_type_id = ContentType.objects.get_for_model(Comment).id
                 comment         = get_object_or_404(Comment, pk=vote_target_id)
@@ -167,37 +176,32 @@ class VoteDetail(APIView):
         type = request.POST.get('type', False)
         direction = request.POST.get('direction', False)
 
-        if type and id and Saiba.utils.is_valid_direction(direction):
-            vote_target_type = type
-            data["target_id"] = id
+        content_type_mapping = {"comment": ContentType.objects.get_for_model(Comment).id,
+                                "reply": ContentType.objects.get_for_model(Reply).id,
+                                "image": ContentType.objects.get_for_model(Image).id,
+                                "video": ContentType.objects.get_for_model(Video).id}
 
-            if vote_target_type == "comment":
-                data["target_content_type"] = ContentType.objects.get_for_model(Comment).id
-            elif vote_target_type == "image":
-                data["target_content_type"] = ContentType.objects.get_for_model(Image).id
-            elif vote_target_type == "video":                
-                data["target_content_type"] = ContentType.objects.get_for_model(Video).id
+        if type and id and Saiba.utils.is_valid_direction(direction):
+            past_vote = Vote.objects.filter(target_id=id, target_content_type=content_type_mapping[type], author=request.user).first()
+
+            if past_vote:
+                if int(past_vote.direction) != int(direction):
+                    past_vote.direction = direction
+                    past_vote.save()
+                else:
+                    past_vote.direction = 0
+                    past_vote.save()
+            else:
+                vote_target_type = type
+                data["target_id"] = id
+
+                data["target_content_type"] = content_type_mapping[type]
 
         serializer = VoteSerializer(data=data)
         
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def patch(self, request):
-        """Parameters: id and direction"""
-        data = request.data.copy()
-
-        if data['id'] is not None:
-            vote = get_object_or_404(Vote, pk=data['id'])
-
-        serializer = VoteSerializer(vote, data=request.data, partial=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -231,8 +235,16 @@ class CommentPageDetail(APIView):
 
         for comment in comments:
             comment_type_id = ContentType.objects.get_for_model(Comment).id
+            reply_type_id = ContentType.objects.get_for_model(Reply).id
             comment.points = (Vote.objects.filter(target_id=comment.pk, 
                                               target_content_type=comment_type_id).aggregate(Sum('direction')))['direction__sum']
+            
+            replies = Reply.objects.filter(comment=comment)
+
+            for reply in replies:
+                reply.points = (Vote.objects.filter(target_id=reply.pk, 
+                                              target_content_type=reply_type_id).aggregate(Sum('direction')))['direction__sum']
+
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(comments, request)
 

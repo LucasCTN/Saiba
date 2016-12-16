@@ -35,7 +35,7 @@ class Entry(models.Model):
     videos_locked           = models.BooleanField(default=False)
     comments_locked         = models.BooleanField(default=False)
     tags                    = models.ManyToManyField('home.Tag', blank=True)
-    points                  = models.IntegerField(default=0)
+    trending_points         = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.id:

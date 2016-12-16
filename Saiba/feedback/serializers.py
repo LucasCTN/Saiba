@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from rest_framework import pagination, serializers
 from django.contrib.contenttypes.models import ContentType
 from .models import Comment, Vote, Reply
@@ -40,6 +41,11 @@ class CommentSerializer(serializers.ModelSerializer):
             limit = int(self.context['reply_limit'])
 
             query = Reply.objects.filter(comment=obj).order_by('id')
+
+            for reply in query:
+                reply.points = (Vote.objects.filter(target_id=reply.pk, 
+                                                    target_content_type=ContentType.objects.get_for_model(Reply).id)
+                                                    .aggregate(Sum('direction')))['direction__sum']
 
             if limit != 0:
                 query = query[:limit]
