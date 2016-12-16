@@ -38,3 +38,10 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return self.label
+
+class SaibaSettings(models.Model):
+    value = models.IntegerField()
+    type  = models.CharField(unique=True, max_length=300)
+
+    def __unicode__(self):
+        return self.type

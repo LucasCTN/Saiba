@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^v1/reply/$', views.ReplyDetail.as_view(), name='api_replies'),
     url(r'^v1/vote/$', views.VoteDetail.as_view(), name='api_vote'),
     url(r'^v1/points/$', views.PointsDetail.as_view(), name='api_points'),
+    url(r'^v1/trending/$', views.TrendingDetail.as_view(), name='api_trending'),
 ]

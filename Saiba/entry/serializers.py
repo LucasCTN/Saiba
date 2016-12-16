@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import Entry, Revision
 
 class EntrySerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        representation = super(EntrySerializer, self).to_representation(obj)
+        representation.pop('trending_points')
+        representation.pop('hidden')
+        return representation
 
     class Meta:
         model = Entry

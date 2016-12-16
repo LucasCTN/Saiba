@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
+from home.models import SaibaSettings
 import Saiba.saibadown, textile
 from django.contrib.contenttypes.models import ContentType
 
@@ -84,6 +85,10 @@ def edit(request, entry_slug):
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
 
         if entry_form.is_valid() and revision_form.is_valid() and is_editor.exists():
+            trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
+            entry.trending_points += trending_weight
+            entry.save(update_fields=['trending_points'])
+            
             entry_form = EntryForm(request.POST, instance = entry)
             entry = entry_form.save(commit=False)
             entry.author = user
@@ -92,7 +97,7 @@ def edit(request, entry_slug):
             revision = revision_form.save(commit=False)
             revision.entry = entry
             revision.author = user
-            revision.save()
+            revision.save()            
 
             last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
         

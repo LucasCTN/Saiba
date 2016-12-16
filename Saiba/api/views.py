@@ -5,6 +5,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from home.models import SaibaSettings
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
 from feedback.models import Comment, Vote, Reply
@@ -85,6 +86,11 @@ class CommentDetail(APIView):
         
         if serializer.is_valid():
             serializer.save()
+            if comment_target_type == "entry":
+                trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
+                entry = Entry.objects.get(slug=data['slug'])
+                entry.trending_points += trending_weight
+                entry.save(update_fields=['trending_points'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -277,4 +283,15 @@ class PointsDetail(APIView):
         serializer = PointsSerializer(points)        
         return Response(serializer.data)
         
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+class TrendingDetail(APIView):
+    def get(self, request):
+        trending_type = request.GET.get('type')
+
+        if trending_type:
+            if trending_type == "entry":
+                entries = Entry.objects.all().order_by('-trending_points')[:20]
+                serializer = EntrySerializer(entries, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
