@@ -1,7 +1,33 @@
-﻿{% for entry in entries %}
-    <div class="inline col-sm-2">
-        <a href="{% url 'entry:detail' entry.slug %}">
-            <img class="media-object" src="{{entry.icon.url}}" alt="nome do artigo[{{teste}}]" height="100">
-        </a>
-    </div>
-{% endfor %}
+﻿<script>
+    function getTrending() {
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    var csrftoken = getCookie("csrftoken");
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8000/api/v1/trending/?type=entry",
+            data: "",
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    var entry = $("<span/>").addClass("col-md-1").css("text-align", "center");
+                    var image = $("<img/>").addClass("col-md-12").attr("src", data[i].icon).css("width", "100px");
+                    var title = $("<a/>").addClass("col-md-12").attr("href", "http://localhost:8000/entrada/" + data[i].slug)
+                                                                .html(data[i].title);
+
+                    entry.append(image).append(title);
+
+                    $('#trending_entries').append(entry);
+                };
+            }
+        })
+    }
+    getTrending();
+</script>
+
+<div id="trending_entries" class="col-md-12"></div>

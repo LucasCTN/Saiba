@@ -84,7 +84,7 @@ function sendVote(contentId, type, direction) {
     })
 }
 
-function updateCommentSection(commentSectionId, getCommentApiEndpoint) {
+function updateCommentSection(commentSectionId, getCommentApiEndpoint, append_only) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -99,13 +99,14 @@ function updateCommentSection(commentSectionId, getCommentApiEndpoint) {
         url: getCommentApiEndpoint,
         data: $(this).serialize(),
         success: function (data) {
+            if (append_only != true)
+                $(commentSectionId).empty();
             createCommentSection(commentSectionId, data);
         }
     })
 }
 
 function createCommentSection(commentSectionId, json_comments) {
-    $(commentSectionId).empty();
     for (i = 0; i < json_comments.results.length; i++) {
         var comment = createComment(json_comments.results[i].id,            json_comments.results[i].author,
                                     json_comments.results[i].update_date,   json_comments.results[i].content,

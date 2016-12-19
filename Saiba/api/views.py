@@ -294,4 +294,4 @@ class TrendingDetail(APIView):
                 entries = Entry.objects.all().order_by('-trending_points')[:20]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
