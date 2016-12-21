@@ -4,15 +4,20 @@
 {% block body %}
 <div class="container-fluid">
     <div id="login">
-        <form class="form-horizontal" name="LoginForm" action="/login/" method="post">
-        {% csrf_token %}
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-        {% endif %}
-        <div class="control-group">
-            <label class="control-label" for="username">Username</label>
-            <div class="controls">
-                <input type="text" id="username" name="username"  placeholder="Username">
+        <form class="form-horizontal" name="RegisterForm" action="{% url 'home:register' %}" method="post">
+            {% csrf_token %}
+
+            {% if custom_error %}
+                <div class="alert alert-warning">
+                    {% for error in custom_error %}
+                        <strong>{{ error|escape }}</strong>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+			<div class="form-group">
+            	<label class="control-label col-sm-2" for="field">Nome de Usuário:</label>
+                <div class="col-md-3">{{ user_form.username }}</div>
             </div>
         </div>
         <div class="control-group">

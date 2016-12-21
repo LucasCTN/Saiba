@@ -8,7 +8,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 class Label(models.Model):
     name        = models.CharField(max_length=2500, blank=True)
     description = models.CharField(max_length=2500, blank=True)
-    color       = models.CharField(max_length=300, blank=True)
+    color       = models.CharField(max_length=300, blank=False)
     icon        = models.ImageField(blank=True, upload_to='label/')
 
     def __unicode__(self):
@@ -16,7 +16,7 @@ class Label(models.Model):
 
 class Post(models.Model):
     author      = models.ForeignKey(User, default=1)
-    label       = models.ForeignKey(Label, blank=True)
+    label       = models.ForeignKey(Label, blank=True, null=True)
     title       = models.CharField(max_length=250)
     content     = models.TextField(max_length=2500, blank=True)
     hidden      = models.BooleanField(default=False)

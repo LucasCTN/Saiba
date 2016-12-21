@@ -4,15 +4,20 @@
 {% block body %}
 <div class="container-fluid">
     <div id="login">
-        <form class="form-horizontal" name="LoginForm" action="{% url 'home:login' %}" method="post">
-        {% csrf_token %}
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-        {% endif %}
-        <div class="control-group">
-            <label class="control-label" for="username">Username</label>
-            <div class="controls">
-                <input type="text" id="username" name="username"  placeholder="Username">
+        <form class="form-horizontal col-md-12" role="form" action="{% url 'home:login' %}" method="post" enctype="multipart/form-data" name="LoginForm">
+            {% csrf_token %}
+
+            {% if errors_list %}
+                <div class="alert alert-warning">
+                {% for error in errors_list %}
+                    <strong>{{ error|escape }}</strong>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="field">Nome de Usuário:</label>
+                <div class="col-sm-3">{{ form.username }}</div>
             </div>
         </div>
         <div class="control-group">
