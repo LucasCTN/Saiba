@@ -32,7 +32,7 @@ def index(request):
         post = text_form.save(commit=False)
         post.author = request.user
         
-        text_label = Label.objects.filter(name="Texto")[0]
+        '''text_label = Label.objects.filter(name="Texto")[0]
         entry_label = Label.objects.filter(name="Meme")[0]
         imagem_label = Label.objects.filter(name="Imagem")[0]
         video_label = Label.objects.filter(name="Video")[0]
@@ -46,7 +46,7 @@ def index(request):
             else:
                 post.label = video_label
         else:
-            post.label = entry_label
+            post.label = entry_label'''
 
         post.save()
         return redirect('home:index')
@@ -159,7 +159,7 @@ def search(request):
         search_text = ''
 
     entries = Entry.objects.all()
-    search_entries = Entry.objects.filter(title__contains=search_text)[:10]
+    search_entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:10]
 
     args = {'entries' : entries,
             'search_entries' : search_entries}
@@ -175,7 +175,7 @@ def search_results(request):
     entries = Entry.objects.all()
 
     if search_text != '':
-        search_entries = Entry.objects.filter(title__contains=search_text)[:5]
+        search_entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
     else:
         search_entries = None
 
