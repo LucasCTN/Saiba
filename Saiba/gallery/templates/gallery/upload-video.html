@@ -1,12 +1,43 @@
 ﻿{% extends 'home/base.html'%}
 
 {% block body %}
-    <form class="form-horizontal col-md-8 col-sm-offset-2" role="form" action="" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        * representa um campo obrigatório.
 
-        {% include 'home/form_template.html'%}
+        <div class="form-group">
+            <span class="col-sm-offset-2">* representa um campo obrigatório.</span>
+        </div>
 
-        <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Título:</label>
+            <div class="col-md-4">{{ form.title }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Entrada:</label>
+            <div class="col-md-4">{{ form.entry }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">{{ form.link.label_tag }}</label>
+            <div class="col-md-4">{{ form.link }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Marcadores:</label>
+            <div class="col-md-4">{{ form.tags }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Descrição:</label>
+            <div class="col-md-4">{{ form.description }}</div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+            </div>
+        </div>
+        
     </form>
 {% endblock %}

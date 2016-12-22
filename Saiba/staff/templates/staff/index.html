@@ -4,8 +4,7 @@
     <section id="panel" class="container col-md-12">
         <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% include 'home/form_template.html'%}
-            <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+            Se você não faz parte da staff, você não devia estar aqui. Mas estamos muito interessados em saber como você conseguiu então entre em contato conosco.
         </form>
     </section>
 {% endblock %}

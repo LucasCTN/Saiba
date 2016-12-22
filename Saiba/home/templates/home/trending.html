@@ -15,12 +15,12 @@
             data: "",
             success: function (data) {
                 for (i = 0; i < data.length; i++) {
-                    var entry = $("<span/>").addClass("col-md-1").css("text-align", "center");
+                    var entry = $("<a/>").addClass("col-md-1").attr("href", "http://localhost:8000/entrada/" + data[i].slug);
+                    var container = $("<span/>").addClass("col-md-12").css("text-align", "center");
                     var image = $("<img/>").addClass("col-md-12").attr("src", data[i].icon).css("width", "100px");
-                    var title = $("<a/>").addClass("col-md-12").attr("href", "http://localhost:8000/entrada/" + data[i].slug)
-                                                                .html(data[i].title);
+                    var title = data[i].title;
 
-                    entry.append(image).append(title);
+                    entry.append(container.append(image).append(title));
 
                     $('#trending_entries').append(entry);
                 };

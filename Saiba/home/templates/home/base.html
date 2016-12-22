@@ -43,7 +43,9 @@
                             <li><a href="{% url 'gallery:upload_video' %}">Video</a></li>
                         </ul>
                     </li>
-                    <li><a href="/staff">Staff</a></li>
+                    {% if request.user.is_staff %}
+                        <li><a href="/staff">Staff</a></li>
+                    {% endif %}
                 </ul>
 
                 <div class="nav navbar-nav navbar-right">
@@ -61,7 +63,7 @@
                     <ul class="nav navbar-nav">
                         {% if not user.is_authenticated %}
                         <li><a href="{% url 'home:login' %}">Entrar</a></li>
-                        <li><a href="#">Registrar-se</a></li>
+                        <li><a href="{% url 'home:register' %}">Registrar-se</a></li>
                         {% else %}
                         <li><a href="{% url 'profile:detail' user.profile.slug %}">Bem vindo(a), {{ user.username }}</a></li>
                         <li><a href="{% url 'home:logout' %}">Sair</a></li>
