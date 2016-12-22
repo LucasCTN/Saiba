@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿    # -*- coding: utf-8 -*-
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -141,7 +141,15 @@ def create_entry(request):
             return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
                                                        'first_revision':first_revision, 'images':last_images})
 
-        context = { "entry_form": entry_form, "revision_form": revision_form }
+        context = { "entry_form": entry_form,
+                    "revision_form": revision_form }
+
+    entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
+    entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
+    entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
+    entry_form.fields['additional_references'].widget.attrs['class'] = 'form-control form-additional_references'
+    entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
+    revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'entry/create_entry.html', context)
 

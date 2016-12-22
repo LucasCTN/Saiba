@@ -141,7 +141,6 @@ def user_register(request):
                         if initialize_authentification(request):
                             return redirect('home:index')
 
-
         register_user_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
         register_user_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
         register_user_form.fields['email'].widget.attrs['class'] = 'form-control form-email'
