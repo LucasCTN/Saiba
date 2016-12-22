@@ -2,30 +2,33 @@
 {% block title %}Entrar{% endblock %}
 
 {% block body %}
-<div class="container-fluid">
+<div class="container-fluid col-md-offset-3">
     <div id="login">
-        <form class="form-horizontal" name="LoginForm" action="{% url 'home:login' %}" method="post">
-        {% csrf_token %}
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-        {% endif %}
-        <div class="control-group">
-            <label class="control-label" for="username">Username</label>
-            <div class="controls">
-                <input type="text" id="username" name="username"  placeholder="Username">
+        <form class="form-horizontal col-md-12" role="form" action="{% url 'home:login' %}" method="post" enctype="multipart/form-data" name="LoginForm">
+            {% csrf_token %}
+
+            {% if errors_list %}
+                <div class="alert alert-warning">
+                {% for error in errors_list %}
+                    <strong>{{ error|escape }}</strong>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="field">Nome de Usuário:</label>
+                <div class="col-sm-3">{{ form.username }}</div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="password">Password</label>
-            <div class="controls">
-                <input type="password" name="password" id="password" placeholder="Password">
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="field">Senha:</label>
+                <div class="col-sm-3">{{ form.password }}</div>
             </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" class="btn">Login</button>
+
+            <div class="control-group col-md-12 col-md-offset-2">
+				<button type="submit" class="btn btn-primary col-md-2">Entrar</button>
             </div>
-        </div>
+
         </form>
     </div>
 </div>
