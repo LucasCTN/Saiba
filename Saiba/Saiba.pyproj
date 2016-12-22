@@ -191,6 +191,8 @@
     <Content Include="gallery\templates\gallery\upload-image.html" />
     <Content Include="home\static\home\api.js" />
     <Content Include="home\static\home\index.css" />
+    <Content Include="home\static\home\navbar.css" />
+    <Content Include="home\static\home\navbar.js" />
     <Content Include="home\static\home\style.css" />
     <Content Include="home\static\home\scripts.js" />
     <Content Include="home\templates\home\base.html" />
@@ -201,7 +203,9 @@
     <Content Include="home\templates\home\register.html" />
     <Content Include="home\templates\home\logout.html" />
     <Content Include="home\templates\home\login.html" />
+    <Content Include="home\templates\home\search_ajax.html" />
     <Content Include="home\templates\home\sidebar.html" />
+    <Content Include="home\templates\home\search.html" />
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
     <Content Include="profile\templates\profile\index.html" />

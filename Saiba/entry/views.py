@@ -180,7 +180,6 @@ def trending(request):
 
     return render(request, 'entry/trending.html', context)
 
-
 '''
     recently_revised_entries = Entry.objects.filter(hidden=False).annotate(num_revisions=Count('revisions')).order_by('-num_revisions')
     

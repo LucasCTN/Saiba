@@ -1,0 +1,39 @@
+﻿{% extends 'home/base.html' %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    <section id="pesquisa" class="container col-md-12">
+        <form class="form-horizontal col-md-4 col-md-offset-4" action="{% url 'home:search' %}" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input name="search" type="text" class="form-control" placeholder="Pesquisar">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="submit">Go!</button>
+                </span>
+            </div>
+        </form>
+
+        <br><hr/>    
+
+        {% if search_entries %}
+            {% for entry in search_entries %}
+                <div class="col-md-12">
+                    <a href="/entrada/{{entry.slug}}/">
+                        <div class="col-md-1">
+                            <img class="media-object" src="/media/{{entry.icon}}" alt="{{entry.title}}" height="50">
+                        </div>
+                        <div class="col-md-8" style="padding-top:12px">
+                            {{entry.title}}
+                        </div>                        
+                    </a>                      
+                </div>
+            {% endfor %}
+        {% else %}
+            Não existem entradas com este nome.
+        {% endif %}
+    </section>
+{% endblock %}

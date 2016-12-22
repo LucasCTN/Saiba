@@ -11,11 +11,11 @@
             {% endif %}
         </div>
         <div class="media-body media-middle">
-            <h3 class="media-heading"><a href="{% url 'profile:detail' profile.slug %}">{{ profile.user.username }}</a></h3>
-            <span class="">Localização: {{ profile.location }}</span><br/>
-            <span class="">Sobre: {{ profile.about }}</span><br/>
-            <span class="">Registrado em: {{ profile.user.date_joined }}</span><br/>
-            <span class="">Último login em: {{ profile.user.last_login }}</span><br/>
+            <h3 class="media-heading">{{ profile.user.username }}</h3>
+            <span class=""><b>Localização:</b> {{ profile.location }}</span><br/>
+            <span class=""><b>Sobre:</b> {{ profile.about }}</span><br/>
+            <span class=""><b>Registrado em:</b> {{ profile.user.date_joined }}</span><br/>
+            <span class=""><b>Último login em:</b> {{ profile.user.last_login }}</span><br/>
         </div>        
     </section>
 {% endblock %}
