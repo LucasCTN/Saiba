@@ -295,3 +295,16 @@ class TrendingDetail(APIView):
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class SearchDetail(APIView):
+    def get(self, request):
+        search_text = request.GET.get('search')
+        search_type = request.GET.get('type')
+
+        if search_text and search_type:
+            if search_type == "entry":
+                entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:20]
+                serializer = EntrySerializer(entries, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
