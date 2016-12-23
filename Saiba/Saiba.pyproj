@@ -96,6 +96,7 @@
     <Compile Include="manage.py" />
     <Compile Include="profile\admin.py" />
     <Compile Include="profile\apps.py" />
+    <Compile Include="profile\forms.py" />
     <Compile Include="profile\migrations\__init__.py" />
     <Compile Include="profile\models.py" />
     <Compile Include="feedback\serializers.py" />
