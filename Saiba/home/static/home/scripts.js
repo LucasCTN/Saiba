@@ -106,6 +106,57 @@ function updateCommentSection(commentSectionId, getCommentApiEndpoint, append_on
     })
 }
 
+function appendCommentSection(commentSectionId, getCommentApiEndpoint) {
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                var csrftoken = getCookie("csrftoken");
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: getCommentApiEndpoint,
+        data: $(this).serialize(),
+        success: function (data) {
+            createCommentSection(commentSectionId, data);
+        }
+    })
+}
+
+function createCommentChain(commentSectionId, json_comments) {
+    for (i = 0; i < json_comments.results.length; i++) {
+        var comment = createComment(json_comments.results[i].id, json_comments.results[i].author,
+                                    json_comments.results[i].update_date, json_comments.results[i].content,
+                                    json_comments.results[i].author_username, json_comments.results[i].author_slug,
+                                    json_comments.results[i].author_avatar, json_comments.results[i].points);
+
+        var commentId = json_comments.results[i].id;
+        $(commentSectionId).append(comment);
+
+        for (j = 0; j < json_comments.results[i].replies.length; j++) {
+
+            var reply = createReply(json_comments.results[i].replies[j].id,
+                                    commentId,
+                                    json_comments.results[i].replies[j].response_to,
+                                    json_comments.results[i].replies[j].author,
+                                    json_comments.results[i].replies[j].update_date,
+                                    json_comments.results[i].replies[j].content,
+                                    json_comments.results[i].replies[j].author_username,
+                                    json_comments.results[i].replies[j].author_slug,
+                                    json_comments.results[i].replies[j].author_avatar,
+                                    json_comments.results[i].replies[j].points);
+
+            var commentChain = $('#comment-' + commentId + ' #replies');
+            commentChain.append(reply);
+
+            return commentChain;
+        };
+    }
+}
+
 function createCommentSection(commentSectionId, json_comments) {
     for (i = 0; i < json_comments.results.length; i++) {
         var comment = createComment(json_comments.results[i].id,            json_comments.results[i].author,
