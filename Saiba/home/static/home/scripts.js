@@ -125,7 +125,6 @@ function CommentSection(section_id, api_comment_page, api_send_vote) {
 
         button_send.click(function () {
             api.sendReply(data.id, null, textarea_reply.val(), sendReplyApiEndpoint).done(function (reply_data) {
-                //comment_section.loadCommentPage();
                 var reply = comment_section.createComment("reply", reply_data);
                 $("#comment-" + data.id + " .replies").append(reply);
                 comment_section.scrollToComment("reply-" + reply_data.id);
@@ -190,7 +189,6 @@ function CommentSection(section_id, api_comment_page, api_send_vote) {
 
     this.scrollToComment = function (id) {
         var div_id = "#" + id;
-        console.log(div_id);
 
         $('html, body').animate({
             scrollTop: $(div_id).offset().top
