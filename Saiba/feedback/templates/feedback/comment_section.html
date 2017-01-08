@@ -24,21 +24,20 @@
 
     <script>
         var sendCommentApiEndpoint  = "{% url 'api:api_comments' %}";
-        var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=5&page=1&slug={{entry.slug}}&type={{type}}&id={{id}}";
+        var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=5&slug={{entry.slug}}&type={{type}}&id={{id}}&page=1";
         var sendReplyApiEndpoint    = "{% url 'api:api_replies' %}";
         var voteApiEndpoint         = "{% url 'api:api_vote' %}";
-        var page_counter = 1;
-        
-        $(document).ready(function () {
-            updateCommentSection("#comment-section", getCommentApiEndpoint);
 
-            /*$(window).scroll(function() {
+        var comment_section = new CommentSection("comment-section", getCommentApiEndpoint, voteApiEndpoint);
+
+        comment_section.loadCommentPage(function(){
+            $(window).scroll(function() {
                 if($(window).scrollTop() + window.innerHeight == $(document).height()) {
-                    
+                    comment_section.appendNextCommentPage();
                 }
-            });*/
+            });
         });
-
+        
         $('#post-comment').click(function(){
 
             var type    = $("[name='type']").val();
@@ -46,7 +45,15 @@
             var content = $("[name='content']").val();
             var id      = $("[name='id']").val();
             
-            sendComment(id, type, slug, content, sendCommentApiEndpoint, getCommentApiEndpoint);
-        }); 
+            var api = new API();
+            api.sendComment(id, type, slug, content, sendCommentApiEndpoint, getCommentApiEndpoint).done(function(data){
+                var comment_id = data.id;
+                comment_section.loadCommentPage(1, function(){
+                    $('html, body').animate({
+                        scrollTop: $("#comment-" + comment_id).offset().top
+                    }, 1500);
+                });
+            })
+        });
     </script>
 </section>
