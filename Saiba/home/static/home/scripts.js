@@ -9,6 +9,7 @@
     });
 
     this.getCommentPage = function (endpoint) {
+        console.log("{{user.username}}");
         return $.ajax({
             type: "GET",
             url: endpoint,
@@ -60,7 +61,7 @@
     }
 }
 
-function CommentSection(section_id, api_comment_page, api_send_vote) {
+function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) {
     var api = new API();
     var id = "#" + section_id;
 
@@ -106,8 +107,14 @@ function CommentSection(section_id, api_comment_page, api_send_vote) {
 
         var hr = $('<div />').addClass('col-md-12').append($('<hr />'));
 
-        div_feedback_container.append(span_points).append(button_upvote).append(button_downvote).append(" | ").append(button_reply)
-                            .append(button_delete).append(textarea_reply).append(button_send);
+        div_feedback_container.append(span_points).append(button_upvote).append(button_downvote).append(" | ").append(button_reply);
+
+        if (user_slug == data.author_slug)
+        {
+            div_feedback_container.append(button_delete);
+        }
+
+        div_feedback_container.append(textarea_reply).append(button_send);
 
         var div_content_container = $('<div />').addClass('col-md-11 content-container').append(div_info_container)
                                                                                         .append(div_feedback_container);

@@ -251,7 +251,7 @@ class CommentPageDetail(APIView):
                 target_id = video.id
 
             comments = Comment.objects.filter(target_id=target_id, 
-                                              target_content_type=target_type_id).order_by('-creation_date')
+                                              target_content_type=target_type_id, is_deleted=False).order_by('-creation_date')
 
         for comment in comments:
             comment_type_id = ContentType.objects.get_for_model(Comment).id
