@@ -40,7 +40,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if 'reply_limit' in self.context:
             limit = int(self.context['reply_limit'])
 
-            query = Reply.objects.filter(comment=obj).order_by('id')
+            query = Reply.objects.filter(comment=obj, is_deleted=False).order_by('id')
 
             for reply in query:
                 reply.points = (Vote.objects.filter(target_id=reply.pk, 

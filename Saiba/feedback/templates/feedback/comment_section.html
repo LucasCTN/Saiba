@@ -28,7 +28,7 @@
         var sendReplyApiEndpoint    = "{% url 'api:api_replies' %}";
         var voteApiEndpoint         = "{% url 'api:api_vote' %}";
 
-        var comment_section = new CommentSection("comment-section", getCommentApiEndpoint, voteApiEndpoint);
+        var comment_section = new CommentSection("comment-section", "{{user.profile.slug}}", getCommentApiEndpoint, voteApiEndpoint);
 
         comment_section.loadCommentPage(function(){
             $(window).scroll(function() {
