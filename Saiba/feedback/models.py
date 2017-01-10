@@ -28,6 +28,7 @@ class Comment(models.Model):
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     update_date         = models.DateTimeField(auto_now=True, blank=True)
     hidden              = models.BooleanField(default=False)
+    is_deleted          = models.BooleanField(default=False)
 
     def __unicode__(self):
         text = "#{} - {}".format(self.id, self.author.username)
@@ -41,6 +42,7 @@ class Reply(models.Model):
     comment         = models.ForeignKey(Comment, default=None, blank=True, null=True, related_name="replies")
     response_to     = models.ForeignKey('self', default=None, blank=True, null=True, related_name="responses")
     hidden          = models.BooleanField(default=False)
+    is_deleted      = models.BooleanField(default=False)
 
     def __unicode__(self):
         text = "#{} - {}".format(self.id, self.author.username)

@@ -47,7 +47,17 @@
             success: function (data) {                
             }
         });
-    }    
+    }
+
+    this.markComment = function (id, is_deleted, endpoint) {
+        return $.ajax({
+            type: "PATCH",
+            url: endpoint,
+            data: { id: id, is_deleted: is_deleted },
+            success: function (data) {
+            }
+        });
+    }
 }
 
 function CommentSection(section_id, api_comment_page, api_send_vote) {
@@ -90,16 +100,17 @@ function CommentSection(section_id, api_comment_page, api_send_vote) {
         var button_downvote = $('<button />').addClass('btn btn-default btn-xs glyphicon glyphicon-chevron-down');
 
         var button_reply = $('<button />').addClass('btn btn-default btn-xs').html("Responder");
+        var button_delete = $('<button />').addClass('btn btn-default btn-xs').html("Apagar");
         var textarea_reply = $('<textarea />').addClass('').css('display', 'none');
         var button_send = $('<button />').addClass('btn btn-default btn-xs').css('display', 'none').html("Enviar");
 
         var hr = $('<div />').addClass('col-md-12').append($('<hr />'));
 
         div_feedback_container.append(span_points).append(button_upvote).append(button_downvote).append(" | ").append(button_reply)
-                            .append(textarea_reply).append(button_send);
+                            .append(button_delete).append(textarea_reply).append(button_send);
 
         var div_content_container = $('<div />').addClass('col-md-11 content-container').append(div_info_container)
-                                .append(div_feedback_container);
+                                                                                        .append(div_feedback_container);
 
         var div_replies = $('<div />').addClass('replies col-md-12');
 
@@ -108,6 +119,13 @@ function CommentSection(section_id, api_comment_page, api_send_vote) {
             button_send.css('display', '');
             button_reply.css('display', 'none');
         });
+
+        /*button_edit.click(function () {
+            textarea_edit.css('display', '');
+            button_send_edit.css('display', '');
+            button_edit.css('display', 'none');
+            span_content.css('display', 'none');            
+        });*/
 
         button_upvote.click(function () {
             api.sendVote(data.id, type, 1, voteApiEndpoint).done(function (data) {
@@ -133,6 +151,20 @@ function CommentSection(section_id, api_comment_page, api_send_vote) {
                 button_send.css('display', 'none');
                 button_reply.css('display', '');
             })            
+        });
+
+        button_delete.click(function () {
+            var endpoint = "";
+            if (type == "comment"){
+                endpoint = sendCommentApiEndpoint;
+            }
+            else if (type == "reply"){
+                endpoint = sendReplyApiEndpoint;
+            }
+
+            api.markComment(data.id, true, endpoint).done(function () {
+                div_comment.remove();
+            })
         });
 
         div_comment.append(div_avatar_container).append(div_content_container).append(hr);

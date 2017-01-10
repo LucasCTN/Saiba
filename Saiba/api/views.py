@@ -96,19 +96,25 @@ class CommentDetail(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def patch(self, request):
-        """Parameters: id and content"""
+        """Parameters: id and is_deleted"""
         data = request.data.copy()
+        is_deleted = data["is_deleted"]
+        args = {"is_deleted": is_deleted}
 
-        if data['id'] is not None:
-            vote = get_object_or_404(Vote, pk=data['id'])
+        if data['id']:
+            comment = get_object_or_404(Comment, pk=data['id'])
 
-        serializer = VoteSerializer(vote, data=request.data, partial=True)
+        serializer = CommentSerializer(comment, data=args, partial=True)
 
-        if serializer.is_valid():
+        if not comment.is_deleted and serializer.is_valid() and comment.author == request.user:
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        elif comment.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class ReplyDetail(APIView):
     def get(self, request):
@@ -134,19 +140,27 @@ class ReplyDetail(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def patch(self, request):
-        """Parameters: id and content"""
+        """Parameters: id and is_deleted"""
         data = request.data.copy()
+        id = data['id']
+        is_deleted = data["is_deleted"]
 
-        if data['id'] is not None:
+        args = {"id": id, "is_deleted": is_deleted}
+
+        if id:
             reply = get_object_or_404(Reply, pk=data['id'])
 
-        serializer = ReplySerializer(vote, data=request.data, partial=True)
+        serializer = ReplySerializer(reply, data=args, partial=True)
 
-        if serializer.is_valid():
+        if not reply.is_deleted and serializer.is_valid() and reply.author == request.user:
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        elif reply.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class VoteDetail(APIView):
     def get(self, request):
