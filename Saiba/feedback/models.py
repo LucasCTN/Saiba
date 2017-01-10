@@ -10,7 +10,7 @@ class Vote(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     target_id           = models.PositiveIntegerField(null=True, blank=True)
     target              = GenericForeignKey('target_content_type', 'target_id')
-    author              = models.ForeignKey(User, default=1)
+    author              = models.ForeignKey(User)
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     update_date         = models.DateTimeField(auto_now=True, blank=True)
     direction           = models.IntegerField(default=0)
@@ -23,7 +23,7 @@ class Comment(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     target_id           = models.PositiveIntegerField(null=True, blank=True)
     target              = GenericForeignKey('target_content_type', 'target_id')
-    author              = models.ForeignKey(User, default=1)
+    author              = models.ForeignKey(User)
     content             = models.CharField(max_length=250)
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     update_date         = models.DateTimeField(auto_now=True, blank=True)
@@ -35,7 +35,7 @@ class Comment(models.Model):
         return text
 
 class Reply(models.Model):    
-    author          = models.ForeignKey(User, default=1)
+    author          = models.ForeignKey(User)
     content         = models.CharField(max_length=250)
     creation_date   = models.DateTimeField(auto_now_add=True, blank=True)
     update_date     = models.DateTimeField(auto_now=True, blank=True)

@@ -9,7 +9,6 @@
     });
 
     this.getCommentPage = function (endpoint) {
-        console.log("{{user.username}}");
         return $.ajax({
             type: "GET",
             url: endpoint,
@@ -126,13 +125,6 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
             button_send.css('display', '');
             button_reply.css('display', 'none');
         });
-
-        /*button_edit.click(function () {
-            textarea_edit.css('display', '');
-            button_send_edit.css('display', '');
-            button_edit.css('display', 'none');
-            span_content.css('display', 'none');            
-        });*/
 
         button_upvote.click(function () {
             api.sendVote(data.id, type, 1, voteApiEndpoint).done(function (data) {

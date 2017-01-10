@@ -33,7 +33,10 @@ class EntryDetail(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        serializer = EntrySerializer(data=request.data)
+        data = request.data.copy()
+        data['author'] = request.user.id;
+
+        serializer = EntrySerializer(data=data)
         
         if serializer.is_valid():
             serializer.save()
@@ -68,6 +71,7 @@ class CommentDetail(APIView):
     def post(self, request):
         data = request.data.copy()
         data['points'] = 0
+        data['author'] = request.user.id;
 
         if data['type']:
             comment_target_type = data['type']
@@ -130,6 +134,7 @@ class ReplyDetail(APIView):
     def post(self, request):
         data = request.data.copy()
         data['points'] = 0
+        data['author'] = request.user.id;
 
         serializer = ReplySerializer(data=data)
         
@@ -191,6 +196,7 @@ class VoteDetail(APIView):
 
     def post(self, request):
         data = request.data.copy()
+        data['author'] = request.user.id;
 
         id = request.POST.get('id', False)
         type = request.POST.get('type', False)
