@@ -1,0 +1,11 @@
+﻿{% if tag_search_result %}
+    {% for tag_result in tag_search_result %}
+        <li>
+            <div id="tag-{{tag_result.label}}" class="tags-result">
+                {{tag_result.label}}
+            </div>
+        </li>
+    {% endfor %}
+{% else %}
+    <li id="tags-no-results">Sem resultados.</li>
+{% endif %}

@@ -7,6 +7,7 @@ from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from .models import Image, Video
 from .forms import ImageForm, VideoForm
+from home.models import Tag
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -26,7 +27,7 @@ def image_detail(request, image_id):
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
     related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\
-                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
+                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=video.pk)[:5]
 
     context = { 'video'         : video,
                 'type'          : 'video',
@@ -52,7 +53,10 @@ def upload_image(request):
 
         if image_form.is_valid():
             image_form = ImageForm(request.POST, request.FILES)
-            image = image_form.save()
+            image = image_form.save(commit=False)
+            image.author = request.user
+            image.save()
+            image_form.save_m2m()
             return render(request, 'gallery/image.html', {'image': image})
 
     image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
@@ -60,7 +64,9 @@ def upload_image(request):
     image_form.fields['file'].widget.attrs['class'] = 'form-control-file form-file'
     image_form.fields['tags'].widget.attrs['class'] = 'form-control form-tags'
     image_form.fields['source'].widget.attrs['class'] = 'form-control form-source'
+    image_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
     image_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
+    image_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
     return render(request, 'gallery/upload-image.html', {"form": image_form})
 
@@ -72,13 +78,35 @@ def upload_video(request):
 
         if video_form.is_valid():
             video_form = VideoForm(request.POST, request.FILES)
-            video = video_form.save()
+            video = video_form.save(commit=False)
+            video.author = request.user
+            video.save()
+            video_form.save_m2m()
             return render(request, 'gallery/video.html', {'video': video})
 
     video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     video_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
     video_form.fields['link'].widget.attrs['class'] = 'form-control form-link'
     video_form.fields['tags'].widget.attrs['class'] = 'form-control form-tags'
+    video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
+    video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
     video_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
+    video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
     return render(request, 'gallery/upload-video.html', {"form": video_form})
+
+def search_tags(request):
+    if request.GET:
+        search_text = request.GET.get('q')
+    else:
+        search_text = ''
+
+    if search_text != '':
+        #tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
+        tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
+    else:
+        tag_search_result = None
+
+    args = { 'tag_search_result' : tag_search_result }
+
+    return render(request, 'gallery/search_ajax.html', args)

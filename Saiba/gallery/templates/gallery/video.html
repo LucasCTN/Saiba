@@ -1,8 +1,8 @@
 ﻿{% extends 'home/base.html' %}
-{% block title %}{{ image.title }} - Saiba{% endblock %}
-{% block body %}  
+{% block title %}{{ video.title }} - Saiba{% endblock %}
+{% block body %}
     <section id="conteudo" class="container col-md-9">
-        <iframe id="vídeo" class='media-object' width="560" height="315" src="{{ video.link }}" frameborder="0" allowfullscreen></iframe>
+        <iframe id="vídeo" class='media-object' width="560" height="315" src="https://www.youtube.com/embed/{{ video.link }}" frameborder="0" allowfullscreen></iframe>
     </section>
 
     <section id="informacao" class="container media col-md-12">

@@ -1,21 +1,28 @@
 ﻿$(function () {
-    $('#search').keyup(function () {
-
+    $('#search').focusin(function () {
         $('#search-results').show();
 
+        $('#search').keypress(function (e) {
+            if (e.keyCode == 27) {
+                $('#search-results').hide();
+            }
+        });
+    });
+
+    $('#search').focusout(function () {
+        window.setTimeout(function () { $('#search-results').hide() }, 100);
+    });
+
+    $('#search').keyup(function () {
         $.ajax({
-            type: "POST",
-            url: "/pesquisar-ajax/",
-            data: {
-                'search_text': $('#search').val(),
-                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
-            },
-            success: searchSuccess,
+            type: "GET",
+            url: "/pesquisar-ajax/?q=" + $('#search').val(),
+            success: searchEntrySuccess,
             dataType: 'html'
         });
     });
 });
 
-function searchSuccess(data, textStatus, jqXHR) {
+function searchEntrySuccess(data, textStatus, jqXHR) {
     $('#search-results').html(data);
 }

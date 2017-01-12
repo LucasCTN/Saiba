@@ -1,5 +1,14 @@
 ﻿{% extends 'home/base.html'%}
 
+{% load staticfiles %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}"/>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'gallery/scripts.js' %}"></script>
+{% endblock %}
+
 {% block body %}
     <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -24,8 +33,32 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Data:</label>
+            <div class="col-md-4">{{ form.date_origin }}</div>
+        </div>
+
+        <!-- <div class="form-group">
             <label class="control-label col-sm-2" for="field">Marcadores:</label>
             <div class="col-md-4">{{ form.tags }}</div>
+        </div> -->
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Marcações:</label>
+            <div class="col-md-4"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+            <div class="col-md-offset-2 search-tag-box">
+                <ul id="search-tag-results">
+                    <li id="tags-no-results">Sem resultados.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field"></label>
+            <div class="col-md-4 search-tag-display">
+                <ul>
+                    Adicionadas:
+                </ul>
+            </div>
         </div>
 
         <div class="form-group">
@@ -34,10 +67,14 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Estado:</label>
+            <div class="col-md-4">{{ form.state }}</div>
+        </div>
+
+        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
             </div>
         </div>
-        
     </form>
 {% endblock %}

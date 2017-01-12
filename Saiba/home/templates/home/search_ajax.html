@@ -1,5 +1,5 @@
-﻿{% if search_entries %}
-    {% for entry in search_entries %}
+﻿{% if search_result %}
+    {% for entry in search_result %}
         <li>
             <a href="/entrada/{{entry.slug}}/">
                 <div class="entry">
@@ -10,5 +10,5 @@
         </li>
     {% endfor %}
 {% else %}
-    <li><div class="not-found">Sem entradas.</div></li>
+    <li><span class="entries-not-found">Sem entradas.</span></li>
 {% endif %}
