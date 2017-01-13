@@ -10,7 +10,7 @@
     });
 
     $('#search-tags').focusout(function () {
-        window.setTimeout(function () { $('#search-tag-results').show() }, 100);
+        window.setTimeout(function () { $('#search-tag-results').hide() }, 100);
     });
 
     $('#search-tags').keyup(function () {
@@ -23,12 +23,11 @@
     });
 });
 
-function searchTagSuccess(data, textStatus, jqXHR) {
+function searchTagSuccess(data) {
     $('#search-tag-results').html(data);
 
     $('.tags-result').click(function (event) {
         var tag = $(event.target);
-
         $('.search-tag-display ul').append('<li>' + tag.text().trim() + '</li>');
     });
 }
