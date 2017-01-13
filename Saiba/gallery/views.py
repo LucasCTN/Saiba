@@ -77,12 +77,28 @@ def upload_video(request):
         video_form = VideoForm(request.POST or None)
 
         if video_form.is_valid():
+            all_tags = get_tag_list(request.POST.get('tags-selected'))
+            db_tags = Tag.objects.filter(label__in=all_tags)
+            new_tags = list(all_tags)
+
+            for x in db_tags:
+                new_tags[:] = (value for value in new_tags if value != str(x))
+
+            new_tags = list(set(new_tags))
+
+            for tag_name in new_tags:
+                Tag.objects.create(label=tag_name, hidden=False)
+
+            set_tags = list(db_tags) + new_tags
+
             video_form = VideoForm(request.POST, request.FILES)
             video = video_form.save(commit=False)
             video.author = request.user
             video.save()
             video_form.save_m2m()
-            return render(request, 'gallery/video.html', {'video': video})
+            video.tags = Tag.objects.filter(label__in=set_tags)
+            video.save()
+            return redirect('gallery:video_detail', video_id=video.id)
 
     video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     video_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
@@ -102,7 +118,6 @@ def search_tags(request):
         search_text = ''
 
     if search_text != '':
-        #tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
         tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
     else:
         tag_search_result = None
@@ -110,3 +125,11 @@ def search_tags(request):
     args = { 'tag_search_result' : tag_search_result }
 
     return render(request, 'gallery/search_ajax.html', args)
+
+def get_tag_list( tag_string ):
+    if(tag_string != None):
+        tags = tag_string.split(",")
+        tags[:] = (value for value in tags if value != '')
+        return tags
+    else:
+        return ''
