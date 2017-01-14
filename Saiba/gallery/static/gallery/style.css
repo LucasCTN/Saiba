@@ -21,29 +21,29 @@
     padding-left: 10px;
 }
 
-.search-tag-box{
+.search-box{
     position: absolute;
     padding-top: 35px;
     padding-left: 15px;
     z-index: 1;
 }
 
-.search-tag-box ul{
+.search-box ul{
     list-style: none;
     padding: initial !important;
 }
 
-.search-tag-box li{
+.search-box li{
     padding-top: 5px;
     padding-left: 12px;
     padding-bottom: 5px;
 }
 
-.search-tag-box li:hover{
+.search-box li:hover{
     background-color: aqua;
 }
 
-#search-tag-results{
+.search-results{
     display: none;
     background-color: ghostwhite;
     padding-top: 8px;
@@ -55,6 +55,6 @@
     word-break:break-all;
 }
 
-#tags-no-results:hover{
+.no-results:hover{
     background-color: darkorange;
 }

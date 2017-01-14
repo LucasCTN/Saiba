@@ -152,7 +152,7 @@ def user_register(request):
     
         return render(request, 'home/register.html', args)
 
-def search(request):
+def navbar_search(request):
     query = request.GET.get('q')
     type = request.GET.get('type')
     order_by = request.GET.get('order_by')
@@ -204,6 +204,6 @@ def search_results(request):
         search_result = None
 
     args = {'entries' : entries,
-            'search_result' : search_result}
+            'navbar_search_result' : search_result}
 
-    return render(request, 'home/search_ajax.html', args)
+    return render(request, 'home/search_entry.html', args)
