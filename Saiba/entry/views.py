@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Count, Max
 #from .forms import AlbumForm, SongForm, UserForm
-from .models import Entry, Revision, Category, EditorList
+from .models import Entry, Revision, Category
 from feedback.models import Comment
 from .forms import EntryForm, RevisionForm
 from django.utils.html import escape
@@ -51,8 +51,9 @@ def detail(request, entry_slug):
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
 
+    popular_images = Image.objects.filter(hidden=False)[:9]
+
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
-    editor_list = EditorList.objects.filter(entry=entry)
 
     args = {'entry'             : entry, 
             'last_revision'     : last_revision,                                                   
@@ -60,7 +61,6 @@ def detail(request, entry_slug):
             'images'            : last_images,
             'videos'            : last_videos,
             'related_entries'   : related_entries,
-            'editor_list'       : editor_list,
             'type'              : 'entry'}
 
     return render(request, 'entry/detail.html', args)
@@ -79,12 +79,12 @@ def edit(request, entry_slug):
         last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
         first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
 
-        is_editor = EditorList.objects.filter(entry=entry, user=user)
+        is_editor = user.profile in entry.editorship.all()
 
-        entry_form = EntryForm(request.POST or None, initial=model_to_dict(entry))
+        entry_form = EntryForm(request.POST or None, request.FILES, initial=model_to_dict(entry))
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
 
-        if entry_form.is_valid() and revision_form.is_valid() and is_editor.exists():
+        if entry_form.is_valid() and revision_form.is_valid() and is_editor:
             trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
             entry.trending_points += trending_weight
             entry.save(update_fields=['trending_points'])
@@ -123,17 +123,13 @@ def create_entry(request):
         if entry_form.is_valid() and revision_form.is_valid():
             entry = entry_form.save(commit=False)
             entry.author = user
+            entry.editorship.add(user.profile)
             entry.save()
             
             revision = revision_form.save(commit=False)
             revision.entry = entry
             revision.author = user
             revision.save()
-
-            editorList = EditorList()
-            editorList.user = user
-            editorList.entry = entry
-            editorList.save()
 
             last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
             first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
@@ -155,7 +151,7 @@ def create_entry(request):
 
 def editorship(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)
-    editor_list = EditorList.objects.filter(entry=entry)
+    editor_list = entry.editorship.all()
     
     user_editor_list = list()
         

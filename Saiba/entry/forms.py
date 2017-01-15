@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Entry, Revision, EditorList
+from .models import Entry, Revision
 
 class EntryForm(ModelForm):
     class Meta:
@@ -10,8 +10,3 @@ class RevisionForm(ModelForm):
     class Meta:
         model = Revision
         fields = [ "content" ]
-
-class EditorListForm(ModelForm):
-    class Meta:
-        model = EditorList
-        fields = [ "user" ]

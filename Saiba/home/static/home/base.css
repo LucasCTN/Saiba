@@ -1,0 +1,43 @@
+﻿body
+{
+    padding-top: 3%;
+    background-color: #fafafa;
+}
+
+#saiba-navbar{
+    background-color: teal;
+}
+
+#saiba-navbar a{
+    color: white;
+}
+
+.divider-vertical {
+    height: 30px;
+    padding-top: 50px;
+    margin: 0 9px;
+    border-left: 1px solid #F2F2F2;
+    border-right: 1px solid #FFF;
+}
+
+#trending_entries{
+    background-color: #faffff;
+    padding: 5px 0px 5px 0px;
+    border-width: 2px 0px 2px 0px;
+    border-style: solid;
+    border-color: #d7e7cf;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.trending-title{
+    padding-top: 5px;
+}
+
+#site-conteudo
+{
+    margin-top: 20px;
+}

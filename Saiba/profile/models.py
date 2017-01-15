@@ -15,3 +15,6 @@ class Profile(models.Model):
             # Newly created object, so set slug
             self.slug = slugify(self.user.username)
         super(Profile, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.user.username

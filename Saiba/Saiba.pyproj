@@ -190,10 +190,11 @@
     <Content Include="gallery\templates\gallery\index.html" />
     <Content Include="gallery\templates\gallery\upload-video.html" />
     <Content Include="gallery\templates\gallery\upload-image.html" />
+    <Content Include="home\static\home\base.css" />
+    <Content Include="home\static\home\entry.css" />
     <Content Include="home\static\home\index.css" />
     <Content Include="home\static\home\navbar.css" />
     <Content Include="home\static\home\navbar.js" />
-    <Content Include="home\static\home\scripts - Copy.js" />
     <Content Include="home\static\home\style.css" />
     <Content Include="home\static\home\scripts.js" />
     <Content Include="home\templates\home\base.html" />
