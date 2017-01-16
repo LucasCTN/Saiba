@@ -21,6 +21,14 @@
     padding-left: 10px;
 }
 
+.search-tag-display span{
+    color: indianred;
+}
+
+.search-tag-display span:hover{
+    color: #330000;
+}
+
 .search-box{
     position: absolute;
     padding-top: 35px;

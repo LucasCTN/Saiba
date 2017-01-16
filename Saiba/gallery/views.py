@@ -112,7 +112,7 @@ def search_tags(request):
 
     args = { 'tag_search_result' : tag_search_result }
 
-    return render(request, 'gallery/search_ajax.html', args)
+    return render(request, 'gallery/search_tag.html', args)
 
 def search_entries(request):
     if request.GET:
@@ -149,7 +149,7 @@ def generate_tags( tag_list ):
 
     # Removing database tag from the new list (if have any)
     for x in db_tags:
-        new_tags[:] = (value for value in new_tags if value != str(x))
+        new_tags[:] = (value for value in new_tags if value != str(x).decode("utf-8"))
 
     # Inserting in database the new tags
     for tag_name in new_tags:
