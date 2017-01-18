@@ -78,6 +78,9 @@
     <Compile Include="gallery\forms.py" />
     <Compile Include="gallery\migrations\__init__.py" />
     <Compile Include="gallery\models.py" />
+    <Compile Include="gallery\serializers.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gallery\tests.py" />
     <Compile Include="gallery\urls.py" />
     <Compile Include="gallery\views.py" />
@@ -208,6 +211,7 @@
     <Content Include="home\templates\home\search_ajax.html" />
     <Content Include="home\templates\home\sidebar.html" />
     <Content Include="home\templates\home\search.html" />
+    <Content Include="home\templates\home\popular_galleries.html" />
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
     <Content Include="profile\templates\profile\index.html" />

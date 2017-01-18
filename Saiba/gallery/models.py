@@ -15,13 +15,13 @@ class Image(models.Model):
     title       = models.CharField(max_length=250)
     date        = models.DateTimeField(default=datetime.datetime.now, blank=True)
     source      = models.CharField(max_length=250)
-    tags        = models.CharField(max_length=250)
-    entry       = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    entry       = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="images")
     hidden      = models.BooleanField(default=False)
     file        = models.ImageField(blank=True, upload_to='icon/')
     description = models.CharField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     tags        = models.ManyToManyField('home.Tag', blank=True)
+    trending_points = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title

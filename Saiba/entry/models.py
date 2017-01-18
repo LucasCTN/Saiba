@@ -59,11 +59,3 @@ class Revision(models.Model):
 
     def __unicode__(self):
         return "#{} - {}".format(str(self.pk), self.entry.title)
-
-class TrendingEntry(models.Model):
-    title   = models.CharField(max_length=250)
-    entry   = models.ForeignKey(Entry, default=1)
-    date    = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{} - {}".format(self.entry.title, self.title)

@@ -1,5 +1,7 @@
-Django==1.10.4
+chardet==2.3.0
+Django==1.10.1
 djangorestframework==3.4.7
+ghdiff==0.4
 Pillow==3.4.2
 six==1.10.0
-textile==2.3.6
+textile==2.3.5

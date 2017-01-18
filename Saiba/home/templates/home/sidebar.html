@@ -2,7 +2,7 @@
     <img src="/media/ad_test.png" class='media-object'/>
 </section>
 
-{% if editor_list %}
+{% if entry.editorship.all %}
 <hr/>
 <section id="lista-editores" class="panel panel-default">
     <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a> ({{entry.editorship.all|length}})</div>
@@ -20,12 +20,8 @@
 </section>
 {% endif %}
 
-{% if popular_images %}
 <hr/>
-<section id="imagens-populares" class="container media col-md-12">
-    <h2>Imagens populares</h2>
-    <img src="/media/icon/test_image.png" class='media-object col-md-4' width="60" height="60"/>
-    <img src="/media/icon/test_image.png" class='media-object col-md-4' width="60" height="60"/>
-    <img src="/media/icon/test_image.png" class='media-object col-md-4' width="60" height="60"/>
+<section id="galerias-populares" class="container media col-md-12">
+    <h2>Galerias populares</h2>
+    {% include "home/popular_galleries.html" %}
 </section>
-{% endif %}

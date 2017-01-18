@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^v1/points/$', views.PointsDetail.as_view(), name='api_points'),
     url(r'^v1/trending/$', views.TrendingDetail.as_view(), name='api_trending'),
     url(r'^v1/search/$', views.SearchDetail.as_view(), name='api_search'),
+    url(r'^v1/preview/$', views.PreviewDetail.as_view(), name='api_preview'),
 ]

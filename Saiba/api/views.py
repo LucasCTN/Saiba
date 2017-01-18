@@ -15,6 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from rest_framework.pagination import PageNumberPagination
 import Saiba.utils
+import Saiba.saibadown, textile
 
 class EntryDetail(APIView):
     def get(self, request):
@@ -314,6 +315,14 @@ class TrendingDetail(APIView):
                 entries = Entry.objects.all().order_by('-trending_points')[:20]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
+            elif trending_type == "gallery":
+                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[:20]
+                serializer = EntrySerializer(galleries, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            elif trending_type == "image":
+                image = Image.objects.all().order_by('-trending_points')[:20]
+                serializer = ImageSerializer(image, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class SearchDetail(APIView):
@@ -326,5 +335,16 @@ class SearchDetail(APIView):
                 entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:20]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    
+class PreviewDetail(APIView):
+    def post(self, request):
+        content = request.POST.get('content')
+
+        if content:
+            result = Saiba.saibadown.parse(textile.textile(content))
+            return Response(result, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
