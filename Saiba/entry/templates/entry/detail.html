@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-7">
             <h3 class="media-heading"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></h3>
-            <p class="saiba-data">(Insert data here)</p>
+            <p class="saiba-data">{{entry.date_origin}}</p>
             <span class="saiba-data">Criado em {{ first_revision.date }} por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
             <span class="saiba-data">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
         </div>

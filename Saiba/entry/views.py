@@ -3,6 +3,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.defaultfilters import slugify
 from django.db.models import Q, Count, Max
 #from .forms import AlbumForm, SongForm, UserForm
 from .models import Entry, Revision, Category
@@ -135,10 +136,13 @@ def create_entry(request):
         user = request.user
         entry_form = EntryForm(request.POST or None)
         revision_form = RevisionForm(request.POST or None)
+
+        entry_test = Entry.objects.filter(slug=slugify(entry_form.fields['title'])).first()
         
-        if entry_form.is_valid() and revision_form.is_valid():
+        if entry_form.is_valid() and revision_form.is_valid() and not entry_test:
             entry = entry_form.save(commit=False)
             entry.author = user
+            entry.save()
             entry.editorship.add(user.profile)
             entry.save()
             
@@ -160,7 +164,6 @@ def create_entry(request):
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
     entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
     entry_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    entry_form.fields['additional_references'].widget.attrs['class'] = 'form-control form-additional_references'
     entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
     revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
 
