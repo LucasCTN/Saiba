@@ -1,5 +1,14 @@
 ﻿{% extends 'home/base.html'%}
 
+{% load staticfiles %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}"/>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'gallery/scripts.js' %}"></script>
+{% endblock %}
+
 {% block body %}
     <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -15,7 +24,11 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Entrada:</label>
-            <div class="col-md-4">{{ form.entry }}</div>
+            <div class="col-md-4"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+            <div class="col-md-offset-2 search-box">
+                <ul id="search-entry-results" class="search-results" hidden>
+                </ul>
+            </div>
         </div>
 
         <div class="form-group">
@@ -24,9 +37,30 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="field">Marcadores:</label>
-            <div class="col-md-4">{{ form.tags }}</div>
+            <label class="control-label col-sm-2" for="field">Data:</label>
+            <div class="col-md-4">{{ form.date_origin }}</div>
         </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Marcações:</label>
+            <div class="col-md-4"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+            <div class="col-md-offset-2 search-box">
+                <ul id="search-tag-results" class="search-results">
+                    <li id="tags-no-results" class="no-results">Sem resultados.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field"></label>
+            <div class="col-md-4 search-tag-display">
+                <ul>
+                    Adicionadas:
+                </ul>
+            </div>
+
+            <input type="text" id="tags-selected" name="tags-selected" hidden/>
+        </div>        
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Descrição:</label>
@@ -34,10 +68,14 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Estado:</label>
+            <div class="col-md-4">{{ form.state }}</div>
+        </div>
+
+        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+                <button type="submit" id="submit-video" class="btn btn-primary" name="submit">Enviar</button>
             </div>
         </div>
-        
     </form>
 {% endblock %}

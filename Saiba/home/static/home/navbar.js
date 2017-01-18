@@ -1,21 +1,28 @@
 ﻿$(function () {
-    $('#search').keyup(function () {
+    $('#navbar-search').focusin(function () {
+        $('#navbar-search-results').show();
 
-        $('#search-results').show();
+        $('#navbar-search').keypress(function (e) {
+            if (e.keyCode == 27) {
+                $('#navbar-search-results').hide();
+            }
+        });
+    });
 
+    $('#navbar-search').focusout(function () {
+        window.setTimeout(function () { $('#navbar-search-results').hide() }, 100);
+    });
+
+    $('#navbar-search').keyup(function () {
         $.ajax({
-            type: "POST",
-            url: "/pesquisar-ajax/",
-            data: {
-                'search_text': $('#search').val(),
-                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
-            },
-            success: searchSuccess,
+            type: "GET",
+            url: "/pesquisa-navbar/?q=" + $('#navbar-search').val(),
+            success: navbarSearchSuccess,
             dataType: 'html'
         });
     });
 });
 
-function searchSuccess(data, textStatus, jqXHR) {
-    $('#search-results').html(data);
+function navbarSearchSuccess(data, textStatus, jqXHR) {
+    $('#navbar-search-results').html(data);
 }

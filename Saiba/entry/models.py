@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Permission, User
 from django.template.defaultfilters import slugify
 from django.db import models
+import datetime
 from django.contrib.contenttypes.fields import GenericRelation
 
 class Status(models.Model):
@@ -27,6 +28,7 @@ class Entry(models.Model):
     status                  = models.ForeignKey(Status, default=1)
     category                = models.ForeignKey(Category, default=1)
     type                    = models.CharField(max_length=100)
+    date_origin             = models.CharField(max_length=100, blank=True)
     origin                  = models.CharField(max_length=100)
     additional_references   = models.CharField(max_length=100)
     icon                    = models.ImageField(blank=True, upload_to='icon/')

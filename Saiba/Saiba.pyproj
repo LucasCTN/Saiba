@@ -157,6 +157,8 @@
     <Folder Include="forum\templates\forum\" />
     <Folder Include="gallery\" />
     <Folder Include="gallery\migrations\" />
+    <Folder Include="gallery\static\" />
+    <Folder Include="gallery\static\gallery\" />
     <Folder Include="gallery\templates\" />
     <Folder Include="gallery\templates\gallery\" />
     <Folder Include="home\" />
@@ -188,6 +190,9 @@
     <Content Include="feedback\templates\feedback\comment_section.html" />
     <Content Include="feedback\templates\feedback\index.html" />
     <Content Include="forum\templates\forum\index.html" />
+    <Content Include="gallery\static\gallery\style.css" />
+    <Content Include="gallery\static\gallery\scripts.js" />
+    <Content Include="gallery\templates\gallery\search_entry.html" />
     <Content Include="gallery\templates\gallery\video.html" />
     <Content Include="gallery\templates\gallery\image.html" />
     <Content Include="gallery\templates\gallery\index.html" />
@@ -208,7 +213,7 @@
     <Content Include="home\templates\home\register.html" />
     <Content Include="home\templates\home\logout.html" />
     <Content Include="home\templates\home\login.html" />
-    <Content Include="home\templates\home\search_ajax.html" />
+    <Content Include="home\templates\home\search_entry.html" />
     <Content Include="home\templates\home\sidebar.html" />
     <Content Include="home\templates\home\search.html" />
     <Content Include="home\templates\home\popular_galleries.html" />

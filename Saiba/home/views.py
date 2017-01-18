@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission, User
 from .models import Post, Label
 from .forms import PostForm
 from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
-from entry.models import Entry
+from entry.models import Entry, Revision
 from gallery.models import Image, Video
 from profile.models import Profile
 from django.contrib.auth import authenticate, login, logout
@@ -152,34 +152,58 @@ def user_register(request):
     
         return render(request, 'home/register.html', args)
 
-def search(request):
-    if request.POST:
-        search_text = request.POST['search']
-    else:
-        search_text = ''
-
+def navbar_search(request):
+    query = request.GET.get('q')
+    type = request.GET.get('type')
+    order_by = request.GET.get('order_by')
+    
     entries = Entry.objects.all()
-    search_entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:10]
 
+    if query == None:
+        query = ''
+
+    if type == None:
+        type = 'entry'
+
+    if order_by == None:
+        order_by = 'newer'
+    
+    search_result = None;
+    
+    if(type == 'entry'):
+        search_result = Entry.objects.filter(title__contains=query, hidden=False)
+    elif(type == 'image'):
+        search_result = Image.objects.filter(title__contains=query, hidden=False)
+    elif(type == 'video'):
+        search_result = Video.objects.filter(title__contains=query, hidden=False)
+
+    if(order_by == 'newer'):
+        search_result = search_result.order_by('-id')
+    elif(order_by == 'older'):
+        search_result = search_result.order_by('id')
+    
     args = {'entries' : entries,
-            'search_entries' : search_entries}
+            'search_result' : search_result,
+            'query' : query,
+            'type' : type,
+            'order_by' : order_by}
 
     return render(request, 'home/search.html', args)
 
 def search_results(request):
-    if request.POST:
-        search_text = request.POST['search_text']
+    if request.GET:
+        search_text = request.GET.get('q')
     else:
         search_text = ''
 
     entries = Entry.objects.all()
 
     if search_text != '':
-        search_entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
+        search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
     else:
-        search_entries = None
+        search_result = None
 
     args = {'entries' : entries,
-            'search_entries' : search_entries}
+            'navbar_search_result' : search_result}
 
-    return render(request, 'home/search_ajax.html', args)
+    return render(request, 'home/search_entry.html', args)

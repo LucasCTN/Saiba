@@ -25,6 +25,8 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Marcadores:</label>
+            <ul id="tag-search-results" class="upload-search-results">
+            </ul>
             <div class="col-md-4">{{ form.tags }}</div>
         </div>
 
@@ -34,8 +36,18 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Data:</label>
+            <div class="col-md-4">{{ form.date_origin }}</div>
+        </div>
+
+        <div class="form-group">
             <label class="control-label col-sm-2" for="field">Descrição:</label>
             <div class="col-md-4">{{ form.description }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="field">Estado:</label>
+            <div class="col-md-4">{{ form.state }}</div>
         </div>
 
         <div class="form-group">
@@ -43,6 +55,5 @@
                 <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
             </div>
         </div>
-        
     </form>
 {% endblock %}

@@ -15,7 +15,41 @@
                     {% endif %}
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% include 'entry/form_template.html' %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Título:</label>
+                            <div class="col-sm-6">{{ entry_form.title }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Categoria:</label>
+                            <div class="col-sm-6">{{ entry_form.category }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Origem:</label>
+                            <div class="col-sm-6">{{ entry_form.origin }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Data da origem:</label>
+                            <div class="col-sm-6">{{ entry_form.date_origin }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Referências adicionais:</label>
+                            <div class="col-sm-6">{{ entry_form.additional_references }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Ícone:</label>
+                            <div class="col-sm-6">{{ entry_form.icon }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Conteúdo:</label>
+                            <div class="col-sm-6">{{ revision_form.content }}</div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-success">Submit</button>
