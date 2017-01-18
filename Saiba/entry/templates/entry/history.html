@@ -19,7 +19,7 @@
                         <tr>
                             <td><a href='#'>#{{ forloop.revcounter }}</a></td>
                             <td><a href='{% url 'entry:revision' entry_slug revision.id %}'>{{ revision.date }}</a></td>
-                            <td><a href='#'>{{revision.author.username}}</a></td>
+                            <td><a href='{% url 'profile:detail' revision.author.profile.slug %}'>{{revision.author.username}}</a></td>
                         </tr>                   
                 {% endfor %}
             </tbody>                    

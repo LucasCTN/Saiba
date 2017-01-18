@@ -45,3 +45,6 @@ class SaibaSettings(models.Model):
 
     def __unicode__(self):
         return self.type
+
+    class Meta:
+        verbose_name_plural = "Saiba settings"

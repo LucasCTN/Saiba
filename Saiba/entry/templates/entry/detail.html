@@ -1,77 +1,62 @@
 ﻿{% extends 'home/base.html' %}
 
+{% load staticfiles %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/entry.css' %}"/>
+{% endblock %}
+
 {% block title %}{{ entry.title }} - Saiba{% endblock %}
 {% block body %}  
     <section id="infocard" class="container media col-md-12">
-        <div class="col-md-2">
+        <div class="col-md-2" style="width:120px;">
             {% if entry.icon %}
-            <img style="border-style:solid; border-width:1px; border-color:lightgrey" class='media-object' src='{{entry.icon.url}}' width='100' height='100'>
+            <img style="border-style:solid; border-width:1px; border-color:lightgrey;" class='media-object' src='{{entry.icon.url}}' width='100' height='100'>
             {% endif %}
         </div>
         <div class="col-md-7">
             <h3 class="media-heading"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></h3>
-            <span class="">Criado em {{ first_revision.date }} por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
-            <span class="">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
-        </div>
-        <div class="col-md-3">
-            <dl class="table-bordered" style="padding: 5px; margin: 0px 0px 15px 15px;">
-                <dt colspan="2" style="text-align:center;">{{ entry.category }}</dt>
-                <dt class="infobox-label">Estado</dt>
-                <dd class="infobox-content"><small>{{ entry.status }}</small></dd>
-                <dt class="infobox-label">Tipo</dt>
-                <dd class="infobox-content"><small>{{ entry.type }}</small></dd>
-            </dl>
-        </div>
-        <div class="media-right media-middle col-md-12">
-            <hr>
-            <div class="btn-group btn-group-justified" role="group" aria-label="...">
-            <div class="btn-group" role="group">
-                <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
-            </div>
-            <div class="btn-group" role="group">
-                <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">Sugerir</button>
-            </div>
-            </div>
-            <hr>
+            <p class="saiba-data">(Insert data here)</p>
+            <span class="saiba-data">Criado em {{ first_revision.date }} por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
+            <span class="saiba-data">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
         </div>
     </section>
-      
-    <section id="conteudo-artigo" class="container col-md-12">
-        <div id="infobox" class="pull-right" style="width:180px">
-            <dl class="table-bordered" style="padding: 5px; margin: 0px 0px 15px 15px;">
-                <dt class="infobox-label">Ano</dt>
-                <dd class="infobox-content"><small>{{ entry.year }}</small></dd>
-                <dt class="infobox-label">Origem</dt>
-                <dd class="infobox-content"><small>{{ entry.origin }}</small></dd>
-                <hr/>
-                <dd></dd>
-                <dt class="infobox-label">Marcações</dt>
-                <dd class="infobox-content">
-                    {% for tag in entry.tags.all %}
-                        {{ tag.label }}, 
-                    {% endfor %}
-                </dd>
-            </dl>
+
+    <div class="media-right media-middle col-md-12">
+        <hr>
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <div class="btn-group" role="group">
+            <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
         </div>
+        <div class="btn-group" role="group">
+            <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default">Sugerir</button>
+        </div>
+        </div>
+        <hr>
+    </div>
+      
+    <section id="conteudo-artigo" class="container col-md-12">        
         <div id="conteudo">
             {{ last_revision.content|safe }}
         </div>
     </section>
 
     <section id="relacionados" class="container media col-md-12"><hr/>
-        <h2>Entradas relacionadas <small>({{ related_entries|length }})</small></h2>
+        <h1>Entradas relacionadas <small>({{ related_entries|length }})</small></h1>
         {% for related_entry in related_entries %}
-            <div class='inline-block col-md-4'>
-                <a href="{% url 'entry:detail' related_entry.slug %}">{{ related_entry.title }}</a>
-            </div>
+            <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}">
+                <span class="col-md-12" style="text-align: center;">
+                    <img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:100px;"/>
+                    <span class="col-md-12">{{ related_entry.title }}</span>
+                </span>                
+            </a>
         {% endfor %}
     </section>
 
     <section id="galeria-video" class="container media col-md-12"><hr/>
-        <h2>Videos recentes <small>({{ videos|length }})</small></h2>
+        <h1>Videos recentes <small>({{ videos|length }})</small></h1>
         {% for video in videos %}
             <div class='inline-block col-md-4'>
                 <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
@@ -81,7 +66,7 @@
 
     <section id="galeria-imagem" class="container media col-md-12">
         <hr/>
-        <h2>Imagens recentes <small>({{ images|length }})</small></h2>
+        <h1>Imagens recentes <small>({{ images|length }})</small></h1>
         {% for image in images %}
             <div class='inline-block col-md-4'>
                 <a href="{% url 'gallery:image_detail' image.id %}"><img class='media-object' src='{{ image.file.url }}' alt='image.title' height='100'/></a>

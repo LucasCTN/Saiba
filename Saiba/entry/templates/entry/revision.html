@@ -9,9 +9,9 @@
             <small>Versão por <a href="#">{{ revision.author.username }}</a> em {{ revision.date }}</small>
         </div>
         <hr />
-        <h4>Conteúdo</h4>
-        <div class="form-control">
-            {{ revision.content }}
+        <h2>Conteúdo</h2>
+        <div class="well">
+            {{ html | safe }}
         </div>
         
         <a href="{% url 'entry:history' revision.entry.slug %}" class="btn btn-default" role="button">

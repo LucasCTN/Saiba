@@ -1,11 +1,27 @@
-﻿<div style="background-color: ghostwhite; ">
-    Teste
-</div>
-{% if editor_list %}
+﻿<section id="ads">
+    <img src="/media/ad_test.png" class='media-object'/>
+</section>
+
+{% if entry.editorship.all %}
+<hr/>
 <section id="lista-editores" class="panel panel-default">
-    <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a>({{editor_list|length}})</div>
-    {% for editor in editor_list %}
-        <div class="panel-body"><a href="{% url 'profile:detail' editor.user.profile.slug %}">{{editor.user.username}}</a></div>
+    <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a> ({{entry.editorship.all|length}})</div>
+    {% for editor in entry.editorship.all %}
+        <div class="media" style="padding-left:5px; padding-bottom: 5px;">
+          <div class="media-left">
+            <img src="{{editor.avatar.url}}" class="media-object img-thumbnail" style="width:60px">
+          </div>
+          <div class="media-body">
+            <a class='media-heading' href="{% url 'profile:detail' editor.slug %}">{{editor.user.username}}</a>
+            <p>Lorem ipsum...</p>
+          </div>
+        </div>
     {% endfor %}
 </section>
 {% endif %}
+
+<hr/>
+<section id="galerias-populares" class="container media col-md-12">
+    <h2>Galerias populares</h2>
+    {% include "home/popular_galleries.html" %}
+</section>

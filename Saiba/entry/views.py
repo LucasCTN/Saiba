@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Count, Max
 #from .forms import AlbumForm, SongForm, UserForm
-from .models import Entry, Revision, Category, EditorList
+from .models import Entry, Revision, Category
 from feedback.models import Comment
 from .forms import EntryForm, RevisionForm
 from django.utils.html import escape
@@ -13,8 +13,9 @@ from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
+from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings
-import Saiba.saibadown, textile
+import Saiba.saibadown, textile, ghdiff
 from django.contrib.contenttypes.models import ContentType
 
 def index(request):
@@ -41,7 +42,6 @@ def index(request):
     return render(request, 'entry/index.html')
 
 def detail(request, entry_slug):
-    trending_entries = get_trending_entries()
     entry = get_object_or_404(Entry, slug=entry_slug)
     last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
@@ -52,7 +52,6 @@ def detail(request, entry_slug):
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
 
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
-    editor_list = EditorList.objects.filter(entry=entry)
 
     args = {'entry'             : entry, 
             'last_revision'     : last_revision,                                                   
@@ -60,7 +59,6 @@ def detail(request, entry_slug):
             'images'            : last_images,
             'videos'            : last_videos,
             'related_entries'   : related_entries,
-            'editor_list'       : editor_list,
             'type'              : 'entry'}
 
     return render(request, 'entry/detail.html', args)
@@ -79,12 +77,12 @@ def edit(request, entry_slug):
         last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
         first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
 
-        is_editor = EditorList.objects.filter(entry=entry, user=user)
+        is_editor = user.profile in entry.editorship.all()
 
-        entry_form = EntryForm(request.POST or None, initial=model_to_dict(entry))
+        entry_form = EntryForm(request.POST or None, request.FILES, initial=model_to_dict(entry))
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
 
-        if entry_form.is_valid() and revision_form.is_valid() and is_editor.exists():
+        if entry_form.is_valid() and revision_form.is_valid() and is_editor:
             trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
             entry.trending_points += trending_weight
             entry.save(update_fields=['trending_points'])
@@ -110,7 +108,17 @@ def edit(request, entry_slug):
 
 def revision(request, entry_slug, revision_id):
     revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
-    return render(request, escape('entry/revision.html'), { 'revision': revision })
+    previous_revision = Revision.objects.filter(entry=revision.entry.pk, hidden=False, pk__lt=revision_id).order_by('-id').first()
+
+    revision_text = revision.content
+    previous_revision_text = ""
+
+    if previous_revision:
+        previous_revision_text = previous_revision.content
+
+    html_result = ghdiff.diff(previous_revision_text, revision_text)
+
+    return render(request, escape('entry/revision.html'), { 'revision': revision, 'html': html_result })
 
 def create_entry(request):
     if not request.user.is_authenticated():
@@ -123,17 +131,13 @@ def create_entry(request):
         if entry_form.is_valid() and revision_form.is_valid():
             entry = entry_form.save(commit=False)
             entry.author = user
+            entry.editorship.add(user.profile)
             entry.save()
             
             revision = revision_form.save(commit=False)
             revision.entry = entry
             revision.author = user
             revision.save()
-
-            editorList = EditorList()
-            editorList.user = user
-            editorList.entry = entry
-            editorList.save()
 
             last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
             first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
@@ -155,7 +159,7 @@ def create_entry(request):
 
 def editorship(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)
-    editor_list = EditorList.objects.filter(entry=entry)
+    editor_list = entry.editorship.all()
     
     user_editor_list = list()
         
@@ -165,28 +169,6 @@ def editorship(request, entry_slug):
     context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
 
     return render(request, 'entry/editorship.html', context)
-
-def get_trending_entries():
-    entry_content_type = ContentType.objects.get_for_model(Entry).id
-
-    #Criteria: recent number of views, was recently updated, was recently commented
-    latest_revisions_ids    = Entry.objects.annotate(latest_revision=Max('revisions__id')).values_list('latest_revision', flat=True)
-    latest_revised_entries  = Entry.objects.filter(revisions__id__in=latest_revisions_ids).order_by('-revisions__date')
-   
-    #get entries ordered by the dates of comments that are the most recent
-    '''print "====#===== entries ====#====="
-    for entry in latest_revised_entries:
-        print entry.title'''
-
-def trending(request):
-    entry = get_object_or_404(Entry, slug=entry_slug)    
-        
-    for user_in_list in editor_list:
-        user_editor_list.append(user_in_list.user)
-
-    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
-
-    return render(request, 'entry/trending.html', context)
 
 '''
     recently_revised_entries = Entry.objects.filter(hidden=False).annotate(num_revisions=Count('revisions')).order_by('-num_revisions')

@@ -2,14 +2,30 @@
 {% block title %}Nova entrada{% endblock %}
 
 {% block body %}
+<script>
+    $(document).ready(function () {
+        $("#preview-entry").click(function () {
+            var content = $("#id_content").val();
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8000/api/v1/preview/",
+                data: { content: content },
+                success: function (data) {
+                    $("#preview").show();
+                    $("#preview-content").html(content);
+                }
+            });
+        });
+    });    
+</script>
 <div class="container-fluid">
 
     <div class="row">
-
-        <div class="col-sm-12 col-md-7">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h3>Criar nova Entrada</h3>
+                    <h2>Criar nova Entrada</h2>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -17,40 +33,48 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Título</label>
-                            <div class="col-sm-6">{{ entry_form.title }}</div>
+                            <div class="col-sm-8">{{ entry_form.title }}</div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Categoria</label>
-                        <div class="col-sm-6">{{ entry_form.category }}</div>
+                        <div class="col-sm-8">{{ entry_form.category }}</div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Origem</label>
-                            <div class="col-sm-6">{{ entry_form.origin }}</div>
+                            <div class="col-sm-8">{{ entry_form.origin }}</div>
                         </div>
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label class="control-label col-sm-2" for="field">Referências adicionais</label>
-                            <div class="col-sm-6">{{ entry_form.additional_references }}</div>
-                        </div>
+                            <div class="col-sm-8">{{ entry_form.additional_references }}</div>
+                        </div>-->
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Ícone</label>
-                            <div class="col-sm-6">{{ entry_form.icon }}</div>
+                            <div class="col-sm-8">{{ entry_form.icon }}</div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Conteúdo</label>
-                            <div class="col-sm-6">{{ revision_form.content }}</div>
+                            <div class="col-sm-10" rows="50">{{ revision_form.content }}</div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" id="preview-entry" class="btn btn-secondary">Pré-visualizar</button>
                                 <button type="submit" class="btn btn-primary">Enviar</button>
                             </div>
                         </div>
                     </form>
+
+                    <div id="preview" hidden>
+                        <hr/>
+                        <h3>Pré-visualização</h3>
+                        <span id="preview-content">
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

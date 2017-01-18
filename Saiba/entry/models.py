@@ -29,13 +29,14 @@ class Entry(models.Model):
     type                    = models.CharField(max_length=100)
     origin                  = models.CharField(max_length=100)
     additional_references   = models.CharField(max_length=100)
-    icon                    = models.ImageField(blank=True, upload_to='icon/', default='icon/indice.png')
+    icon                    = models.ImageField(blank=True, upload_to='icon/')
     hidden                  = models.BooleanField(default=False)
     images_locked           = models.BooleanField(default=False)
     videos_locked           = models.BooleanField(default=False)
     comments_locked         = models.BooleanField(default=False)
     tags                    = models.ManyToManyField('home.Tag', blank=True)
     trending_points         = models.IntegerField(default=0)
+    editorship              = models.ManyToManyField('profile.Profile', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -46,6 +47,9 @@ class Entry(models.Model):
     def __unicode__(self):
         return self.title
 
+    class Meta:
+        verbose_name_plural = "entries"
+
 class Revision(models.Model):
     author = models.ForeignKey(User, default=1)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="revisions")
@@ -55,19 +59,3 @@ class Revision(models.Model):
 
     def __unicode__(self):
         return "#{} - {}".format(str(self.pk), self.entry.title)
-
-class EditorList(models.Model):
-    user    = models.ForeignKey(User, default=1)
-    entry   = models.ForeignKey(Entry, default=1)
-    date = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{} - {}".format(self.user.username, self.entry.title)
-
-class TrendingEntry(models.Model):
-    title   = models.CharField(max_length=250)
-    entry   = models.ForeignKey(Entry, default=1)
-    date    = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{} - {}".format(self.entry.title, self.title)
