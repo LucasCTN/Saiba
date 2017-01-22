@@ -80,7 +80,7 @@ def edit(request, entry_slug):
 
         is_editor = user.profile in entry.editorship.all()
 
-        entry_form = EntryForm(request.POST or None, request.FILES, initial=model_to_dict(entry))
+        entry_form = EntryForm(request.POST or None, initial=model_to_dict(entry))
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
 
         if entry_form.is_valid() and revision_form.is_valid() and is_editor:
@@ -88,7 +88,7 @@ def edit(request, entry_slug):
             entry.trending_points += trending_weight
             entry.save(update_fields=['trending_points'])
             
-            entry_form = EntryForm(request.POST, instance = entry)
+            entry_form = EntryForm(request.POST, request.FILES, instance = entry)
             entry = entry_form.save(commit=False)
             entry.author = user
             entry.save()
@@ -98,9 +98,6 @@ def edit(request, entry_slug):
             revision.author = user
             revision.save()            
 
-            last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
-        
-            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
             return redirect('entry:detail', entry_slug=entry_slug)
 
         context = { "entry_form": entry_form, "revision_form": revision_form, "entry":entry, "user":user }
@@ -109,7 +106,6 @@ def edit(request, entry_slug):
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
     entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
     entry_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    entry_form.fields['additional_references'].widget.attrs['class'] = 'form-control form-additional_references'
     entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
     revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
 

@@ -17,46 +17,10 @@ def index(request):
     fixed_posts = Post.objects.filter(fixed=True).order_by('-date')
     normal_posts = Post.objects.filter(fixed=False).order_by('-date')
 
-    text_form = PostForm(request.POST or None)
-
-    #text_form.fields['label'].widget.attrs['style'] = 'color:red;'
-    text_form.fields['label'].widget.attrs['class'] = 'form-control form-label'
-    text_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    text_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
-    text_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
-    text_form.fields['image'].widget.attrs['class'] = 'form-control form-image'
-    text_form.fields['video'].widget.attrs['class'] = 'form-control form-video'
-
-    text_form.fields['content'].widget.attrs['rows'] = '4'
-
-    if text_form.is_valid():
-        post = text_form.save(commit=False)
-        post.author = request.user
-        
-        '''text_label = Label.objects.filter(name="Texto")[0]
-        entry_label = Label.objects.filter(name="Meme")[0]
-        imagem_label = Label.objects.filter(name="Imagem")[0]
-        video_label = Label.objects.filter(name="Video")[0]
-
-        if post.entry == None:
-            if post.video == None:
-                if post.image == None:
-                    post.label = text_label
-                else:
-                    post.label = imagem_label
-            else:
-                post.label = video_label
-        else:
-            post.label = entry_label'''
-
-        post.save()
-        return redirect('home:index')
-
     args = {'entries': entries,
             'posts': posts,
             'fixed_posts': fixed_posts,
-            'normal_posts': normal_posts,
-            'form': text_form}
+            'normal_posts': normal_posts}
 
     return render(request, 'home/index.html', args)
 
