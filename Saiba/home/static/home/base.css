@@ -12,6 +12,10 @@
     color: white;
 }
 
+#saiba-navbar .navbox-subitem li a{
+    color:black;
+}
+
 .divider-vertical {
     height: 30px;
     padding-top: 50px;

@@ -20,7 +20,7 @@ class Image(models.Model):
     entry       = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="images")
     hidden      = models.BooleanField(default=False)
     file        = models.ImageField(blank=True, upload_to='icon/')
-    description = models.CharField(max_length=250, blank=True)
+    description = models.TextField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
 
@@ -36,7 +36,7 @@ class Video(models.Model):
     entry       = models.ForeignKey(Entry, on_delete=models.CASCADE)
     hidden      = models.BooleanField(default=False)
     link        = models.CharField(max_length=250)
-    description = models.CharField(max_length=250, blank=True)
+    description = models.TextField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
 
     def __unicode__(self):

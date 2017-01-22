@@ -18,6 +18,7 @@
             <p class="saiba-data">{{entry.date_origin}}</p>
             <span class="saiba-data">Criado em {{ first_revision.date }} por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
             <span class="saiba-data">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
+            <p><small>Tags: {% for tag in entry.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=entry">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
         </div>
     </section>
 

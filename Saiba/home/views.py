@@ -8,6 +8,7 @@ from entry.models import Entry, Revision
 from gallery.models import Image, Video
 from profile.models import Profile
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 
 def index(request):
     entries = Entry.objects.all()
@@ -171,11 +172,11 @@ def navbar_search(request):
     search_result = None;
     
     if(type == 'entry'):
-        search_result = Entry.objects.filter(title__contains=query, hidden=False)
+        search_result = Entry.objects.filter(Q(title__contains=query, hidden=False) | Q(tags__label__contains=query)).distinct()
     elif(type == 'image'):
-        search_result = Image.objects.filter(title__contains=query, hidden=False)
+        search_result = Image.objects.filter(Q(title__contains=query, hidden=False) | Q(tags__label__contains=query)).distinct()
     elif(type == 'video'):
-        search_result = Video.objects.filter(title__contains=query, hidden=False)
+        search_result = Video.objects.filter(Q(title__contains=query, hidden=False) | Q(tags__label__contains=query)).distinct()
 
     if(order_by == 'newer'):
         search_result = search_result.order_by('-id')

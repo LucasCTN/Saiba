@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block body %}
+    <h2>Enviar novo vídeo</h2>
     <form class="form-horizontal col-md-12" role="form" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -19,12 +20,12 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Título:</label>
-            <div class="col-md-4">{{ form.title }}</div>
+            <div class="col-md-8">{{ form.title }}</div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Entrada:</label>
-            <div class="col-md-4"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+            <div class="col-md-8"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
             <div class="col-md-offset-2 search-box">
                 <ul id="search-entry-results" class="search-results" hidden>
                 </ul>
@@ -33,17 +34,18 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">{{ form.link.label_tag }}</label>
-            <div class="col-md-4">{{ form.link }}</div>
+            <div class="col-md-8">{{ form.link }}</div>
+            <p class="help-block col-md-8">Use somente o id do vídeo. Exemplo: https://www.youtube.com/watch?v=<strong>45U2fjfru1E</strong> .</p>
         </div>
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Data:</label>
-            <div class="col-md-4">{{ form.date_origin }}</div>
+            <div class="col-md-2">{{ form.date_origin }}</div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Marcações:</label>
-            <div class="col-md-4"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+            <div class="col-md-2"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
             <div class="col-md-offset-2 search-box">
                 <ul id="search-tag-results" class="search-results">
                     <li id="tags-no-results" class="no-results">Sem resultados.</li>
@@ -64,12 +66,12 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Descrição:</label>
-            <div class="col-md-4">{{ form.description }}</div>
+            <div class="col-md-8">{{ form.description }}</div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Estado:</label>
-            <div class="col-md-4">{{ form.state }}</div>
+            <div class="col-md-2">{{ form.state }}</div>
         </div>
 
         <div class="form-group">

@@ -11,7 +11,7 @@
             <small>Uploaded by {{ image.author.username }}</small>
         </h3>
         <p>Source: {{ image.source }}</p>
-        <p>Tags: {% for tag in image.tags.all %} {{ tag.label }}, {% endfor %}</p>
+        <p><small>Tags: {% for tag in image.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=image">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
     </section>
 
     <section id="relacionados" class="container media col-md-12"><hr/>
