@@ -11,31 +11,12 @@
 {% endblock %}
 
 {% block body %}
-<script>
-    $(document).ready(function () {
-        $("#preview-entry").click(function () {
-            var content = $("#id_content").val();
-
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:8000/api/v1/preview/",
-                data: { content: content },
-                success: function (data) {
-                    $("#preview").show();
-                    $("#preview-content").html(content);
-                }
-            });
-        });
-    });    
-</script>
 <div class="container-fluid">
-
     <div class="row">
-
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h2>Modificar entrada - <a href="{% url 'entry:detail' entry.slug %}">{{entry.title}}</a></h2>
+                    <h2>Modificar imagem - <a href="{% url 'gallery:image_detail' image.pk %}">{{image.title}}</a></h2>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -43,27 +24,22 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Título:</label>
-                            <div class="col-sm-8">{{ entry_form.title }}</div>
+                            <div class="col-sm-8">{{ image_form.title }}</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Categoria:</label>
-                            <div class="col-sm-8">{{ entry_form.category }}</div>
+                            <label class="control-label col-sm-2" for="field">Entrada:</label>
+                            <div class="col-sm-8">{{ image_form.entry }}</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Origem:</label>
-                            <div class="col-sm-8">{{ entry_form.origin }}</div>
+                            <label class="control-label col-sm-2" for="field">Fonte:</label>
+                            <div class="col-sm-8">{{ image_form.source }}</div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Data:</label>
-                            <div class="col-sm-6">{{ entry_form.date_origin }}</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Ícone:</label>
-                            <div class="col-sm-8">{{ entry_form.icon }}</div>
+                            <div class="col-sm-6">{{ image_form.date_origin }}</div>
                         </div>
 
                         <div class="form-group">
@@ -86,27 +62,19 @@
                             </div>
 
                             <input type="text" id="tags-selected" name="tags-selected" hidden/>
-                        </div> 
-
+                        </div>
+                        
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Conteúdo:</label>
-                            <div class="col-sm-10" rows="50">{{ revision_form.content }}</div>
+                            <label class="control-label col-sm-2" for="field">Descrição:</label>
+                            <div class="col-sm-8">{{ image_form.description }}</div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" id="preview-entry" class="btn btn-secondary">Pré-visualizar</button>
                                 <button type="submit" id="send" class="btn btn-primary">Enviar</button>
                             </div>
                         </div>
                     </form>
-
-                    <div id="preview" hidden>
-                        <hr/>
-                        <h3>Pré-visualização</h3>
-                        <span id="preview-content">
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>

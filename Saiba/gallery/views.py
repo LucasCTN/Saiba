@@ -4,6 +4,7 @@ from django.db.models import Q, Count, Max
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.html import escape
+from django.forms.models import model_to_dict
 from django.core.urlresolvers import reverse
 from .models import Image, Video
 from .forms import ImageForm, VideoForm
@@ -98,6 +99,44 @@ def upload_video(request):
     video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
     return render(request, 'gallery/upload-video.html', {"form": video_form})
+
+def image_edit(request, image_id):
+    if not request.user.is_authenticated():
+        return redirect('home:login')
+    else:
+        user = request.user
+        image = Image.objects.get(pk=image_id)
+        is_editor = (user == image.author)
+
+        print "ALLALAL"
+        print image
+        print model_to_dict(image)
+
+        image_form = ImageForm(request.POST or None, request.FILES, initial=model_to_dict(image))
+
+        print image_form.errors
+
+        if image_form.is_valid() and is_editor:
+            all_tags = string_tags_to_list(request.POST.get('tags-selected'))
+            set_tags = generate_tags(all_tags)
+
+            print "maximum LEL"
+            print request.POST.get('tags-selected')
+
+            image_form = ImageForm(request.POST, request.FILES, instance = image)
+            image = image_form.save(commit=False)
+            image.tags = Tag.objects.filter(label__in=set_tags)
+            image.save()
+            return redirect('gallery:image_detail', image_id=image.pk)
+
+        context = { "image_form": image_form, "image":image, "user":user }
+
+    image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
+    image_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
+    image_form.fields['source'].widget.attrs['class'] = 'form-control form-source'
+    image_form.fields['description'].widget.attrs['class'] = 'form-control form-content'
+
+    return render(request, 'gallery/edit-image.html', context)
 
 def search_tags(request):
     if request.GET:

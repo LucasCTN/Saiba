@@ -8,11 +8,22 @@
     <section id="informacao" class="container media col-md-12">
         <h3>
             {{ image.title }} - <a href="{% url 'entry:detail' image.entry.slug %}">{{image.entry.title}}</a><br/>
-            <small>Uploaded by {{ image.author.username }}</small>
+            <small>Enviado por <a href="{% url 'profile:detail' image.author.profile.slug %}">{{ image.author.username }}</a></small>
         </h3>
-        <p>Source: {{ image.source }}</p>
-        <p><small>Tags: {% for tag in image.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=image">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+        <p>Fonte: {{ image.source }}</p>
+        <p><small>Marcações: {% if image.tags.all|length > 0 %}{% for tag in image.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=image">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %} <em style="color:gray;">Nenhuma</em>{% endif %}</small></p>
+        {% if image.description %}<p>Descrição: {{ image.description }}</p>{% endif %}
     </section>
+
+    <div class="media-right media-middle col-md-12">
+        <hr>
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <a href='{% url 'gallery:image_edit' image.pk %}'><button type='button' class='btn btn-default'>Editar</button></a>
+            </div>
+        </div>
+        <hr>
+    </div>
 
     <section id="relacionados" class="container media col-md-12"><hr/>
         <h2>Imagens relacionadas <small>({{ related_images|length }})</small></h2>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
-from .models import Post, Label
+from .models import Post, Label, Tag
 from .forms import PostForm
 from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
 from entry.models import Entry, Revision
@@ -172,3 +172,18 @@ def search_results(request):
             'navbar_search_result' : search_result}
 
     return render(request, 'home/search_entry.html', args)
+
+def search_tags(request):
+    if request.GET:
+        search_text = request.GET.get('q')
+    else:
+        search_text = ''
+
+    if search_text != '':
+        tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
+    else:
+        tag_search_result = None
+
+    args = { 'tag_search_result' : tag_search_result }
+
+    return render(request, 'home/search_tag.html', args)

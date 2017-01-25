@@ -15,7 +15,7 @@ from django.forms.models import model_to_dict
 from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
-from home.models import SaibaSettings
+from home.models import SaibaSettings, Tag
 import Saiba.saibadown, textile, ghdiff
 from django.contrib.contenttypes.models import ContentType
 
@@ -84,13 +84,21 @@ def edit(request, entry_slug):
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
 
         if entry_form.is_valid() and revision_form.is_valid() and is_editor:
+            all_tags = string_tags_to_list(request.POST.get('tags-selected'))
+            set_tags = generate_tags(all_tags)
+
+            print request.POST.get('tags-selected')
+
             trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
             entry.trending_points += trending_weight
             entry.save(update_fields=['trending_points'])
-            
+
             entry_form = EntryForm(request.POST, request.FILES, instance = entry)
             entry = entry_form.save(commit=False)
             entry.author = user
+            entry.save()
+            entry_form.save_m2m()
+            entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.save()
 
             revision = revision_form.save(commit=False)
@@ -130,7 +138,7 @@ def create_entry(request):
         return redirect('home:login')
     else:
         user = request.user
-        entry_form = EntryForm(request.POST or None)
+        entry_form = EntryForm(request.POST or None, request.FILES)
         revision_form = RevisionForm(request.POST or None)
 
         entry_test = Entry.objects.filter(slug=slugify(entry_form.fields['title'])).first()
@@ -175,7 +183,6 @@ def editorship(request, entry_slug):
         user_editor_list.append(user_in_list.user)
 
     context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
-
     return render(request, 'entry/editorship.html', context)
 
 '''
@@ -201,3 +208,32 @@ def editorship(request, entry_slug):
             })
         else:
     return render(request, 'music/index.html', {'albums': albums})'''
+
+def string_tags_to_list( tag_string ):
+    if(tag_string != None):
+        # Splitting all commas
+        tags = tag_string.split(",")
+        # Removing empty spaces
+        tags[:] = (value for value in tags if value != '')
+        # Removing all duplicates and returning it (the insertion order it's lost unfortunately)
+        return list(set(tags))
+    else:
+        return ''
+
+def generate_tags( tag_list ):
+    # Of the tags written, which one is in database
+    db_tags = Tag.objects.filter(label__in=tag_list)
+
+    # Creating a copy of the all tag list
+    new_tags = list(tag_list)
+
+    # Removing database tag from the new list (if have any)
+    for x in db_tags:
+        new_tags[:] = (value for value in new_tags if value != str(x).decode("utf-8"))
+
+    # Inserting in database the new tags
+    for tag_name in new_tags:
+        Tag.objects.create(label=tag_name, hidden=False)
+
+    # Returning a new list with the database tags and the new created tags
+    return list(db_tags) + new_tags

@@ -4,7 +4,7 @@ from .models import Entry, Revision
 class EntryForm(forms.ModelForm):
     class Meta:
         model = Entry
-        fields = [ "title", "category", "origin", "date_origin", "icon" ]
+        fields = [ "title", "category", "origin", "date_origin", "icon", "tags" ]
 
 
 class RevisionForm(forms.ModelForm):

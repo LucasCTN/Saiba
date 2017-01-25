@@ -4,7 +4,7 @@ from .models import Image, Video
 class ImageForm(ModelForm):
     class Meta:
         model = Image
-        fields = [ "title", "source", "date_origin", "description", "file", "state" ]
+        fields = [ "title", "source", "date_origin", "description", "file", "state", "tags", "entry" ]
 
 class VideoForm(ModelForm):
     class Meta:
