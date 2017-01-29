@@ -107,29 +107,21 @@ def image_edit(request, image_id):
         user = request.user
         image = Image.objects.get(pk=image_id)
         is_editor = (user == image.author)
+        image_dict = model_to_dict(image)
 
-        print "ALLALAL"
-        print image
-        print model_to_dict(image)
-
-        image_form = ImageForm(request.POST or None, request.FILES, initial=model_to_dict(image))
-
-        print image_form.errors
+        image_form = ImageForm(request.POST or None, initial=image_dict)
 
         if image_form.is_valid() and is_editor:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
-            print "maximum LEL"
-            print request.POST.get('tags-selected')
-
-            image_form = ImageForm(request.POST, request.FILES, instance = image)
+            image_form = ImageForm(request.POST, instance = image)
             image = image_form.save(commit=False)
             image.tags = Tag.objects.filter(label__in=set_tags)
             image.save()
             return redirect('gallery:image_detail', image_id=image.pk)
 
-        context = { "image_form": image_form, "image":image, "user":user }
+        context = { "image_form": image_form, "image": image, "user": user }
 
     image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     image_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
@@ -137,6 +129,43 @@ def image_edit(request, image_id):
     image_form.fields['description'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'gallery/edit-image.html', context)
+
+def video_edit(request, video_id):
+    if not request.user.is_authenticated():
+        return redirect('home:login')
+    else:
+        user = request.user
+        video = Video.objects.get(pk=video_id)
+        is_editor = (user == video.author)
+        video_dict = model_to_dict(video)
+
+        request_post = request.POST.copy()
+
+        if request_post:
+            request_post["link"] = video.link
+
+        video_form = VideoForm(request_post or None, initial=video_dict)
+
+        if video_form.is_valid() and is_editor:
+            all_tags = string_tags_to_list(request.POST.get('tags-selected'))
+            set_tags = generate_tags(all_tags)
+
+            video_form = VideoForm(request_post, instance = video)
+            video = video_form.save(commit=False)
+            video.tags = Tag.objects.filter(label__in=set_tags)
+            video.save()
+            return redirect('gallery:video_detail', video_id=video.pk)
+        else:
+            print "LALALA"
+            print video_form.errors
+        
+        context = { "video_form": video_form, "video": video, "user": user }
+
+    video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
+    video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
+    video_form.fields['description'].widget.attrs['class'] = 'form-control form-content'
+
+    return render(request, 'gallery/edit-video.html', context)
 
 def search_tags(request):
     if request.GET:

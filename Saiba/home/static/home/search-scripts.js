@@ -44,7 +44,7 @@
 
         $.ajax({
             type: "GET",
-            url: "../pesquisar-entradas/?q=" + $('#search-entries').val(),
+            url: "http://localhost:8000/pesquisar-entradas/?q=" + $('#search-entries').val(),
             success: searchEntrySuccess,
             dataType: 'html'
         });

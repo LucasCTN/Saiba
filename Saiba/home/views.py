@@ -187,3 +187,21 @@ def search_tags(request):
     args = { 'tag_search_result' : tag_search_result }
 
     return render(request, 'home/search_tag.html', args)
+
+def search_entries(request):
+    if request.GET:
+        search_text = request.GET.get('q')
+    else:
+        search_text = ''
+
+    entries = Entry.objects.all()
+
+    if search_text != '':
+        search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
+    else:
+        search_result = None
+
+    args = {'entries' : entries,
+            'navbar_search_result' : search_result}
+
+    return render(request, 'home/search_entry.html', args)

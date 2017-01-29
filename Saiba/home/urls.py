@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^pesquisar/$', views.navbar_search, name = 'navbar_search'),
     url(r'^pesquisa-navbar/$', views.search_results, name = 'search_results'),
     url(r'^pesquisar-tags/$', views.search_tags, name='search_tags'),
+    url(r'^pesquisar-entradas/$', views.search_entries, name = 'search_entries'),
 ]

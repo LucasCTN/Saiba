@@ -10,9 +10,20 @@
             {{ video.title }} - <a href="{% url 'entry:detail' video.entry.slug %}">{{video.entry.title}}</a><br/>
             <small>Uploaded by {{ video.author.username }}</small>
         </h3>
-        <p>Source: {{ video.source }}</p>
-        <p><small>Tags: {% for tag in video.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+        {% if video.source %}<p>Fonte: {{ video.source }}</p>{% endif %}
+        <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+        {% if video.description %}<p>Descrição: {{ video.description }}</p>{% endif %}
     </section>
+
+    <div class="media-right media-middle col-md-12">
+        <hr>
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <a href='{% url 'gallery:video_edit' video.pk %}'><button type='button' class='btn btn-default'>Editar</button></a>
+            </div>
+        </div>
+        <hr>
+    </div>
 
     <section id="relacionados" class="container media col-md-12"><hr/>
         <h2>Videos relacionadas <small>({{ related_videos|length }})</small></h2>

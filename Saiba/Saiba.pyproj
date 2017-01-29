@@ -187,6 +187,7 @@
     <Content Include="entry\templates\entry\form_template.html" />
     <Content Include="entry\templates\entry\editorship.html" />
     <Content Include="entry\templates\entry\history.html" />
+    <Content Include="gallery\templates\gallery\edit-video.html" />
     <Content Include="gallery\templates\gallery\edit-image.html" />
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />

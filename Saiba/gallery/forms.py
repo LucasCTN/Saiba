@@ -9,4 +9,4 @@ class ImageForm(ModelForm):
 class VideoForm(ModelForm):
     class Meta:
         model = Video
-        fields = [ "title", "date_origin", "description", "link", "state" ]
+        fields = [ "title", "date_origin", "description", "link", "state", "entry", "tags", "link" ]
