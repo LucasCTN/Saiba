@@ -67,7 +67,7 @@ def upload_image(request):
             image_form.save_m2m()
             image.tags = Tag.objects.filter(label__in=set_tags)
             image.save()
-            return render(request, 'gallery/image.html', {'image': image})
+            return redirect('gallery:image_detail', image_id=image.pk)
 
     image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     image_form.fields['file'].widget.attrs['class'] = 'form-control-file form-file'

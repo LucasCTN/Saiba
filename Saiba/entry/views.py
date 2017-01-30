@@ -129,8 +129,8 @@ def create_entry(request):
 
             entry = entry_form.save(commit=False)
             entry.author = user
-            entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.save()
+            entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.editorship.add(user.profile)
             entry.save()
             
@@ -141,9 +141,8 @@ def create_entry(request):
 
             last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
             first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
-            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]            
-            return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
-                                                       'first_revision':first_revision, 'images':last_images})
+            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
+            return redirect('entry:detail', entry_slug=entry.slug)
 
         context = { "entry_form": entry_form,
                     "revision_form": revision_form }
