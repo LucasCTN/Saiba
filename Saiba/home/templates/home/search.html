@@ -7,7 +7,7 @@
 
 {% block body %}
     <section id="pesquisa" class="container col-md-12">
-        <form class="form-horizontal col-md-4 col-md-offset-4" action="{% url 'home:navbar_search' %}" method="get">
+        <form class="form-horizontal col-md-4 col-md-offset-4" action="{% url 'home:search' %}" method="get">
             <div class="input-group">
                 <input name="q" type="text" class="form-control" placeholder="Pesquisar" value="{{query}}">
                 <span class="input-group-btn">

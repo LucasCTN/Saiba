@@ -1,14 +1,5 @@
-﻿{% if navbar_search_result %}
-    {% for navbar_entry in navbar_search_result %}
-        <li>
-            <a href="/entrada/{{navbar_entry.slug}}/">
-                <div class="entry">
-                    <img src="/media/{{navbar_entry.icon}}" alt="{{navbar_entry.title}}" height="35">
-                    {{navbar_entry.title}}
-                </div>
-            </a>
-        </li>
+﻿{% if entry_search_result %}
+    {% for searched_entry in entry_search_result %}
+        <li class="entries-result" id="entry-{{searched_entry.slug}}">{{searched_entry.title}}</li>
     {% endfor %}
-{% else %}
-    <li><span class="not-found">Sem entradas.</span></li>
 {% endif %}

@@ -117,7 +117,7 @@ def user_register(request):
     
         return render(request, 'home/register.html', args)
 
-def navbar_search(request):
+def search(request):
     query = request.GET.get('q')
     type = request.GET.get('type')
     order_by = request.GET.get('order_by')
@@ -155,24 +155,6 @@ def navbar_search(request):
 
     return render(request, 'home/search.html', args)
 
-def search_results(request):
-    if request.GET:
-        search_text = request.GET.get('q')
-    else:
-        search_text = ''
-
-    entries = Entry.objects.all()
-
-    if search_text != '':
-        search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
-    else:
-        search_result = None
-
-    args = {'entries' : entries,
-            'navbar_search_result' : search_result}
-
-    return render(request, 'home/search_entry.html', args)
-
 def search_tags(request):
     if request.GET:
         search_text = request.GET.get('q')
@@ -199,9 +181,37 @@ def search_entries(request):
     if search_text != '':
         search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
     else:
-        search_result = None
+        search_result =  None
 
-    args = {'entries' : entries,
-            'navbar_search_result' : search_result}
+    args = {'entry_search_result' : search_result}
 
     return render(request, 'home/search_entry.html', args)
+
+def string_tags_to_list( tag_string ):
+    if(tag_string != None):
+        # Splitting all commas
+        tags = tag_string.split(",")
+        # Removing empty spaces
+        tags[:] = (value for value in tags if value != '')
+        # Removing all duplicates and returning it (the insertion order it's lost unfortunately)
+        return list(set(tags))
+    else:
+        return ''
+
+def generate_tags( tag_list ):
+    # Of the tags written, which one is in database
+    db_tags = Tag.objects.filter(label__in=tag_list)
+
+    # Creating a copy of the all tag list
+    new_tags = list(tag_list)
+
+    # Removing database tag from the new list (if have any)
+    for x in db_tags:
+        new_tags[:] = (value for value in new_tags if value != str(x).decode("utf-8"))
+
+    # Inserting in database the new tags
+    for tag_name in new_tags:
+        Tag.objects.create(label=tag_name, hidden=False)
+
+    # Returning a new list with the database tags and the new created tags
+    return list(db_tags) + new_tags

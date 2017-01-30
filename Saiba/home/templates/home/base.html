@@ -48,7 +48,7 @@
                 </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <form class="navbar-form navbar-left" action="{% url 'home:navbar_search' %}" method="post">
+                    <form class="navbar-form navbar-left" action="{% url 'home:search' %}" method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <input id="navbar-search" name="q" type="text" class="form-control" placeholder="Pesquisar" autocomplete="off">

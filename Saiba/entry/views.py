@@ -20,26 +20,6 @@ import Saiba.saibadown, textile, ghdiff
 from django.contrib.contenttypes.models import ContentType
 
 def index(request):
-    '''if not request.user.is_authenticated():
-        return render(request, 'music/login.html')
-    else:
-        albums = Album.objects.filter(user=request.user)
-        song_results = Song.objects.all()
-        query = request.GET.get("q")
-        if query:
-            albums = albums.filter(
-                Q(album_title__icontains=query) |
-                Q(artist__icontains=query)
-            ).distinct()
-            song_results = song_results.filter(
-                Q(song_title__icontains=query)
-            ).distinct()
-            return render(request, 'music/index.html', {
-                'albums': albums,
-                'songs': song_results,
-            })
-        else:
-    return render(request, 'music/index.html', {'albums': albums})'''
     return render(request, 'entry/index.html')
 
 def detail(request, entry_slug):
@@ -86,8 +66,6 @@ def edit(request, entry_slug):
         if entry_form.is_valid() and revision_form.is_valid() and is_editor:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
-
-            print request.POST.get('tags-selected')
 
             trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
             entry.trending_points += trending_weight
@@ -144,8 +122,14 @@ def create_entry(request):
         entry_test = Entry.objects.filter(slug=slugify(entry_form.fields['title'])).first()
         
         if entry_form.is_valid() and revision_form.is_valid() and not entry_test:
+            all_tags = string_tags_to_list(request.POST.get('tags-selected'))
+            set_tags = generate_tags(all_tags)
+
+            print request.POST.get('tags-selected')
+
             entry = entry_form.save(commit=False)
             entry.author = user
+            entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.save()
             entry.editorship.add(user.profile)
             entry.save()
@@ -157,7 +141,7 @@ def create_entry(request):
 
             last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
             first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
-            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
+            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]            
             return render(request, 'entry/detail.html', {'entry': entry, 'last_revision':last_revision, 
                                                        'first_revision':first_revision, 'images':last_images})
 

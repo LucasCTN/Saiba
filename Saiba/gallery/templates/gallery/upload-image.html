@@ -25,7 +25,11 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Entrada:</label>
-            <div class="col-md-8">{{ form.entry }}</div>
+            <div class="col-md-8"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+            <div class="col-md-offset-2 search-box">
+                <ul id="search-entry-results" class="search-results" hidden>
+                </ul>
+            </div>
         </div>
 
         <div class="form-group">
@@ -34,15 +38,8 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="field">Marcadores:</label>
-            <ul id="tag-search-results" class="upload-search-results">
-            </ul>
-            <div class="col-md-4">{{ form.tags }}</div>
-        </div>
-
-        <div class="form-group">
             <label class="control-label col-sm-2" for="field">Origem:</label>
-            <div class="col-md-4">{{ form.source }}</div>
+            <div class="col-md-2">{{ form.source }}</div>
         </div>
 
         <div class="form-group">
@@ -51,7 +48,7 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="field">Marcações:</label>
+            <label class="control-label col-sm-2" for="field">Marcadores:</label>
             <div class="col-md-2"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
             <div class="col-md-offset-2 search-box">
                 <ul id="search-tag-results" class="search-results">
@@ -73,17 +70,17 @@
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Descrição:</label>
-            <div class="col-md-4">{{ form.description }}</div>
+            <div class="col-md-8">{{ form.description }}</div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="field">Estado:</label>
-            <div class="col-md-4">{{ form.state }}</div>
+            <div class="col-md-2">{{ form.state }}</div>
         </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" name="submit">Enviar</button>
+                <button type="submit" id="submit-image" class="btn btn-primary submit-media" name="submit">Enviar</button>
             </div>
         </div>
     </form>

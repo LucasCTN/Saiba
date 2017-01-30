@@ -8,10 +8,10 @@
     <section id="informacao" class="container media col-md-12">
         <h3>
             {{ video.title }} - <a href="{% url 'entry:detail' video.entry.slug %}">{{video.entry.title}}</a><br/>
-            <small>Uploaded by {{ video.author.username }}</small>
+            <small>Enviado por {{ video.author.username }}</small>
         </h3>
         {% if video.source %}<p>Fonte: {{ video.source }}</p>{% endif %}
-        <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+        <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
         {% if video.description %}<p>Descrição: {{ video.description }}</p>{% endif %}
     </section>
 
@@ -26,14 +26,14 @@
     </div>
 
     <section id="relacionados" class="container media col-md-12"><hr/>
-        <h2>Videos relacionadas <small>({{ related_videos|length }})</small></h2>
+        <h2>Vídeos relacionados <small>({{ related_videos|length }})</small></h2>
         {% for related_video in related_videos %}
             <div class='inline-block col-md-4'>
-                <a href="{% url 'gallery:video_detail' related_video.id %}">{{ related_videos.title }}</a>
+                <a href="{% url 'gallery:video_detail' related_video.id %}">{{ related_video.title }}</a>
             </div>
         {% endfor %}
     </section>
 
-    <section id="comentarios" class="container col-md-12">
-    </section>
+    {% include "feedback/comment_section.html" %}
+
 {% endblock %}

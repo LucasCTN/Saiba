@@ -29,17 +29,12 @@
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Entrada:</label>
-                            <div class="col-md-8"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+                            <div class="col-md-8"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off" value="{{image.entry}}"></div>
                             <div class="col-md-offset-2 search-box">
                                 <ul id="search-entry-results" class="search-results" hidden>
                                 </ul>
                             </div>
                         </div>
-
-                        <!--<div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Entrada:</label>
-                            <div class="col-sm-8">{{ image_form.entry }}</div>
-                        </div>-->
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Fonte:</label>
@@ -85,7 +80,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" id="send" class="btn btn-primary">Enviar</button>
+                                <button type="submit" id="send" class="btn btn-primary submit-media">Enviar</button>
                             </div>
                         </div>
                     </form>

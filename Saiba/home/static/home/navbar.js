@@ -1,7 +1,6 @@
 ﻿$(function () {
     $('#navbar-search').focusin(function () {
         $('#navbar-search-results').show();
-
         $('#navbar-search').keypress(function (e) {
             if (e.keyCode == 27) {
                 $('#navbar-search-results').hide();
@@ -16,7 +15,7 @@
     $('#navbar-search').keyup(function () {
         $.ajax({
             type: "GET",
-            url: "/pesquisa-navbar/?q=" + $('#navbar-search').val(),
+            url: "/pesquisar-entradas/?q=" + $('#navbar-search').val(),
             success: navbarSearchSuccess,
             dataType: 'html'
         });

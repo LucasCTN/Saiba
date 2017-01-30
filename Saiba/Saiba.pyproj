@@ -191,6 +191,8 @@
     <Content Include="gallery\templates\gallery\edit-image.html" />
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />
+    <Content Include="home\templates\home\form_template.html" />
+    <Content Include="home\templates\home\search_navbar.html" />
     <Content Include="home\templates\home\search_tag.html" />
     <Content Include="entry\templates\entry\trending.html" />
     <Content Include="entry\templates\entry\revision.html" />
@@ -199,10 +201,6 @@
     <Content Include="feedback\templates\feedback\comment_section.html" />
     <Content Include="feedback\templates\feedback\index.html" />
     <Content Include="forum\templates\forum\index.html" />
-    <Content Include="gallery\static\gallery\style.css" />
-    <Content Include="gallery\static\gallery\scripts.js" />
-    <Content Include="gallery\templates\gallery\search_entry.html" />
-    <Content Include="gallery\templates\gallery\search_tag.html" />
     <Content Include="gallery\templates\gallery\video.html" />
     <Content Include="gallery\templates\gallery\image.html" />
     <Content Include="gallery\templates\gallery\index.html" />
