@@ -8,8 +8,7 @@ urlpatterns = [
     url(r'^entrar/$', views.user_login, name = 'login'),
     url(r'^sair/$', views.user_logout, name = 'logout'),
     url(r'^registrar/$', views.user_register, name = 'register'),
-    url(r'^pesquisar/$', views.search, name = 'search'),
-    #url(r'^pesquisar-navbar/$', views.search_navbar_entries, name = 'search_navbar_entries'),
-    url(r'^pesquisar-entradas/$', views.search_entries, name = 'search_entries'),
+    url(r'^pesquisar/$', views.navbar_search, name = 'navbar_search'),
+    url(r'^pesquisa-navbar/$', views.search_results, name = 'search_results'),
     url(r'^pesquisar-tags/$', views.search_tags, name='search_tags'),
 ]

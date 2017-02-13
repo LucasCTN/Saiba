@@ -10,7 +10,6 @@ from .models import Image, Video
 from .forms import ImageForm, VideoForm
 from home.models import Tag
 from entry.models import Entry
-from home.views import string_tags_to_list, generate_tags
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -176,3 +175,60 @@ def video_edit(request, video_id):
     video_form.fields['description'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'gallery/edit-video.html', context)
+
+def search_tags(request):
+    if request.GET:
+        search_text = request.GET.get('q')
+    else:
+        search_text = ''
+
+    if search_text != '':
+        tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
+    else:
+        tag_search_result = None
+
+    args = { 'tag_search_result' : tag_search_result }
+
+    return render(request, 'gallery/search_tag.html', args)
+
+def search_entries(request):
+    if request.GET:
+        search_text = request.GET.get('q')
+    else:
+        search_text = ''
+
+    if search_text != '':
+        entry_search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
+    else:
+        entry_search_result = None
+
+    args = { 'entry_search_result' : entry_search_result }
+
+def string_tags_to_list( tag_string ):
+    if(tag_string != None):
+        # Splitting all commas
+        tags = tag_string.split(",")
+        # Removing empty spaces
+        tags[:] = (value for value in tags if value != '')
+        # Removing all duplicates and returning it (the insertion order it's lost unfortunately)
+        return list(set(tags))
+    else:
+        return ''
+
+def generate_tags( tag_list ):
+    # Of the tags written, which one is in database
+    db_tags = Tag.objects.filter(label__in=tag_list)
+
+    # Creating a copy of the all tag list
+    new_tags = list(tag_list)
+
+    # Removing database tag from the new list (if have any)
+    for x in db_tags:
+        new_tags[:] = (value for value in new_tags if value != str(x).decode("utf-8"))
+
+    # Inserting in database the new tags
+    for tag_name in new_tags:
+        Tag.objects.create(label=tag_name, hidden=False)
+
+    # Returning a new list with the database tags and the new created tags
+    return list(db_tags) + new_tags

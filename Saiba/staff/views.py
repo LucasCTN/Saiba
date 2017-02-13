@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from home.forms import PostForm
 from entry.models import Entry
+from profile.models import User
 
 # Create your views here.
 def index(request):
-
     if not request.user.is_staff:
         return redirect('home:index')
 
@@ -42,8 +42,33 @@ def create_post(request):
         post = text_form.save(commit=False)
         post.author = request.user
         post.save()
-        return redirect('staff:create_post')
+        return redirect('home:index')
 
     args = {'form': text_form}
 
     return render(request, 'staff/create_post.html', args)
+
+def search_user(request):
+    if not request.user.is_staff:
+        return redirect('home:index')
+
+    search_term = request.GET.get("q")
+
+    if search_term == None:
+        all_users = User.objects.order_by("-date_joined")
+    else:
+        all_users = User.objects.filter(username__contains=search_term).order_by("-date_joined")
+
+    args = {'all_users': all_users}
+
+    return render(request, 'staff/search_user.html', args)
+
+def search_user_result(request):
+    if not request.user.is_staff:
+        return redirect('home:index')
+
+    all_users = User.objects.order_by("-date_joined")
+
+    args = {'all_users': all_users}
+
+    return render(request, 'staff/search_user.html', args)

@@ -5,5 +5,6 @@ app_name = 'staff'
 
 urlpatterns = [
     url(r'^$', views.index, name = 'index'),
-    url(r'^create-post$', views.create_post, name = 'create_post'),
+    url(r'^nova-postagem$', views.create_post, name = 'create_post'),
+    url(r'^procurar-usuario', views.search_user, name = 'search_user'),
 ]

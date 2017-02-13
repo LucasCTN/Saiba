@@ -11,7 +11,7 @@
             <small>Enviado por {{ video.author.username }}</small>
         </h3>
         {% if video.source %}<p>Fonte: {{ video.source }}</p>{% endif %}
-        <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+        <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
         {% if video.description %}<p>Descrição: {{ video.description }}</p>{% endif %}
     </section>
 
