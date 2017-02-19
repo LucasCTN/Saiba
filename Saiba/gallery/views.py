@@ -177,34 +177,6 @@ def video_edit(request, video_id):
 
     return render(request, 'gallery/edit-video.html', context)
 
-def search_tags(request):
-    if request.GET:
-        search_text = request.GET.get('q')
-    else:
-        search_text = ''
-
-    if search_text != '':
-        tag_search_result = Tag.objects.filter(label__contains=search_text, hidden=False)[:5]
-    else:
-        tag_search_result = None
-
-    args = { 'tag_search_result' : tag_search_result }
-
-    return render(request, 'gallery/search_tag.html', args)
-
-def search_entries(request):
-    if request.GET:
-        search_text = request.GET.get('q')
-    else:
-        search_text = ''
-
-    if search_text != '':
-        entry_search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
-    else:
-        entry_search_result = None
-
-    args = { 'entry_search_result' : entry_search_result }
-
 def string_tags_to_list( tag_string ):
     if(tag_string != None):
         # Splitting all commas

@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^registrar/$', views.user_register, name = 'register'),
     url(r'^pesquisar/$', views.navbar_search, name = 'navbar_search'),
     url(r'^pesquisa-navbar/$', views.search_results, name = 'search_results'),
+    url(r'^pesquisar-entradas/$', views.search_results, name = 'search_results'),
     url(r'^pesquisar-tags/$', views.search_tags, name='search_tags'),
 ]

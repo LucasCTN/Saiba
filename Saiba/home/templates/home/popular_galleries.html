@@ -16,7 +16,7 @@
             success: function (data) {
                 for (i = 0; i < data.length; i++) {
                     var entry = $("<a/>").addClass("trending-entry").attr("href", "http://localhost:8000/entrada/" + data[i].slug);
-                    var container = $("<span/>").addClass("trending-container col-md-12").css("text-align", "center");
+                    var container = $("<span/>").addClass("trending-container col-md-4").css("text-align", "center");
                     var image = $("<img/>").addClass("trending-image col-centered img-thumbnail col-md-2").attr("src", data[i].icon).css("width", "60px");
                     var title = $("<span/>").addClass("trending-title col-md-2").html(data[i].title);
 
