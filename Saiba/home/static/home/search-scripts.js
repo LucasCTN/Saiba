@@ -44,7 +44,7 @@
 
         $.ajax({
             type: "GET",
-            url: "http://localhost:8000/pesquisar-entradas/?q=" + $('#search-entries').val(),
+            url: "../pesquisar-entradas/?q=" + $('#search-entries').val(),
             success: searchEntrySuccess,
             dataType: 'html'
         });
@@ -72,7 +72,7 @@
         $('.search-tag-display ul li[tag-data=' + tag_data + ']').remove();
     });
 
-    $('.submit-media').click(function () {
+    $('#send').click(function () {
         $('#tags-selected').val('');
         $('.search-tag-display ul li').each(function () {
             $('#tags-selected').val($('#tags-selected').val() + ',' + $(this).attr('tag-data'));

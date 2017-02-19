@@ -26,47 +26,68 @@
     <body>
         <nav id="saiba-navbar" class="navbar navbar-default navbar-fixed-top">
             <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% url 'home:index' %}">Saiba</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="divider-vertical"></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contribuir <span class="caret"></span></a>
-                        <ul class="navbox-subitem dropdown-menu">
-                        <li><a href="{% url 'entry:create_entry' %}">Criar entrada</a></li>
-                        <li><a href="{% url 'gallery:upload_image' %}">Enviar imagem</a></li>
-                        <li><a href="{% url 'gallery:upload_video' %}">Enviar vídeo</a></li>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'home:index' %}">Saiba</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="divider-vertical"></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contribuir <span class="caret"></span></a>
+                            <ul class="navbox-subitem dropdown-menu">
+                                <li><a href="{% url 'entry:create_entry' %}">Criar entrada</a></li>
+                                <li><a href="{% url 'gallery:upload_image' %}">Enviar imagem</a></li>
+                                <li><a href="{% url 'gallery:upload_video' %}">Enviar vídeo</a></li>
+                            </ul>
+                        </li>
+                        {% if user.is_staff %}
+                            <li>
+                                <a href="{% url 'staff:index' %}" role="button">Staff</a>
+                            </li>
+                        {% endif %}
                     </ul>
-                </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <form class="navbar-form navbar-left" action="{% url 'home:search' %}" method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <input id="navbar-search" name="q" type="text" class="form-control" placeholder="Pesquisar" autocomplete="off">
-                            <button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
-                            <div class="navbar-search-box">
-                                <ul id="navbar-search-results" class="navbar-search-results">
-                                    <li><span class="not-found">Sem entradas.</span></li>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <form class="navbar-form navbar-left" action="{% url 'home:navbar_search' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input id="navbar-search" name="q" type="text" class="form-control" placeholder="Pesquisar" autocomplete="off">
+                                    <button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
+                                    <div class="navbar-search-box">
+                                        <ul id="navbar-search-results" class="navbar-search-results">
+                                            <li><span class="not-found">Sem entradas.</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                        
+                        {% if user.is_authenticated %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.username}} <span class="caret"></span></a>
+                                <ul class="navbox-subitem dropdown-menu">
+                                    <li><a href="{% url 'profile:detail' user.profile.slug %}">Perfil</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url 'home:logout' %}">Sair</a></li>
                                 </ul>
-                            </div>
-                        </div>
-                    </form>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meu perfil <span class="caret"></span></a>
-                        <ul class="navbox-subitem dropdown-menu">
-                        <li><a href="#">Criar entrada</a></li>
+                            </li>
+                        {% else %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Conectar <span class="caret"></span></a>
+                                <ul class="navbox-subitem dropdown-menu">
+                                    <li><a href="{% url 'home:login' %}">Entrar</a></li>
+                                    <li><a href="{% url 'home:register' %}">Registrar-se</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
                     </ul>
-                </ul>
-            </div><!--/.nav-collapse -->
+                </div><!--/.nav-collapse -->
             </div>
         </nav>
 
