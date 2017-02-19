@@ -2,7 +2,7 @@
 {% block title %}{{ image.title }} - Saiba{% endblock %}
 {% block body %}  
     <section id="conteudo" class="container col-md-9">
-        <img id="imagem" class='media-object img-thumbnail' src='{{ image.file.url }}'>
+        <img id="imagem" class='media-object img-thumbnail' src='{{ image.file.url }}' style="max-height: 100%; max-width: 100%;">
     </section>   
 
     <section id="informacao" class="container media col-md-12">
@@ -29,6 +29,7 @@
         <h2>Imagens relacionadas <small>({{ related_images|length }})</small></h2>
         {% for related_image in related_images %}
             <div class='inline-block col-md-4'>
+                <a href="{% url 'gallery:image_detail' related_image.id %}"><img class='media-object' src='{{ related_image.file.url }}' alt='image.title' height='100'/></a>
                 <a href="{% url 'gallery:image_detail' related_image.id %}">{{ related_image.title }}</a>
             </div>
         {% endfor %}

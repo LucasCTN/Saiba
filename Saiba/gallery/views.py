@@ -96,6 +96,7 @@ def upload_video(request):
             video_form.save_m2m()
             video.tags = Tag.objects.filter(label__in=set_tags)
             video.save()
+
             return redirect('gallery:video_detail', video_id=video.id)
 
     video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'

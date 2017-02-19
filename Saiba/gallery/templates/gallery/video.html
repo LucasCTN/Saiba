@@ -29,6 +29,7 @@
         <h2>Vídeos relacionados <small>({{ related_videos|length }})</small></h2>
         {% for related_video in related_videos %}
             <div class='inline-block col-md-4'>
+                <a href="{% url 'gallery:video_detail' related_video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ related_video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>
                 <a href="{% url 'gallery:video_detail' related_video.id %}">{{ related_video.title }}</a>
             </div>
         {% endfor %}

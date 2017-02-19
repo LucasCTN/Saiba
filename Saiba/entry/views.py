@@ -74,6 +74,7 @@ def edit(request, entry_slug):
             entry_form = EntryForm(request.POST, request.FILES, instance = entry)
             entry = entry_form.save(commit=False)
             entry.author = user
+            entry.slug = slugify(entry.title)
             entry.save()
             entry_form.save_m2m()
             entry.tags = Tag.objects.filter(label__in=set_tags)
@@ -84,7 +85,7 @@ def edit(request, entry_slug):
             revision.author = user
             revision.save()            
 
-            return redirect('entry:detail', entry_slug=entry_slug)
+            return redirect('entry:detail', entry_slug=entry.slug)
 
         context = { "entry_form": entry_form, "revision_form": revision_form, "entry":entry, "user":user }
 

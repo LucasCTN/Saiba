@@ -49,7 +49,7 @@
         {% for related_entry in related_entries %}
             <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}">
                 <span class="col-md-12" style="text-align: center;">
-                    <img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:100px;"/>
+                    {% if related_entry.icon %}<img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:100px;"/>{% endif %}
                     <span class="col-md-12">{{ related_entry.title }}</span>
                 </span>                
             </a>
@@ -60,6 +60,7 @@
         <h1>Videos recentes <small>({{ videos|length }})</small></h1>
         {% for video in videos %}
             <div class='inline-block col-md-4'>
+                {% if related_entry.icon %}<a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>{% endif %}
                 <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
             </div>
         {% endfor %}
