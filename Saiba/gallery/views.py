@@ -166,7 +166,6 @@ def video_edit(request, video_id):
             video.save()
             return redirect('gallery:video_detail', video_id=video.pk)
         else:
-            print "LALALA"
             print video_form.errors
         
         context = { "video_form": video_form, "video": video, "user": user }

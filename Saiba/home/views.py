@@ -117,7 +117,7 @@ def user_register(request):
     
         return render(request, 'home/register.html', args)
 
-def navbar_search(request):
+def page_search(request):
     query = request.GET.get('q')
     type = request.GET.get('type')
     order_by = request.GET.get('order_by')
@@ -155,7 +155,7 @@ def navbar_search(request):
 
     return render(request, 'home/search.html', args)
 
-def search_results(request):
+def navbar_search(request):
     if request.GET:
         search_text = request.GET.get('q')
     else:
@@ -171,9 +171,27 @@ def search_results(request):
     args = {'entries' : entries,
             'navbar_search_result' : search_result}
 
+    return render(request, 'home/navbar_search.html', args)
+
+def search_entry(request):
+    if request.GET:
+        search_text = request.GET.get('q')
+    else:
+        search_text = ''
+
+    entries = Entry.objects.all()
+
+    if search_text != '':
+        search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
+    else:
+        search_result = None
+
+    args = {'entries' : entries,
+            'entry_search_result' : search_result}
+
     return render(request, 'home/search_entry.html', args)
 
-def search_tags(request):
+def search_tag(request):
     if request.GET:
         search_text = request.GET.get('q')
     else:

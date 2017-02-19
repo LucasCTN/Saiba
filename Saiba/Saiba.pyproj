@@ -192,7 +192,7 @@
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />
     <Content Include="home\templates\home\form_template.html" />
-    <Content Include="home\templates\home\search_navbar.html" />
+    <Content Include="home\templates\home\search_entry.html" />
     <Content Include="home\templates\home\search_tag.html" />
     <Content Include="entry\templates\entry\trending.html" />
     <Content Include="entry\templates\entry\revision.html" />
@@ -221,7 +221,7 @@
     <Content Include="home\templates\home\register.html" />
     <Content Include="home\templates\home\logout.html" />
     <Content Include="home\templates\home\login.html" />
-    <Content Include="home\templates\home\search_entry.html" />
+    <Content Include="home\templates\home\navbar_search.html" />
     <Content Include="home\templates\home\sidebar.html" />
     <Content Include="home\templates\home\search.html" />
     <Content Include="home\templates\home\popular_galleries.html" />

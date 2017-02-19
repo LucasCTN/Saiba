@@ -16,7 +16,7 @@
     $('#navbar-search').keyup(function () {
         $.ajax({
             type: "GET",
-            url: "/pesquisa-navbar/?q=" + $('#navbar-search').val(),
+            url: "/pesquisar-navbar/?q=" + $('#navbar-search').val(),
             success: navbarSearchSuccess,
             dataType: 'html'
         });

@@ -44,7 +44,7 @@
 
         $.ajax({
             type: "GET",
-            url: "http://localhost:8000/pesquisar-entradas/?q=" + $('#search-entries').val(),
+            url: "http://localhost:8000/pesquisar-entrada/?q=" + $('#search-entries').val(),
             success: searchEntrySuccess,
             dataType: 'html'
         });
@@ -59,7 +59,7 @@
         else {
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8000/pesquisar-tags/?q=" + $('#search-tags').val(),
+                url: "http://localhost:8000/pesquisar-tag/?q=" + $('#search-tags').val(),
                 success: searchTagSuccess,
                 dataType: 'html'
             });
