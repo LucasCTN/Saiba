@@ -72,7 +72,7 @@
         $('.search-tag-display ul li[tag-data=' + tag_data + ']').remove();
     });
 
-    $('#send').click(function () {
+    $('.submit-media').click(function () {
         $('#tags-selected').val('');
         $('.search-tag-display ul li').each(function () {
             $('#tags-selected').val($('#tags-selected').val() + ',' + $(this).attr('tag-data'));
