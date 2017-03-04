@@ -23,5 +23,10 @@
 <hr/>
 <section id="galerias-populares" class="container media col-md-12">
     <h2>Galerias populares</h2>
-    {% include "home/popular_galleries.html" %}
+    {% for gallery in trending_galleries %}
+        <a href="{{gallery.slug}}">
+            <img class="img-thumbnail" src="{{gallery.icon}}" style="width:60px;"/>
+            <span>{{gallery.title}}</span>
+        </a><br/>
+    {% endfor %}
 </section>

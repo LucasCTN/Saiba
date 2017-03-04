@@ -1,3 +1,5 @@
+import urllib2, urllib, json
+from rest_framework.reverse import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
@@ -9,9 +11,11 @@ from gallery.models import Image, Video
 from profile.models import Profile
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
+from Saiba import utils
 
 def index(request):
     entries = Entry.objects.all()
+    trending_entries    = utils.get_trending_entries(request)
 
     posts = Post.objects.all().order_by('-date')
     fixed_posts = Post.objects.filter(fixed=True).order_by('-date')
@@ -20,7 +24,8 @@ def index(request):
     args = {'entries': entries,
             'posts': posts,
             'fixed_posts': fixed_posts,
-            'normal_posts': normal_posts}
+            'normal_posts': normal_posts,
+            'trending_entries': trending_entries}
 
     return render(request, 'home/index.html', args)
 

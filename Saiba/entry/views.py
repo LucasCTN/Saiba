@@ -16,7 +16,7 @@ from entry.serializers import EntrySerializer, RevisionSerializer
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
-import Saiba.saibadown, textile, ghdiff
+import Saiba.saibadown, textile, ghdiff, Saiba.utils as utils
 from django.contrib.contenttypes.models import ContentType
 
 def index(request):
@@ -34,22 +34,36 @@ def detail(request, entry_slug):
 
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
 
-    args = {'entry'             : entry, 
-            'last_revision'     : last_revision,                                                   
-            'first_revision'    : first_revision, 
+    trending_galleries  = utils.get_popular_galleries(request)
+    trending_entries    = utils.get_trending_entries(request)
+
+    args = {'entry'             : entry,
+            'last_revision'     : last_revision,
+            'first_revision'    : first_revision,
             'images'            : last_images,
             'videos'            : last_videos,
             'related_entries'   : related_entries,
-            'type'              : 'entry'}
+            'type'              : 'entry',
+            'trending_galleries': trending_galleries,
+            'trending_entries'  : trending_entries }
 
     return render(request, 'entry/detail.html', args)
 
 def history(request, entry_slug):
+    trending_entries    = utils.get_trending_entries(request)
     entry = get_object_or_404(Entry, slug=entry_slug)
     revisions = Revision.objects.filter(entry=entry, hidden=False).order_by('-id')
-    return render(request, escape('entry/history.html'), {'revisions': revisions, 'entry_name':entry.title, 'entry_slug':entry.slug})
+
+    context = {'revisions'          : revisions, 
+               'entry_name'         :entry.title, 
+               'entry_slug'         :entry.slug,
+               'trending_entries'   :trending_entries }
+
+    return render(request, escape('entry/history.html'), context)
 
 def edit(request, entry_slug):
+    trending_entries    = utils.get_trending_entries(request)
+
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -87,7 +101,12 @@ def edit(request, entry_slug):
 
             return redirect('entry:detail', entry_slug=entry.slug)
 
-        context = { "entry_form": entry_form, "revision_form": revision_form, "entry":entry, "user":user }
+        context = { "entry_form": entry_form, 
+                   "revision_form": revision_form, 
+                   "entry":entry, 
+                   "user":user, 
+                   'trending_entries':trending_entries }
+
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -99,6 +118,7 @@ def edit(request, entry_slug):
     return render(request, 'entry/edit.html', context)
 
 def revision(request, entry_slug, revision_id):
+    trending_entries    = utils.get_trending_entries(request)
     revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
     previous_revision = Revision.objects.filter(entry=revision.entry.pk, hidden=False, pk__lt=revision_id).order_by('-id').first()
 
@@ -110,9 +130,10 @@ def revision(request, entry_slug, revision_id):
 
     html_result = ghdiff.diff(previous_revision_text, revision_text)
 
-    return render(request, escape('entry/revision.html'), { 'revision': revision, 'html': html_result })
+    return render(request, escape('entry/revision.html'), { 'revision': revision, 'html': html_result, 'trending_entries': trending_entries })
 
 def create_entry(request):
+    trending_entries    = utils.get_trending_entries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -146,7 +167,8 @@ def create_entry(request):
             return redirect('entry:detail', entry_slug=entry.slug)
 
         context = { "entry_form": entry_form,
-                    "revision_form": revision_form }
+                    "revision_form": revision_form,
+                   'trending_entries': trending_entries }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -166,32 +188,8 @@ def editorship(request, entry_slug):
     for user_in_list in editor_list:
         user_editor_list.append(user_in_list.user)
 
-    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
+    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list, 'trending_entries':trending_entries}
     return render(request, 'entry/editorship.html', context)
-
-'''
-    recently_revised_entries = Entry.objects.filter(hidden=False).annotate(num_revisions=Count('revisions')).order_by('-num_revisions')
-    
-    if not request.user.is_authenticated():
-        return render(request, 'music/login.html')
-    else:
-        albums = Album.objects.filter(user=request.user)
-        song_results = Song.objects.all()
-        query = request.GET.get("q")
-        if query:
-            albums = albums.filter(
-                Q(album_title__icontains=query) |
-                Q(artist__icontains=query)
-            ).distinct()
-            song_results = song_results.filter(
-                Q(song_title__icontains=query)
-            ).distinct()
-            return render(request, 'music/index.html', {
-                'albums': albums,
-                'songs': song_results,
-            })
-        else:
-    return render(request, 'music/index.html', {'albums': albums})'''
 
 def string_tags_to_list( tag_string ):
     if(tag_string != None):
