@@ -1,25 +1,29 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
+# -*- coding: utf-8 -*-
 import django
-from django.test import TestCase
+from django.contrib.auth.models import AnonymousUser, User
+from django.test import TestCase, RequestFactory
+from entry.models import Entry
+from entry.views import create_entry
 
 # TODO: Configure your database in settings.py and sync before running tests.
 
-class SimpleTest(TestCase):
-    """Tests for the application views."""
 
-    # Django requires an explicit setup() when running tests in PTVS
+class EntryTestCase(TestCase):
+    """Tests for the entry views."""
+
     @classmethod
     def setUpClass(cls):
+        cls.factory = RequestFactory()
+        cls.user = User.objects.create_user(
+            username='Joao', email='joao@…', password='top_secret')
         django.setup()
 
-    def test_basic_addition(self):
+    def test_create_entry(self):
         """
-        Tests that 1 + 1 always equals 2.
+        Tests creating a entry.
         """
-        self.assertEqual(1 + 1, 2)
+        request = self.factory.get('/entrada/nova-entrada/')
+        request.user = self.user
+
+        response = create_entry(request)
+        self.assertEqual(response.status_code, 200)
