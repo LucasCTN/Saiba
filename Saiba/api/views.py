@@ -307,8 +307,8 @@ class PointsDetail(APIView):
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 class TrendingDetail(APIView):
-    def get(self, request):
-        trending_type = request.GET.get('type')
+    def get(self, request, type = None):
+        trending_type = request.GET.get('type') or type
 
         if trending_type:
             if trending_type == "entry":
