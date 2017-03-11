@@ -134,6 +134,7 @@ def revision(request, entry_slug, revision_id):
 
 def create_entry(request):
     trending_entries    = utils.get_trending_entries(request)
+    trending_gallery    = utils.get_popular_galleries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -142,11 +143,11 @@ def create_entry(request):
         revision_form = RevisionForm(request.POST or None)
 
         entry_test = Entry.objects.filter(slug=slugify(entry_form.fields['title'])).first()
-        
+
         if entry_form.is_valid() and revision_form.is_valid() and not entry_test:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
-
+            
             print request.POST.get('tags-selected')
 
             entry = entry_form.save(commit=False)
@@ -166,9 +167,10 @@ def create_entry(request):
             last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
             return redirect('entry:detail', entry_slug=entry.slug)
 
-        context = { "entry_form": entry_form,
-                    "revision_form": revision_form,
-                   'trending_entries': trending_entries }
+        context = { "entry_form"        : entry_form,
+                    "revision_form"     : revision_form,
+                    "trending_entries"  : trending_entries,
+                    "trending_gallery"  : trending_gallery }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'

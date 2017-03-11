@@ -1,13 +1,21 @@
-from rest_framework.reverse import reverse
+import copy
 from api.views import TrendingDetail
 
 def is_valid_direction(direction):
     return int(direction) in [-1, 0, 1]
 
 def get_trending_entries(request):
-    trending_entries = TrendingDetail.as_view()(request, "entry").data
-    return trending_entries[:5]
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
+
+    trending_entries = TrendingDetail.as_view()(new_request, "entry").data
+    result = trending_entries[:5]
+    return result
 
 def get_popular_galleries(request):
-    trending_galleries = TrendingDetail.as_view()(request, "gallery").data
-    return trending_galleries[:5]
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
+
+    trending_galleries = TrendingDetail.as_view()(new_request, "gallery").data
+    result = trending_galleries[:5]
+    return result
