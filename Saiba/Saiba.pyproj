@@ -191,6 +191,7 @@
     <Content Include="feedback\templates\feedback\comment_page.html" />
     <Content Include="gallery\templates\gallery\edit-video.html" />
     <Content Include="gallery\templates\gallery\edit-image.html" />
+    <Content Include="home\static\home\file-script.js" />
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />
     <Content Include="home\templates\home\form_template.html" />
