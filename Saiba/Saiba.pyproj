@@ -198,8 +198,6 @@
     <Content Include="home\templates\home\search_tag.html" />
     <Content Include="entry\templates\entry\trending.html" />
     <Content Include="entry\templates\entry\revision.html" />
-    <Content Include="entry\static\entry\search-scripts.js" />
-    <Content Include="entry\static\entry\search-style.css" />
     <Content Include="feedback\templates\feedback\comment_section.html" />
     <Content Include="feedback\templates\feedback\index.html" />
     <Content Include="forum\templates\forum\index.html" />

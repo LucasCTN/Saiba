@@ -8,6 +8,7 @@
 
 {% block scripts %}
     <script src="{% static 'home/search-scripts.js' %}"></script>
+    <script src="{% static 'home/file-script.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -61,30 +62,37 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Ícone</label>
-                            <div class="col-sm-8">{{ entry_form.icon }}</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Marcações:</label>
-                            <div class="col-md-2"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
-                            <div class="col-md-offset-2 search-box">
-                                <ul id="search-tag-results" class="search-results">
-                                    <li id="tags-no-results" class="no-results">Sem resultados.</li>
-                                </ul>
+                            <label class="control-label col-md-2" for="field">Ícone</label>
+                            <div class="col-md-8">
+                                {{ entry_form.icon }}
+                                <label class="custom-file-control col-md-12">
+                                    <button type="button" class="btn btn-primary col-md-2" 
+                                            style="border-left-style: hidden; border-top-right-radius: initial; border-bottom-right-radius: initial;">Enviar foto</button>
+                                    <span class="custom-file-field col-md-4"></span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field"></label>
-                            <div class="col-md-4 search-tag-display">
+                            <div class="col-md-5" style="padding-left: 0px; padding-right: 0px;">
+                                <label class="control-label col-md-5" for="field">Marcações</label>
+                                <div class="col-md-7" style="padding-left: 1.6%; padding-right: 0px;">
+                                    <input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off">
+                                    <div class="search-box">
+                                        <ul id="search-tag-results" class="search-results">
+                                            <li id="tags-no-results" class="no-results">Sem resultados.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 search-tag-display">
                                 <ul>
-                                    Adicionadas:
                                 </ul>
                             </div>
 
                             <input type="text" id="tags-selected" name="tags-selected" hidden/>
-                        </div> 
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Conteúdo</label>
