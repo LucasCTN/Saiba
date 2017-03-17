@@ -18,6 +18,9 @@
             <span class=""><b>Último login em:</b> {{ profile.user.last_login }}</span><br/>
         </div>        
     </section>
+
+    {% include "feedback/comment_section.html" %}
+
 {% endblock %}
 
 user.date_joined()
