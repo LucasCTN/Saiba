@@ -19,6 +19,10 @@ from home.models import SaibaSettings, Tag
 import Saiba.saibadown, textile, ghdiff, Saiba.utils as utils
 from django.contrib.contenttypes.models import ContentType
 
+import urllib2
+from django.core.files import File
+from django.core.files.base import ContentFile
+
 def index(request):
     return render(request, 'entry/index.html')
 
@@ -147,10 +151,23 @@ def create_entry(request):
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
-            print request.POST.get('tags-selected')
-
             entry = entry_form.save(commit=False)
             entry.author = user
+
+            if request.POST.get('icon') == "":
+                link = request.POST.get('custom-link-field')
+                name = link.split('/')[-1]
+
+                link_exists = True
+
+                try:
+                    content = ContentFile(urllib2.urlopen(link).read())
+                except:
+                    link_exists = False
+
+                if link_exists:
+                    entry.icon.save(name, content, save=True)
+
             entry.save()
             entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.editorship.add(user.profile)
