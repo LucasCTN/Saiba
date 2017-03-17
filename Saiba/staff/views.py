@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from home.forms import PostForm
 from entry.models import Entry
-from profile.models import User
+from profile.models import Profile
 
 # Create your views here.
 def index(request):
