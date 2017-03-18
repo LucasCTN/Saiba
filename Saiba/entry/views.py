@@ -23,6 +23,8 @@ import urllib2
 from django.core.files import File
 from django.core.files.base import ContentFile
 
+from datetime import datetime
+
 def index(request):
     return render(request, 'entry/index.html')
 
@@ -168,6 +170,8 @@ def create_entry(request):
                 if link_exists:
                     entry.icon.save(name, content, save=True)
 
+            entry.date_origin = verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
+
             entry.save()
             entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.editorship.add(user.profile)
@@ -236,3 +240,54 @@ def generate_tags( tag_list ):
 
     # Returning a new list with the database tags and the new created tags
     return list(db_tags) + new_tags
+
+def verify_and_format_date(day, month, year):
+    if day.isdigit():
+        day = int(day)
+        
+        if day < 1 or day > 31:
+            day = 0
+    else:
+        day = 0
+
+    if month.isdigit():
+        month = int(month)
+        
+        if month < 1 or month > 12:
+            month = 0
+    else:
+        month = 0
+
+    if year.isdigit():
+        year = int(year)
+        
+        if year < 0:
+            year = 0
+    else:
+        year = 0
+
+    month_list = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+
+    now = datetime.now()
+    input_time = datetime.now()
+
+    if day != 0:
+        input_time = input_time.replace(day=day)
+
+    if month != 0:
+        input_time = input_time.replace(month=month)
+
+    if year != 0:
+        input_time = input_time.replace(year=year)
+
+    if (now - input_time).days >= 0:
+        if day != 0 and month != 0 and year != 0:
+            return str(day) + " de " + str(month_list[month]) + " de " + str(year)
+        elif day == 0 and month != 0 and year != 0:
+            return str(month_list[month]) + " de " + str(year)
+        elif day == 0 and month == 0 and year != 0:
+            return str(year)
+        else:
+            return ""
+    else:
+        return ""

@@ -56,16 +56,10 @@
                             <div class="col-sm-8">{{ entry_form.origin }}</div>
                         </div>
 
-                        <!-- <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Data</label>
-                            <div class="col-sm-6">{{ entry_form.date_origin }}</div>
-                        </div>-->
-
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Data</label>
-                            <div class="col-sm-6" hidden>{{ entry_form.date_origin }}</div>
                             <div class="col-sm-1">
-                                <select class="form-control">
+                                <select name="date-day" class="form-control">
                                     {% for i in "x"|rjust:"32" %}
                                         {% if forloop.counter0 == 0 %}
                                             <option></option>
@@ -76,23 +70,23 @@
                                 </select>
                             </div>
                             <div class="col-sm-2">
-                                <select class="form-control">
-                                    <option></option>
-                                    <option>Janeiro</option>
-                                    <option>Fevereiro</option>
-                                    <option>Março</option>
-                                    <option>Abril</option>
-                                    <option>Maio</option>
-                                    <option>Junho</option>
-                                    <option>Julho</option>
-                                    <option>Agosto</option>
-                                    <option>Setembro</option>
-                                    <option>Outubro</option>
-                                    <option>Novembro</option>
-                                    <option>Dezembro</option>
+                                <select name="date-month" class="form-control">
+                                    <option value="0"></option>
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
                                 </select>
                             </div>
-                            <div class="col-sm-1"><input class="form-control" placeholder="Ano"></div>
+                            <div class="col-sm-1"><input name="date-year" class="form-control" placeholder="Ano"></div>
                         </div>
 
                         <div class="form-group">
