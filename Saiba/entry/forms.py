@@ -2,7 +2,7 @@
 from django import forms
 from .models import Entry, Revision
 
-from Saiba import messages
+from Saiba import custom_messages
 
 class EntryForm(forms.ModelForm):
     class Meta:
@@ -18,7 +18,7 @@ class EntryForm(forms.ModelForm):
             'tags': ('Marcações'),
         }
 
-        error_messages = messages.custom_error_messages(fields)
+        error_messages = custom_messages.custom_error_messages(fields, labels)
 
 class RevisionForm(forms.ModelForm):
     class Meta:
@@ -33,4 +33,4 @@ class RevisionForm(forms.ModelForm):
             'content': ('Conteúdo'),
         }
 
-        error_messages = messages.custom_error_messages(fields)
+        error_messages = custom_messages.custom_error_messages(fields, labels)

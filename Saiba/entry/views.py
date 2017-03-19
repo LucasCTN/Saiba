@@ -151,13 +151,12 @@ def create_entry(request):
 
         errors = {}
 
-        for error in entry_form.errors:
-            errors[error] = entry_form.errors[error].as_text
+        if(request.POST):
+            for error in entry_form.errors:
+                errors[error] = entry_form.errors[error].as_text
 
-        for error in revision_form.errors:
-            errors[error] = revision_form.errors[error].as_text
-
-        print "Errors: " + str(errors)
+            for error in revision_form.errors:
+                errors[error] = revision_form.errors[error].as_text
         
         if entry_form.is_valid() and revision_form.is_valid() and not entry_test:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
@@ -189,7 +188,7 @@ def create_entry(request):
         context = { "entry_form": entry_form,
                     "revision_form": revision_form,
                    'trending_entries': trending_entries,
-                    'errors': errors }
+                    'error_messages': errors }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -216,10 +215,16 @@ def string_tags_to_list( tag_string ):
     if(tag_string != None):
         # Splitting all commas
         tags = tag_string.split(",")
-        # Removing empty spaces
-        tags[:] = (value for value in tags if value != '')
+        verified_tags = []
+
+        # Removing empty and only one space tags
+        for tag in tags:
+            tag = tag.strip()
+            if tag != '' and tag != ' ':
+                verified_tags.append(tag)
+
         # Removing all duplicates and returning it (the insertion order it's lost unfortunately)
-        return list(set(tags))
+        return list(set(verified_tags))
     else:
         return ''
 

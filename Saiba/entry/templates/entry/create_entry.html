@@ -36,15 +36,19 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h2>Criar nova Entrada</h2>
-                    <!--
-                    {% if error_message %}
-                        <p><strong>{{ error_message }}</strong></p>
-                    {% endif %}
-                    -->
 
-                    {% for key, item in errors.items %}
-                        {{ key }} - {{ item }}
-                    {% endfor %}
+                    {% if error_messages %}
+                        <div class="col-md-offset-1">
+                            <div class="alert alert-warning col-md-11">
+                                <strong>Aviso!</strong>
+                                <ul>
+                                    {% for key, message in error_messages.items %}
+                                        <li>{{ message|slice:"2:" }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
 
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
