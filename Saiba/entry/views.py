@@ -1,5 +1,4 @@
-﻿    # -*- coding: utf-8 -*-
-from django.contrib.auth import logout, authenticate, login
+﻿from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -24,6 +23,8 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 
 from datetime import datetime
+
+import imghdr
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -113,7 +114,6 @@ def edit(request, entry_slug):
                    "user":user, 
                    'trending_entries':trending_entries }
 
-
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
     entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
@@ -148,6 +148,16 @@ def create_entry(request):
         revision_form = RevisionForm(request.POST or None)
 
         entry_test = Entry.objects.filter(slug=slugify(entry_form.fields['title'])).first()
+
+        errors = {}
+
+        for error in entry_form.errors:
+            errors[error] = entry_form.errors[error].as_text
+
+        for error in revision_form.errors:
+            errors[error] = revision_form.errors[error].as_text
+
+        print "Errors: " + str(errors)
         
         if entry_form.is_valid() and revision_form.is_valid() and not entry_test:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
@@ -157,18 +167,7 @@ def create_entry(request):
             entry.author = user
 
             if request.POST.get('icon') == "":
-                link = request.POST.get('custom-link-field')
-                name = link.split('/')[-1]
-
-                link_exists = True
-
-                try:
-                    content = ContentFile(urllib2.urlopen(link).read())
-                except:
-                    link_exists = False
-
-                if link_exists:
-                    entry.icon.save(name, content, save=True)
+                save_image_link(request.POST.get('custom-link-field'), entry.icon)
 
             entry.date_origin = verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
 
@@ -189,7 +188,8 @@ def create_entry(request):
 
         context = { "entry_form": entry_form,
                     "revision_form": revision_form,
-                   'trending_entries': trending_entries }
+                   'trending_entries': trending_entries,
+                    'errors': errors }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -240,6 +240,21 @@ def generate_tags( tag_list ):
 
     # Returning a new list with the database tags and the new created tags
     return list(db_tags) + new_tags
+
+def save_image_link( link, entry_icon  ):
+    name = link.split('/')[-1]
+
+    accepted_image_files = [ 'bmp', 'gif', 'jpeg', 'png' ]
+
+    try:
+        content = ContentFile(urllib2.urlopen(link).read())
+        print "Image Type: " + str(imghdr.what(content))
+        valid_file = imghdr.what(content) in accepted_image_files
+    except:
+        content = None
+
+    if content and valid_file:
+        entry_icon.save(name, content, save=True)
 
 def verify_and_format_date(day, month, year):
     if day.isdigit():

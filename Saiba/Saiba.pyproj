@@ -110,6 +110,9 @@
     </Compile>
     <Compile Include="profile\views.py" />
     <Compile Include="profile\__init__.py" />
+    <Compile Include="Saiba\messages.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Saiba\saibadown.py">
       <SubType>Code</SubType>
     </Compile>
