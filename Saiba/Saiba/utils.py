@@ -5,25 +5,27 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from datetime import datetime
 import imghdr
+import copy
+from api.views import TrendingDetail
 
 def is_valid_direction(direction):
     return int(direction) in [-1, 0, 1]
 
 def get_trending_entries(request):
-    entry_trending_url = reverse('api:api_trending', request=request) + "?type=entry"
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
 
-    entry_trending_result = urllib2.urlopen(entry_trending_url).read()
-    trending_entries = json.loads(entry_trending_result)
-
-    return trending_entries[:5]
+    trending_entries = TrendingDetail.as_view()(new_request, "entry").data
+    result = trending_entries[:5]
+    return result
 
 def get_popular_galleries(request):
-    gallery_trending_url = reverse('api:api_trending', request=request) + "?type=gallery"
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
 
-    gallery_trending_result = urllib2.urlopen(gallery_trending_url).read()
-    trending_galleries = json.loads(gallery_trending_result)
-
-    return trending_galleries[:5]
+    trending_galleries = TrendingDetail.as_view()(new_request, "gallery").data
+    result = trending_galleries[:5]
+    return result
 
 def string_tags_to_list( tag_string ):
     if(tag_string != None):
