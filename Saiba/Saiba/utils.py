@@ -26,7 +26,6 @@ def get_popular_galleries(request):
     trending_galleries = TrendingDetail.as_view()(new_request, "gallery").data
     result = trending_galleries[:5]
     return result
-
 def string_tags_to_list( tag_string ):
     if(tag_string != None):
         # Splitting all commas

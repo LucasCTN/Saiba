@@ -134,7 +134,7 @@ def revision(request, entry_slug, revision_id):
 
 def create_entry(request):
     trending_entries    = utils.get_trending_entries(request)
-
+    trending_gallery    = utils.get_popular_galleries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -187,9 +187,10 @@ def create_entry(request):
         elif entry_duplicate_title != None:
             errors['title'] = custom_messages.get_custom_error_message( 'duplicated_entry' )
 
-        context = { "entry_form": entry_form,
-                    "revision_form": revision_form,
-                   'trending_entries': trending_entries,
+        context = { "entry_form"        : entry_form,
+                    "revision_form"     : revision_form,
+                    "trending_entries"  : trending_entries,
+                    "trending_gallery"  : trending_gallery }
                     'error_messages': errors }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
@@ -202,6 +203,7 @@ def create_entry(request):
     return render(request, 'entry/create_entry.html', context)
 
 def editorship(request, entry_slug):
+    trending_entries    = utils.get_trending_entries(request)
     entry = get_object_or_404(Entry, slug=entry_slug)
     editor_list = entry.editorship.all()
     
@@ -212,3 +214,27 @@ def editorship(request, entry_slug):
 
     context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list, 'trending_entries':trending_entries}
     return render(request, 'entry/editorship.html', context)
+
+    trending_entries    = utils.get_trending_entries(request)
+def manage_editorship(request, entry_slug):
+    trending_gallery    = utils.get_popular_galleries(request)
+    if not request.user.is_staff:
+
+        return redirect('home:index')
+    entry = Entry.objects.get(slug=entry_slug)
+
+    editor = None
+
+        editor_name = request.POST['editor_name'] #sanitize this
+    if ('editor_name' in request.POST) and (request.POST['editor_name'] is not None) and request.POST['editor_name']:
+        entry.editorship.add(editor)
+        editor = Profile.objects.get(user__username=editor_name)
+
+    if 'remove_editor' in request.POST:
+        editor = Profile.objects.get(user__username=editor_name)
+        editor_name = request.POST['remove_editor'] #sanitize this
+
+        entry.editorship.remove(editor)
+    context = { 'entry': entry, 'trending_entries': trending_entries, 'trending_gallery': trending_gallery }
+   
+    return render(request, 'entry/manage_editorship.html', context)

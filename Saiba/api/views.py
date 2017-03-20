@@ -5,6 +5,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from profile.models import Profile
 from home.models import SaibaSettings
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
@@ -85,6 +86,9 @@ class CommentDetail(APIView):
                 data["target_id"]           = data['id']
             elif comment_target_type == "video" and data['id'] is not None:                
                 data["target_content_type"] = ContentType.objects.get_for_model(Video).id
+                data["target_id"]           = data['id']
+            elif comment_target_type == "profile" and data['id'] is not None:
+                data["target_content_type"] = ContentType.objects.get_for_model(Profile).id
                 data["target_id"]           = data['id']
 
         serializer = CommentSerializer(data=data)
@@ -253,9 +257,13 @@ class CommentPageDetail(APIView):
                 target_type_id  = ContentType.objects.get_for_model(Image).id
                 target_id = image.id
             elif comment_target_type == "video" and comment_target_id:                
-                video           = get_object_or_404(Image, id=comment_target_id)
+                video           = get_object_or_404(Video, id=comment_target_id)
                 target_type_id  = ContentType.objects.get_for_model(Video).id
                 target_id = video.id
+            elif comment_target_type == "profile" and comment_target_id:                
+                profile         = get_object_or_404(Profile, id=comment_target_id)
+                target_type_id  = ContentType.objects.get_for_model(Profile).id
+                target_id = profile.user.id
 
             comments = Comment.objects.filter(target_id=target_id, 
                                               target_content_type=target_type_id, is_deleted=False).order_by('-creation_date')
@@ -307,8 +315,8 @@ class PointsDetail(APIView):
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 class TrendingDetail(APIView):
-    def get(self, request):
-        trending_type = request.GET.get('type')
+    def get(self, request, type = None):
+        trending_type = request.GET.get('type') or type
 
         if trending_type:
             if trending_type == "entry":

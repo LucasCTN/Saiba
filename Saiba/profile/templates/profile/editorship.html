@@ -21,9 +21,21 @@
 
     {% include "profile/profile_menu.html" %}
 
+    <section id="editorships" class="container media col-md-12">
+        <h2>Editorias de {{profile.user.username}}</h2>
 
-    {% include "feedback/comment_section.html" %}
-
+        <div class="container media col-md-12">
+            {% for entry in entries %}            
+            <a href="{% url 'entry:detail' entry.slug %}" class="trending-entry col-md-4">
+                <span class="trending-container col-md-12" style="text-align: center;">
+                    <img class="trending-image col-md-12 col-centered" src="/media/{{entry.icon}}" 
+                         style="height:80px; width:auto; border:1px;"/>
+                    <span class="trending-title col-md-12">{{entry.title}}</span>
+                </span>
+            </a>            
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}
 
 user.date_joined()

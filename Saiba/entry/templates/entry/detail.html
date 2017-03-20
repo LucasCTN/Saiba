@@ -25,15 +25,19 @@
     <div class="media-right media-middle col-md-12">
         <hr>
         <div class="btn-group btn-group-justified" role="group" aria-label="...">
-        <div class="btn-group" role="group">
-            <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
-        </div>
-        <div class="btn-group" role="group">
-            <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
-        </div>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default">Sugerir</button>
-        </div>
+            <div class="btn-group" role="group">
+                <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
+            </div>
+            <div class="btn-group" role="group">
+                <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
+            </div>
+            {% if user.is_staff %}
+            <div class="btn-group" role="group">
+                <a href='{% url 'entry:manage_editorship' entry.slug %}'>
+                    <button type='button' class='btn btn-default'>Editoria</button>
+                </a>
+            </div>
+            {% endif %}
         </div>
         <hr>
     </div>
