@@ -176,13 +176,13 @@
     top: 0;
 }
 
-.custom-file-button{
+#custom-file-button{
     border-bottom-right-radius: initial;
     border-left-style: hidden;
     border-top-right-radius: initial;
 }
 
-.custom-link-button{
+#custom-link-button{
     border-left-style: hidden;
     border-right-style: hidden;
     border-radius:initial;

@@ -18,13 +18,7 @@ from home.models import SaibaSettings, Tag
 import Saiba.saibadown, textile, ghdiff, Saiba.utils as utils
 from django.contrib.contenttypes.models import ContentType
 
-import urllib2
-from django.core.files import File
-from django.core.files.base import ContentFile
-
-from datetime import datetime
-
-import imghdr
+from Saiba import utils, custom_messages
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -85,8 +79,8 @@ def edit(request, entry_slug):
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
 
         if entry_form.is_valid() and revision_form.is_valid() and is_editor:
-            all_tags = string_tags_to_list(request.POST.get('tags-selected'))
-            set_tags = generate_tags(all_tags)
+            all_tags = utils.string_tags_to_list(request.POST.get('tags-selected'))
+            set_tags = utils.generate_tags(all_tags, Tag)
 
             trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
             entry.trending_points += trending_weight
@@ -140,6 +134,7 @@ def revision(request, entry_slug, revision_id):
 
 def create_entry(request):
     trending_entries    = utils.get_trending_entries(request)
+
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -147,7 +142,7 @@ def create_entry(request):
         entry_form = EntryForm(request.POST or None, request.FILES)
         revision_form = RevisionForm(request.POST or None)
 
-        entry_test = Entry.objects.filter(slug=slugify(entry_form.fields['title'])).first()
+        entry_duplicate_title = Entry.objects.filter(slug=slugify(request.POST.get('title'))).first()
 
         errors = {}
 
@@ -157,18 +152,23 @@ def create_entry(request):
 
             for error in revision_form.errors:
                 errors[error] = revision_form.errors[error].as_text
-        
-        if entry_form.is_valid() and revision_form.is_valid() and not entry_test:
-            all_tags = string_tags_to_list(request.POST.get('tags-selected'))
-            set_tags = generate_tags(all_tags)
 
-            entry = entry_form.save(commit=False)
-            entry.author = user
+            for error in errors:
+                errors[error] = error[2:]
+        
+        if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:            
+            entry = entry_form.save(commit=False) 
+
+            all_tags = utils.string_tags_to_list(request.POST.get('tags-selected'))
+            set_tags = utils.generate_tags(all_tags, Tag)
 
             if request.POST.get('icon') == "":
-                save_image_link(request.POST.get('custom-link-field'), entry.icon)
+                image_name, image_content = utils.save_image_link(request.POST.get('custom-link-field'))
 
-            entry.date_origin = verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
+                if image_content:
+                    entry.icon.save(image_name, image_content, save=True)
+
+            entry.date_origin = utils.verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
 
             entry.save()
             entry.tags = Tag.objects.filter(label__in=set_tags)
@@ -184,6 +184,8 @@ def create_entry(request):
             first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
             last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
             return redirect('entry:detail', entry_slug=entry.slug)
+        elif entry_duplicate_title != None:
+            errors['title'] = custom_messages.get_custom_error_message( 'duplicated_entry' )
 
         context = { "entry_form": entry_form,
                     "revision_form": revision_form,
@@ -210,104 +212,3 @@ def editorship(request, entry_slug):
 
     context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list, 'trending_entries':trending_entries}
     return render(request, 'entry/editorship.html', context)
-
-def string_tags_to_list( tag_string ):
-    if(tag_string != None):
-        # Splitting all commas
-        tags = tag_string.split(",")
-        verified_tags = []
-
-        # Removing empty and only one space tags
-        for tag in tags:
-            tag = tag.strip()
-            if tag != '' and tag != ' ':
-                verified_tags.append(tag)
-
-        # Removing all duplicates and returning it (the insertion order it's lost unfortunately)
-        return list(set(verified_tags))
-    else:
-        return ''
-
-def generate_tags( tag_list ):
-    # Of the tags written, which one is in database
-    db_tags = Tag.objects.filter(label__in=tag_list)
-
-    # Creating a copy of the all tag list
-    new_tags = list(tag_list)
-
-    # Removing database tag from the new list (if have any)
-    for x in db_tags:
-        new_tags[:] = (value for value in new_tags if value != str(x).decode("utf-8"))
-
-    # Inserting in database the new tags
-    for tag_name in new_tags:
-        Tag.objects.create(label=tag_name, hidden=False)
-
-    # Returning a new list with the database tags and the new created tags
-    return list(db_tags) + new_tags
-
-def save_image_link( link, entry_icon  ):
-    name = link.split('/')[-1]
-
-    accepted_image_files = [ 'bmp', 'gif', 'jpeg', 'png' ]
-
-    try:
-        content = ContentFile(urllib2.urlopen(link).read())
-        print "Image Type: " + str(imghdr.what(content))
-        valid_file = imghdr.what(content) in accepted_image_files
-    except:
-        content = None
-
-    if content and valid_file:
-        entry_icon.save(name, content, save=True)
-
-def verify_and_format_date(day, month, year):
-    if day.isdigit():
-        day = int(day)
-        
-        if day < 1 or day > 31:
-            day = 0
-    else:
-        day = 0
-
-    if month.isdigit():
-        month = int(month)
-        
-        if month < 1 or month > 12:
-            month = 0
-    else:
-        month = 0
-
-    if year.isdigit():
-        year = int(year)
-        
-        if year < 0:
-            year = 0
-    else:
-        year = 0
-
-    month_list = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
-
-    now = datetime.now()
-    input_time = datetime.now()
-
-    if day != 0:
-        input_time = input_time.replace(day=day)
-
-    if month != 0:
-        input_time = input_time.replace(month=month)
-
-    if year != 0:
-        input_time = input_time.replace(year=year)
-
-    if (now - input_time).days >= 0:
-        if day != 0 and month != 0 and year != 0:
-            return str(day) + " de " + str(month_list[month]) + " de " + str(year)
-        elif day == 0 and month != 0 and year != 0:
-            return str(month_list[month]) + " de " + str(year)
-        elif day == 0 and month == 0 and year != 0:
-            return str(year)
-        else:
-            return ""
-    else:
-        return ""

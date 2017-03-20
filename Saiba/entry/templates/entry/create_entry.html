@@ -43,7 +43,7 @@
                                 <strong>Aviso!</strong>
                                 <ul>
                                     {% for key, message in error_messages.items %}
-                                        <li>{{ message|slice:"2:" }}</li>
+                                        <li>{{ message }}</li>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -105,8 +105,8 @@
                             <div class="col-md-8">
                                 {{ entry_form.icon }}
                                 <div class="custom-file-control col-md-12">
-                                    <button type="button" class="btn btn-primary custom-file-button col-md-2">Enviar imagem</button>
-                                    <button type="button" class="btn btn-success custom-link-button col-md-2">Link da imagem</button>
+                                    <button type="button" id="custom-file-button" class="btn btn-primary col-md-2">Enviar imagem</button>
+                                    <button type="button" id="custom-link-button" class="btn btn-success col-md-2">Link da imagem</button>
                                     <span id="custom-file-field" class="col-md-4" style="display: none;"></span>
                                     <div class="col-md-4" style="padding-left:initial;"><input id="custom-link-field" name="custom-link-field" class="form-control" placeholder="Insira o link da imagem"></div>
                                 </div>

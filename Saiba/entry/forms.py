@@ -18,7 +18,7 @@ class EntryForm(forms.ModelForm):
             'tags': ('Marcações'),
         }
 
-        error_messages = custom_messages.custom_error_messages(fields, labels)
+        error_messages = custom_messages.get_all_error_messages(fields, labels)
 
 class RevisionForm(forms.ModelForm):
     class Meta:
@@ -33,4 +33,4 @@ class RevisionForm(forms.ModelForm):
             'content': ('Conteúdo'),
         }
 
-        error_messages = custom_messages.custom_error_messages(fields, labels)
+        error_messages = custom_messages.get_all_error_messages(fields, labels)
