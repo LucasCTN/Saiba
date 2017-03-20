@@ -148,13 +148,10 @@ def create_entry(request):
 
         if(request.POST):
             for error in entry_form.errors:
-                errors[error] = entry_form.errors[error].as_text
+                errors[error] = entry_form.errors[error].as_text[2:]
 
             for error in revision_form.errors:
-                errors[error] = revision_form.errors[error].as_text
-
-            for error in errors:
-                errors[error] = error[2:]
+                errors[error] = revision_form.errors[error].as_text[2:]
         
         if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:            
             entry = entry_form.save(commit=False) 
@@ -162,36 +159,43 @@ def create_entry(request):
             all_tags = utils.string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = utils.generate_tags(all_tags, Tag)
 
-            if request.POST.get('icon') == "":
-                image_name, image_content = utils.save_image_link(request.POST.get('custom-link-field'))
+            date_origin = utils.verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
 
-                if image_content:
-                    entry.icon.save(image_name, image_content, save=True)
+            if date_origin != False:
+                entry.date_origin = date_origin
 
-            entry.date_origin = utils.verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
+                if request.POST.get('icon') == "":
+                    image_name, image_content = utils.save_image_link(request.POST.get('custom-link-field'))
 
-            entry.save()
-            entry.tags = Tag.objects.filter(label__in=set_tags)
-            entry.editorship.add(user.profile)
-            entry.save()
+                    if image_content:
+                        entry.icon.save(image_name, image_content, save=True)
+
+                entry.save()
+                entry.tags = Tag.objects.filter(label__in=set_tags)
+                entry.editorship.add(user.profile)
+                entry.save()
             
-            revision = revision_form.save(commit=False)
-            revision.entry = entry
-            revision.author = user
-            revision.save()
+                revision = revision_form.save(commit=False)
+                revision.entry = entry
+                revision.author = user
+                revision.save()
 
-            last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
-            first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
-            last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
-            return redirect('entry:detail', entry_slug=entry.slug)
+                last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
+                first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
+                last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
+            
+                return redirect('entry:detail', entry_slug=entry.slug)
+            else:
+                errors['date_origin'] = custom_messages.get_custom_error_message( 'invalid_date' )
+
         elif entry_duplicate_title != None:
             errors['title'] = custom_messages.get_custom_error_message( 'duplicated_entry' )
 
         context = { "entry_form"        : entry_form,
                     "revision_form"     : revision_form,
                     "trending_entries"  : trending_entries,
-                    "trending_gallery"  : trending_gallery }
-                    'error_messages': errors }
+                    "trending_gallery"  : trending_gallery,
+                    "error_messages"    : errors }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -216,16 +220,19 @@ def editorship(request, entry_slug):
     return render(request, 'entry/editorship.html', context)
 
     trending_entries    = utils.get_trending_entries(request)
+
 def manage_editorship(request, entry_slug):
     trending_gallery    = utils.get_popular_galleries(request)
-    if not request.user.is_staff:
 
+    if not request.user.is_staff:
         return redirect('home:index')
+
     entry = Entry.objects.get(slug=entry_slug)
 
     editor = None
 
-        editor_name = request.POST['editor_name'] #sanitize this
+    editor_name = request.POST['editor_name'] #sanitize this
+
     if ('editor_name' in request.POST) and (request.POST['editor_name'] is not None) and request.POST['editor_name']:
         entry.editorship.add(editor)
         editor = Profile.objects.get(user__username=editor_name)
@@ -235,6 +242,7 @@ def manage_editorship(request, entry_slug):
         editor_name = request.POST['remove_editor'] #sanitize this
 
         entry.editorship.remove(editor)
+
     context = { 'entry': entry, 'trending_entries': trending_entries, 'trending_gallery': trending_gallery }
    
     return render(request, 'entry/manage_editorship.html', context)

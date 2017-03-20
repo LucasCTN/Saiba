@@ -81,6 +81,9 @@ def save_image_link( link ):
         # Returning the image and the original name
         return (name, content)
 
+# It return the date on string format (20 de Março de 2017) if the date is valid.
+# Returns empty ('') if the date was not inserted.
+# And return False when the date is invalid.
 def verify_and_format_date( day, month, year ):
     if day.isdigit():
         day = int(day)
@@ -115,10 +118,12 @@ def verify_and_format_date( day, month, year ):
             return str(month_list[month]) + " de " + str(year)
         elif day == 0 and month == 0 and year != 0:
             return str(year)
+        elif day == 0 and month == 0 and year == 0:
+            return ''
         else:
-            return ""
+            return False
     else:
-        return ""
+        return False
 
 def date_is_before_datetime( day, month, year, datetime ):
     input_date = datetime
