@@ -4,7 +4,8 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>Saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
-    <InterpreterId>MSBuild|{086cdf49-2ba7-4623-82f6-ec4b76184c3c}|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>{086cdf49-2ba7-4623-82f6-ec4b76184c3c}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -104,6 +105,9 @@
     </Compile>
     <Compile Include="profile\views.py" />
     <Compile Include="profile\__init__.py" />
+    <Compile Include="Saiba\custom_messages.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Saiba\saibadown.py">
       <SubType>Code</SubType>
     </Compile>
@@ -176,6 +180,7 @@
     <Content Include="feedback\templates\feedback\comment_page.html" />
     <Content Include="gallery\templates\gallery\edit-video.html" />
     <Content Include="gallery\templates\gallery\edit-image.html" />
+    <Content Include="home\static\home\file-script.js" />
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />
     <Content Include="home\templates\home\form_template.html" />
@@ -183,8 +188,6 @@
     <Content Include="home\templates\home\search_tag.html" />
     <Content Include="entry\templates\entry\trending.html" />
     <Content Include="entry\templates\entry\revision.html" />
-    <Content Include="entry\static\entry\search-scripts.js" />
-    <Content Include="entry\static\entry\search-style.css" />
     <Content Include="feedback\templates\feedback\comment_section.html" />
     <Content Include="feedback\templates\feedback\index.html" />
     <Content Include="forum\templates\forum\index.html" />

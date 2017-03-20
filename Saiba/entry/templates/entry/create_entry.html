@@ -8,6 +8,7 @@
 
 {% block scripts %}
     <script src="{% static 'home/search-scripts.js' %}"></script>
+    <script src="{% static 'home/file-script.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -35,59 +36,106 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h2>Criar nova Entrada</h2>
-                    {% if error_message %}
-                        <p><strong>{{ error_message }}</strong></p>
+
+                    {% if error_messages %}
+                        <div class="col-md-offset-1">
+                            <div class="alert alert-warning col-md-11">
+                                <strong>Aviso!</strong>
+                                <ul>
+                                    {% for key, message in error_messages.items %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
                     {% endif %}
+
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Título</label>
+                            <label class="control-label col-sm-2" for="field">{{ entry_form.title.label }}</label>
                             <div class="col-sm-8">{{ entry_form.title }}</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Categoria</label>
+                            <label class="control-label col-sm-2" for="field">{{ entry_form.category.label }}</label>
                         <div class="col-sm-8">{{ entry_form.category }}</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Origem</label>
+                            <label class="control-label col-sm-2" for="field">{{ entry_form.origin.label }}</label>
                             <div class="col-sm-8">{{ entry_form.origin }}</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Data</label>
-                            <div class="col-sm-6">{{ entry_form.date_origin }}</div>
+                            <label class="control-label col-sm-2" for="field">{{ entry_form.date_origin.label }}</label>
+                            <div class="col-sm-1">
+                                <select name="date-day" class="form-control">
+                                    {% for i in "x"|rjust:"32" %}
+                                        {% if forloop.counter0 == 0 %}
+                                            <option></option>
+                                        {% else %}
+                                            <option>{{ forloop.counter0 }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <select name="date-month" class="form-control">
+                                    <option value="0"></option>
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-1"><input name="date-year" class="form-control" placeholder="Ano"></div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Ícone</label>
-                            <div class="col-sm-8">{{ entry_form.icon }}</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Marcações:</label>
-                            <div class="col-md-2"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
-                            <div class="col-md-offset-2 search-box">
-                                <ul id="search-tag-results" class="search-results">
-                                    <li id="tags-no-results" class="no-results">Sem resultados.</li>
-                                </ul>
+                            <label class="control-label col-md-2" for="field">{{ entry_form.icon.label }}</label>
+                            <div class="col-md-8">
+                                {{ entry_form.icon }}
+                                <div class="custom-file-control col-md-12">
+                                    <button type="button" id="custom-file-button" class="btn btn-primary col-md-2">Enviar imagem</button>
+                                    <button type="button" id="custom-link-button" class="btn btn-success col-md-2">Link da imagem</button>
+                                    <span id="custom-file-field" class="col-md-4" style="display: none;"></span>
+                                    <div class="col-md-4" style="padding-left:initial;"><input id="custom-link-field" name="custom-link-field" class="form-control" placeholder="Insira o link da imagem"></div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field"></label>
-                            <div class="col-md-4 search-tag-display">
+                            <div class="col-md-5" style="padding-left: 0px; padding-right: 0px;">
+                                <label class="control-label col-md-5" for="field">{{ entry_form.tags.label }}</label>
+                                <div class="col-md-7" style="padding-left: 1.6%; padding-right: 0px;">
+                                    <input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off">
+                                    <div class="search-box">
+                                        <ul id="search-tag-results" class="search-results">
+                                            <li id="tags-no-results" class="no-results">Sem resultados.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 search-tag-display">
                                 <ul>
-                                    Adicionadas:
                                 </ul>
                             </div>
 
                             <input type="text" id="tags-selected" name="tags-selected" hidden/>
-                        </div> 
+                        </div>
 
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="field">Conteúdo</label>
+                            <label class="control-label col-sm-2" for="field">{{ revision_form.content.label }}</label>
                             <div class="col-sm-10" rows="50">{{ revision_form.content }}</div>
                         </div>
 

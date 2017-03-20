@@ -27,11 +27,13 @@
         });
 
         $('#search-tags').keydown(function (e) {
-            if (e.keyCode == 188 && !justKeyDown) {
-                selectedTag($('#search-tags').val())
-            }
+            if (e.keyCode == 188) {
+                var tag_to_search = $('#search-tags').val().split(',').join('');
+                tag_to_search = tag_to_search.trim();
 
-            justKeyDown = true;
+                if (tag_to_search != '')
+                    selectedTag(tag_to_search)
+            }
         });
     });
 
@@ -51,8 +53,6 @@
     });
 
     $('#search-tags').keyup(function (e) {
-        justKeyDown = false;
-
         if (e.keyCode == 188) {
             $('#search-tags').val('');
         }
@@ -67,7 +67,7 @@
     });
     
     // Because .click doesn't work on span
-    $(".search-tag-display").on('click', '.remove-tag', function (e) {
+    $(".search-tag-display").on('click', '#remove-tag', function (e) {
         var tag_data = $(this).attr('tag-data');
         $('.search-tag-display ul li[tag-data=' + tag_data + ']').remove();
     });
@@ -96,9 +96,7 @@ function searchTagSuccess(data) {
     });
 }
 
-function selectedTag(tag) {
-    var tagString = tag.trim();
-
-    $('.search-tag-display ul').append('<li tag-data="' + tagString + '">' + tagString + ' <span tag-data=' + tagString + ' class="glyphicon glyphicon-remove remove-tag"></span>' + '</li>');
+function selectedTag(tagString) {
+    $('.search-tag-display ul').append('<li tag-data="' + tagString + '">' + '<span id="remove-tag-visual">' + tagString + ' <span id="remove-tag" tag-data=' + tagString + ' class="glyphicon glyphicon-remove"></span>' + '</span>' + '</li>');
     $('#search-tags').val('');
 }

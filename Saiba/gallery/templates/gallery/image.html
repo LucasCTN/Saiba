@@ -11,7 +11,7 @@
             <small>Enviado por <a href="{% url 'profile:detail' image.author.profile.slug %}">{{ image.author.username }}</a></small>
         </h3>
         <p>Fonte: {{ image.source }}</p>
-        <p><small>Marcações: {% if image.tags.all|length > 0 %}{% for tag in image.tags.all %}<a href="{% url 'home:navbar_search' %}?q={{ tag.label }}&type=image">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %} <em style="color:gray;">Nenhuma</em>{% endif %}</small></p>
+        <p><small>Marcações: {% if image.tags.all|length > 0 %}{% for tag in image.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=image">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %} <em style="color:gray;">Nenhuma</em>{% endif %}</small></p>
         {% if image.description %}<p>Descrição: {{ image.description }}</p>{% endif %}
     </section>
 

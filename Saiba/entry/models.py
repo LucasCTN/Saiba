@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import Permission, User
 from django.template.defaultfilters import slugify
 from django.db import models
@@ -54,7 +55,7 @@ class Entry(models.Model):
 class Revision(models.Model):
     author = models.ForeignKey(User, default=1)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="revisions")
-    content = models.TextField(max_length=2500, blank=True)
+    content = models.TextField(max_length=2500)
     date = models.DateTimeField(auto_now_add=True, blank=True)
     hidden = models.BooleanField(default=False)
 

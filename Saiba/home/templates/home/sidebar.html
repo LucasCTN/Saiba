@@ -13,7 +13,7 @@
           </div>
           <div class="media-body">
             <a class='media-heading' href="{% url 'profile:detail' editor.slug %}">{{editor.user.username}}</a>
-            <p>Lorem ipsum...</p>
+            <p><b>Sobre:</b> {{editor.user.profile.about}}</p>
           </div>
         </div>
     {% endfor %}
