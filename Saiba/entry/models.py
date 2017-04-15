@@ -42,7 +42,6 @@ class Entry(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            # Newly created object, so set slug
             self.slug = slugify(self.title)
         super(Entry, self).save(*args, **kwargs)
 

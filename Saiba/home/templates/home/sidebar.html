@@ -8,12 +8,12 @@
     <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a> ({{entry.editorship.all|length}})</div>
     {% for editor in entry.editorship.all %}
         <div class="media" style="padding-left:5px; padding-bottom: 5px;">
-          <div class="media-left">
-            <img src="{{editor.avatar.url}}" class="media-object img-thumbnail" style="width:60px">
+          <div class="media-left media-middle">
+            <img src="{{editor.avatar.url}}" class="media-object img-thumbnail" style="width:50px">
           </div>
           <div class="media-body">
             <a class='media-heading' href="{% url 'profile:detail' editor.slug %}">{{editor.user.username}}</a>
-            <p><b>Sobre:</b> {{editor.user.profile.about}}</p>
+            <p><small>{{editor.user.profile.title}}</small></p>
           </div>
         </div>
     {% endfor %}

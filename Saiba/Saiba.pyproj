@@ -4,8 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>Saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
-    <InterpreterId>{086cdf49-2ba7-4623-82f6-ec4b76184c3c}</InterpreterId>
-    <InterpreterVersion>2.7</InterpreterVersion>
+    <InterpreterId>MSBuild|{086cdf49-2ba7-4623-82f6-ec4b76184c3c}|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -19,6 +18,7 @@
     <WorkingDirectory>.</WorkingDirectory>
     <LaunchProvider>Django launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -208,6 +208,10 @@
     <Content Include="home\templates\home\index.html" />
     <Content Include="home\templates\home\post_content.html" />
     <Content Include="entry\templates\entry\manage_editorship.html" />
+    <Content Include="profile\templates\profile\videos.html" />
+    <Content Include="profile\templates\profile\images.html" />
+    <Content Include="profile\templates\profile\editorship.html" />
+    <Content Include="profile\templates\profile\profile_menu.html" />
     <Content Include="staff\templates\staff\create_post.html" />
     <Content Include="home\templates\home\register.html" />
     <Content Include="home\templates\home\logout.html" />
@@ -281,5 +285,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>
