@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.contrib.auth.models import Permission, User
 from django.db import models
 from entry.models import Entry
@@ -39,3 +40,8 @@ class Comment(models.Model):
         if self.parent: 
             text += " (child of #{})".format(self.parent.id)
         return text
+
+    def get_points(self):
+        content_type = ContentType.objects.get_for_model(Comment)
+        points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('direction'))['direction__sum']
+        return points or 0
