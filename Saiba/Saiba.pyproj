@@ -55,6 +55,9 @@
     <Compile Include="feedback\apps.py" />
     <Compile Include="feedback\migrations\__init__.py" />
     <Compile Include="feedback\models.py" />
+    <Compile Include="feedback\services.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="feedback\tests.py" />
     <Compile Include="feedback\urls.py" />
     <Compile Include="feedback\views.py" />
