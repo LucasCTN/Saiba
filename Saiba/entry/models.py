@@ -20,7 +20,7 @@ class Category(models.Model):
         return self.label
 
     class Meta:
-        verbose_name_plural = "comentaries"
+        verbose_name_plural = "categories"
 
 class Entry(models.Model):
     author                  = models.ForeignKey(User, default=1)
