@@ -1,4 +1,4 @@
-from .models import Comment, Vote, Reply
+from .models import Comment, Vote
 from entry.models import Entry
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
@@ -9,19 +9,18 @@ def create_comment(id = None, type = None, user = None, content = None):
     comment = Comment.objects.create(target = target, author = user, content = content)
     comment.save()
 
-def get_comments_from_target(id = None, type = None):
+def get_target_parent_comments(id = None, type = None):
     """Returns a queryset of comments associated with the target."""
     target = find_target(id, type)
     target_type = ContentType.objects.get_for_model(target)
     target_id = target.id
 
-    comments = Comment.objects.filter(target_content_type = target_type, target_id = target_id)
+    comments = Comment.objects.filter(target_content_type = target_type, target_id = target_id, parent = None)
     return comments
 
-def get_replies_from_comment(comment = None):
-    """Returns a queryset of replies associated with the comment."""    
-    replies = Reply.objects.filter(comment = comment)
-    return replies
+def get_comment_children(comment = None): #is this still needed?
+    """Returns a queryset of replies associated with the comment."""
+    return comment.children
 
 def vote_target(id = None, type = None, user = None, direction = 0):
     """

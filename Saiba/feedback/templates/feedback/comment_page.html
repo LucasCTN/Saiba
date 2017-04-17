@@ -9,17 +9,17 @@
     <div class="comment container media col-md-12" data-id="{{comment.id}}" id="chain-{{comment.id}}">
         <div class="comment container media col-md-12" data-id="{{comment.id}}" id="comment-{{comment.id}}">
             <div class="col-md-1 avatar-container">
-                <a href="/perfil/{{comment.author_slug}}">
-                    <img class="col-md-12 img-rounded media-object" src="/media/{{comment.author_avatar}}" style="width: 80px;">
+                <a href="/perfil/{{comment.author.profile.slug}}">
+                    <img class="col-md-12 img-rounded media-object" src="/media/{{comment.author.profile.avatar}}" style="width: 80px;">
                 </a>
             </div>
             <div class="col-md-11 content-container">
                 <div class="col-md-11 info-container">
                     <span class="col-md-12">
-                        <a href="/perfil/{{comment.author_slug}}"><b>{{comment.author_username}}</b></a>
+                        <a href="/perfil/{{comment.author.profile.slug}}"><b>{{comment.author}}</b></a>
                     </span>
                     <span class="col-md-12 comment-date" title="Seg, 20/02/2017 20:41:23 BRT">16 minutos atrás</span>
-                    <span class="col-md-12 comment-content">Orqadfa</span>
+                    <span class="col-md-12 comment-content">{{comment.content}}</span>
                 </div>
                 <div class="col-md-12 feedback-container">
                     <span class="col-md-1 comment-points">0</span>
@@ -34,9 +34,9 @@
             </div>
         </div>
         <div class="col-md-12"><hr></div>
-        {% for reply in comment.replies %}
-        <div class="replies col-md-12">
-            <div class="reply container media col-md-12" data-id="22" id="reply-22">
+        {% for child in comment.children.all %}
+        <div class="comment-children col-md-12">
+            <div class="comment-child container media col-md-12" data-id="{{child.id}}">
                 <div class="col-md-1 avatar-container">
                     <a href="/perfil/saiba">
                         <img class="col-md-12 img-rounded media-object" src="/media/icon/perfil.png" style="width: 80px;">
@@ -46,7 +46,7 @@
                     <div class="col-md-11 info-container">
                         <span class="col-md-12"><a href="/perfil/saiba"><b>Saiba</b></a></span>
                         <span class="col-md-12 comment-date" title="Seg, 20/02/2017 20:41:27 BRT">16 minutos atrás</span>
-                        <span class="col-md-12 comment-content">Conc</span>
+                        <span class="col-md-12 comment-content">{{child.content}}</span>
                     </div>
                     <div class="col-md-12 feedback-container">
                         <span class="col-md-1 comment-points">0</span>

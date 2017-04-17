@@ -9,8 +9,8 @@ from profile.models import Profile
 from home.models import SaibaSettings
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment, Vote, Reply
-from feedback.serializers import CommentSerializer, VoteSerializer, ReplySerializer, PointsSerializer
+from feedback.models import Comment, Vote
+from feedback.serializers import CommentSerializer, VoteSerializer, PointsSerializer
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
@@ -125,53 +125,6 @@ class CommentDetail(APIView):
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class ReplyDetail(APIView):
-    def get(self, request):
-        reply_id      = request.GET.get('id')
-
-        if reply_id:
-            reply = get_object_or_404(Reply, pk=reply_id)
-            serializer = ReplySerializer(reply, many=False)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    def post(self, request):
-        data = request.data.copy()
-        data['points'] = 0
-        data['author'] = request.user.id;
-
-        serializer = ReplySerializer(data=data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def patch(self, request):
-        """Parameters: id and is_deleted"""
-        data = request.data.copy()
-        id = data['id']
-        is_deleted = data["is_deleted"]
-
-        args = {"id": id, "is_deleted": is_deleted}
-
-        if id:
-            reply = get_object_or_404(Reply, pk=data['id'])
-
-        serializer = ReplySerializer(reply, data=args, partial=True)
-
-        if not reply.is_deleted and serializer.is_valid() and reply.author == request.user:
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif reply.author != request.user:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
 class VoteDetail(APIView):
     def get(self, request):
         vote_target_id   = request.GET.get('id')
@@ -208,7 +161,6 @@ class VoteDetail(APIView):
         direction = request.POST.get('direction', False)
 
         content_type_mapping = {"comment": ContentType.objects.get_for_model(Comment).id,
-                                "reply": ContentType.objects.get_for_model(Reply).id,
                                 "image": ContentType.objects.get_for_model(Image).id,
                                 "video": ContentType.objects.get_for_model(Video).id}
 
@@ -270,12 +222,9 @@ class CommentPageDetail(APIView):
 
         for comment in comments:
             comment_type_id = ContentType.objects.get_for_model(Comment).id
-            reply_type_id = ContentType.objects.get_for_model(Reply).id
             comment.points = (Vote.objects.filter(target_id=comment.pk, 
                                               target_content_type=comment_type_id).aggregate(Sum('direction')))['direction__sum']
             
-            replies = Reply.objects.filter(comment=comment)
-
             for reply in replies:
                 reply.points = (Vote.objects.filter(target_id=reply.pk, 
                                               target_content_type=reply_type_id).aggregate(Sum('direction')))['direction__sum']
@@ -295,8 +244,6 @@ class PointsDetail(APIView):
 
         target_type_id = None
         target_id      = None
-
-        type_content_map = {'comment': Comment, 'reply': Reply }
 
         if vote_target_type is not None:
             target_type = type_content_map[vote_target_type]

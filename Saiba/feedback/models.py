@@ -29,24 +29,13 @@ class Comment(models.Model):
     update_date         = models.DateTimeField(auto_now=True, blank=True)
     hidden              = models.BooleanField(default=False)
     is_deleted          = models.BooleanField(default=False)
+    parent              = models.ForeignKey('feedback.Comment', on_delete=models.CASCADE, null=True, blank=True, 
+                                            related_name="children") # for tracking the main comment when replying a reply
+    reply_to            = models.ForeignKey('feedback.Comment', on_delete=models.CASCADE, null=True, blank=True, 
+                                            related_name="replies") # the immediate response (may not be the main comment)
 
     def __unicode__(self):
         text = "#{} - {}".format(self.id, self.author.username)
+        if self.parent: 
+            text += " (child of #{})".format(self.parent.id)
         return text
-
-class Reply(models.Model):    
-    author          = models.ForeignKey(User)
-    content         = models.CharField(max_length=250)
-    creation_date   = models.DateTimeField(auto_now_add=True, blank=True)
-    update_date     = models.DateTimeField(auto_now=True, blank=True)
-    comment         = models.ForeignKey(Comment, default=None, blank=True, null=True, related_name="replies")
-    response_to     = models.ForeignKey('self', default=None, blank=True, null=True, related_name="responses")
-    hidden          = models.BooleanField(default=False)
-    is_deleted      = models.BooleanField(default=False)
-
-    def __unicode__(self):
-        text = "#{} - {}".format(self.id, self.author.username)
-        return text
-
-    class Meta:
-        verbose_name_plural = "replies"

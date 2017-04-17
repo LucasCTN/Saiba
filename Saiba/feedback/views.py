@@ -1,17 +1,13 @@
-import urllib2, urllib, json
 from django.shortcuts import render
-from rest_framework.reverse import reverse
+import feedback.services
 
-def comment_page(request, type):
+def comment_page(request):
     id   = request.GET.get('id') or ""
-    slug = request.GET.get('slug') or ""
+    type = request.GET.get('type') or ""
     reply_limit = request.GET.get('reply_limit') or 5
 
-    api_url = reverse('api:api_comment_page', request=request) + "?" + urllib.urlencode({'id':id, 'slug':slug, 'reply_limit': reply_limit, 'type':type})
+    comments = feedback.services.get_target_parent_comments(id, type)
 
-    result = urllib2.urlopen(api_url).read()
-    json_result = json.loads(result)
-
-    args = { 'comments' : json_result['results'], 'u':api_url }
+    args = { 'comments' : comments }
 
     return render(request, 'feedback/comment_page.html', args)
