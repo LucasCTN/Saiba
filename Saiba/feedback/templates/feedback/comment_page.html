@@ -18,7 +18,7 @@
                     <span class="col-md-12">
                         <a href="/perfil/{{comment.author.profile.slug}}"><b>{{comment.author}}</b></a>
                     </span>
-                    <span class="col-md-12 comment-date" title="{{comment.creation_date}}">?</span>
+                    <span class="col-md-12 comment-date" title="{{comment.creation_date}}">{{comment.creation_date|timesince}}</span>
                     <span class="col-md-12 comment-content">{{comment.content}}</span>
                 </div>
                 <div class="col-md-12 feedback-container">
@@ -45,7 +45,7 @@
                 <div class="col-md-11 content-container">
                     <div class="col-md-11 info-container">
                         <span class="col-md-12"><a href="/perfil/{{child.author.profile.slug}}"><b>{{child.author}}</b></a></span>
-                        <span class="col-md-12 comment-date" title="{{child.creation_date}}">?</span>
+                        <span class="col-md-12 comment-date" title="{{child.creation_date}}">{{child.creation_date|timesince}}</span>
                         <span class="col-md-12 comment-content">{{child.content}}</span>
                     </div>
                     <div class="col-md-12 feedback-container">
