@@ -4,9 +4,12 @@ import feedback.services
 def comment_page(request):
     id   = request.GET.get('id') or ""
     type = request.GET.get('type') or ""
-    reply_limit = request.GET.get('reply_limit') or 5
+    child_limit = request.GET.get('child_limit') or 5
+    page = int(request.GET.get('page')) or 1
 
-    comments = feedback.services.get_target_parent_comments(id, type)
+    comments_limit = 10
+
+    comments = feedback.services.get_target_comment_page(id, type, page, comments_limit)
 
     args = { 'comments' : comments }
 

@@ -63,6 +63,7 @@
 function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) {
     var api = new API();
     var id = "#" + section_id;
+    var current_page = 1;
 
     var comment_page_endpoint = api_comment_page;
     var next_page = null;
