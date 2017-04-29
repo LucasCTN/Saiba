@@ -19,11 +19,11 @@
         });
     }
 
-    this.sendComment = function (formId, formType, formSlug, formContent, sendCommentApiEndpoint) {
+    this.sendComment = function (formId, formType, formContent, parent, reply_to, sendCommentApiEndpoint) {
         return $.ajax({
             type: "POST",
             url: sendCommentApiEndpoint,
-            data: { type: formType, slug: formSlug, content: formContent, id: formId },
+            data: { id: formId, type: formType, content: formContent, parent: parent, reply_to: reply_to },
             success: function (data) {
             }
         });
@@ -44,7 +44,7 @@
             type: "POST",
             url: endpoint,
             data: { id: contentId, type: type, direction: direction },
-            success: function (data) {                
+            success: function (data) {
             }
         });
     }
@@ -63,167 +63,88 @@
 function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) {
     var api = new API();
     var id = "#" + section_id;
+    var current_page = 1;
 
-    var comment_page_endpoint = api_comment_page;
+    var comment_page_endpoint = commentPage;
     var next_page = null;
     var loadedPages = 0;
 
     var comment_section = this;
 
-    this.createComment = function createComment(type, data) {
-        var div_id = "";
-        if (type == "comment")
-            div_id = "comment-" + data.id;
-        else
-            div_id = "reply-" + data.id;
-
-        var div_comment = $('<div />').addClass(type + ' container media col-md-12').attr("data-id", data.id).attr("id", div_id);
-
-        var div_avatar_container = $('<div />').addClass('col-md-1 avatar-container');
-        var img_avatar = $('<a />').attr('href', '/perfil/' + data.author_slug).append(
-            $('<img />').addClass('col-md-12 img-rounded media-object').attr('src', "/media/" + data.author_avatar).css("width", "80")
-            );
-
-        div_avatar_container.append(img_avatar);
-
-        var div_info_container = $('<div />').addClass('col-md-11 info-container');
-        var a_author = $('<a />').attr('href', '/perfil/' + data.author_slug).html("<b>" + data.author_username + "</b>");
-        var span_author = $('<span />').addClass('col-md-12').append(a_author);
-        var span_date = $('<span />').addClass('col-md-12 comment-date').html(GetDateText(data.creation_date)).attr('title', dateFormat(data.creation_date));
-        var span_content = $('<span />').addClass('col-md-12 comment-content').html(data.content);
-
-        div_info_container.append(span_author).append(span_date).append(span_content);
-
-        var div_feedback_container = $('<div />').addClass('col-md-12 feedback-container');
-        var span_points = $('<span />').addClass('col-md-1 comment-points').html(data.points || 0);
-        var button_upvote = $('<button />').addClass('btn btn-default btn-xs glyphicon glyphicon-chevron-up');
-        var button_downvote = $('<button />').addClass('btn btn-default btn-xs glyphicon glyphicon-chevron-down');
-
-        var button_reply = $('<button />').addClass('btn btn-default btn-xs').html("Responder");
-        var button_delete = $('<button />').addClass('btn btn-default btn-xs').html("Apagar");
-        var textarea_reply = $('<textarea />').addClass('').css('display', 'none');
-        var button_send = $('<button />').addClass('btn btn-default btn-xs').css('display', 'none').html("Enviar");
-
-        var hr = $('<div />').addClass('col-md-12').append($('<hr />'));
-
-        div_feedback_container.append(span_points).append(button_upvote).append(button_downvote).append(" | ").append(button_reply);
-
-        if (user_slug == data.author_slug)
-        {
-            div_feedback_container.append(button_delete);
-        }
-
-        div_feedback_container.append(textarea_reply).append(button_send);
-
-        var div_content_container = $('<div />').addClass('col-md-11 content-container').append(div_info_container)
-                                                                                        .append(div_feedback_container);
-
-        var div_replies = $('<div />').addClass('replies col-md-12');
-
-        button_reply.click(function () {
-            textarea_reply.css('display', '');
-            button_send.css('display', '');
-            button_reply.css('display', 'none');
-        });
-
-        button_upvote.click(function () {
-            api.sendVote(data.id, type, 1, voteApiEndpoint).done(function (data) {
-                comment_section.loadCommentPage();
-                comment_section.scrollToComment(div_id);
-            })
-        });
-
-        button_downvote.click(function () {
-            api.sendVote(data.id, type, -1, voteApiEndpoint).done(function (data) {
-                comment_section.loadCommentPage();
-                comment_section.scrollToComment(div_id);
-            })
-        });
-
-        button_send.click(function () {
-            api.sendReply(data.id, null, textarea_reply.val(), sendReplyApiEndpoint).done(function (reply_data) {
-                var reply = comment_section.createComment("reply", reply_data);
-                $("#comment-" + data.id + " .replies").append(reply);
-                comment_section.scrollToComment("reply-" + reply_data.id);
-
-                textarea_reply.css('display', 'none');
-                button_send.css('display', 'none');
-                button_reply.css('display', '');
-            })            
-        });
-
-        button_delete.click(function () {
-            var endpoint = "";
-            if (type == "comment"){
-                endpoint = sendCommentApiEndpoint;
-            }
-            else if (type == "reply"){
-                endpoint = sendReplyApiEndpoint;
-            }
-
-            api.markComment(data.id, true, endpoint).done(function () {
-                div_comment.remove();
-            })
-        });
-
-        div_comment.append(div_avatar_container).append(div_content_container).append(hr);
-
-        if (type == "comment")
-            div_comment.append(div_replies);
-        return div_comment;
-    }
-
-    this.createCommentPage = function (data) {
-        var comment_page = [];
-
-        for (i = 0; i < data.results.length; i++) {
-            var comment = this.createComment("comment", data.results[i]);
-            comment_page.push(comment);
-
-            for (j = 0; j < data.results[i].replies.length; j++) {
-                var reply = this.createComment("reply", data.results[i].replies[j]);
-                comment.find('.replies').append(reply);
-            }
-        }
-
-        return comment_page;
-    }
-
-    this.loadCommentPage = function (pages, callback) {
-        pages = pages || 0;
+    this.loadCommentPage = function (callback) {
         var comment_section = this;
-        loadedPages += 1;
 
-        api.getCommentPage(comment_page_endpoint).done(function (data) {
-            var comments = comment_section.createCommentPage(data);
-            next_page = data.next;
-            $(id).empty().append(comments);
+        api.getCommentPage(comment_page_endpoint + "&page=" + current_page).done(function (data) {
+            $(id).empty().append(data);
+
+            $(".comment-reply").click(function () {
+                $(this).css('display', 'none');
+                $(this).siblings('.replybox').css('display', '');
+                $(this).siblings('.replybox-send').css('display', '');
+            });
+
+            $(".upvote").click(function () {
+                var comment_id = $(this).parents(".comment").attr("data-id");
+                api.sendVote(comment_id, "comment", 1, voteApiEndpoint).done(function (data) {
+                    comment_section.loadCommentPage();
+                    comment_section.scrollToComment(comment_id);
+                })
+            }); 
+
+            $(".downvote").click(function () {
+                var comment_id = $(this).parents(".comment").attr("data-id");
+                api.sendVote(comment_id, "comment", -1, voteApiEndpoint).done(function (data) {
+                    comment_section.loadCommentPage();
+                    comment_section.scrollToComment(comment_id);
+                })
+            });
+
+            $(".replybox-send").click(function () {
+                $(this).css('display', 'none');
+                $(this).siblings('.replybox').css('display', 'none');
+                $(this).siblings('.comment-reply').css('display', '');
+
+                var replybox_content = $(this).siblings(".replybox").val();
+                var parent = $(this).parents(".comment-parent").attr("data-id");
+                var reply_to = $(this).parents(".comment").attr("data-id");
+
+                api.sendComment(contentId, contentType, replybox_content, parent, reply_to, sendCommentApiEndpoint).done(function (data) {                    
+                comment_section.loadCommentPage();
+                })
+            });
+
+            $(".comment-delete").click(function () {
+                var comment_id = $(this).parents(".comment").attr("data-id");
+                api.markComment(comment_id, true, sendCommentApiEndpoint).done(function () {
+                    $(this).parents(".comment").remove();
+                    comment_section.loadCommentPage();
+                    comment_section.scrollToComment(comment_id);
+                })
+                
+            });
+
+            $(".change-page").click(function () {
+                current_page = $(this).attr("data-id");
+                $("#comment-section").empty();
+                comment_section.loadCommentPage();
+            });
 
             if (callback){
                 callback();
             }
         });
-    }
 
-    this.appendNextCommentPage = function () {
-        if (next_page != null) {
-            var comment_section = this;
-            loadedPages += 1;
-
-            api.getCommentPage(next_page).done(function (data) {
-                var comments = comment_section.createCommentPage(data);
-                next_page = data.next;
-                $(id).append(comments);
-            });
-        }
+         $('html, body').animate({
+            scrollTop: $("#comment-section").offset().top
+        }, 1);
     }
 
     this.scrollToComment = function (id) {
-        var div_id = "#" + id;
+        var div_id = "#comment-" + id;
 
         $('html, body').animate({
-            scrollTop: $(div_id).offset().top
-        }, 1500);
+            scrollTop: $(div_id).parents(".comment-parent").offset().top
+        }, 3);
     }
 }
 

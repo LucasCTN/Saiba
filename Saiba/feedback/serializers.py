@@ -1,7 +1,7 @@
 from django.db.models import Sum
 from rest_framework import pagination, serializers
 from django.contrib.contenttypes.models import ContentType
-from .models import Comment, Vote, Reply
+from .models import Comment, Vote
 
 class VoteSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
@@ -14,21 +14,6 @@ class VoteSerializer(serializers.ModelSerializer):
         model = Vote
         field = ('author', 'date', 'direction', 'creation_date', 'update_date')
 
-class ReplySerializer(serializers.ModelSerializer):
-    points = serializers.IntegerField(required=False, read_only=True)
-    author_username = serializers.StringRelatedField(source='author.username', read_only=True)
-    author_slug = serializers.StringRelatedField(source='author.profile.slug', read_only=True)
-    author_avatar = serializers.StringRelatedField(source='author.profile.avatar', read_only=True)
-
-    def to_representation(self, obj):
-        representation = super(ReplySerializer, self).to_representation(obj)
-        representation.pop('hidden')
-        return representation    
-
-    class Meta:
-        model = Reply
-        field = ('author', 'content', 'creation_date', 'update_date', 'comment', 'response_to', 'points')
-
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
     points  = serializers.IntegerField(required=False, read_only=True)
@@ -37,23 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author_avatar = serializers.StringRelatedField(source='author.profile.avatar', read_only=True)
 
     def get_replies(self, obj):
-        if 'reply_limit' in self.context:
-            limit = int(self.context['reply_limit'])
-
-            query = Reply.objects.filter(comment=obj, is_deleted=False).order_by('id')
-
-            for reply in query:
-                reply.points = (Vote.objects.filter(target_id=reply.pk, 
-                                                    target_content_type=ContentType.objects.get_for_model(Reply).id)
-                                                    .aggregate(Sum('direction')))['direction__sum']
-
-            if limit != 0:
-                query = query[:limit]
-
-            serializer = ReplySerializer(query, many=True)
-            return serializer.data
-        else:
-            return None
+        return None
 
     def to_representation(self, obj):
         representation = super(CommentSerializer, self).to_representation(obj)
@@ -65,7 +34,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         #field = '__all__'
-        field = ('author', 'content', 'creation_date', 'update_date', 'parent_comment', 'replies', 'points')
+        field = ('author', 'content', 'creation_date', 'update_date', 'parent_comment', 'replies', 'points', 'parent', 'reply_to')
 
 class PointsSerializer(serializers.Serializer):
     points              = serializers.IntegerField()

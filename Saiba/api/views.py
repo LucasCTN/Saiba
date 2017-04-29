@@ -9,8 +9,8 @@ from profile.models import Profile
 from home.models import SaibaSettings
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment, Vote, Reply
-from feedback.serializers import CommentSerializer, VoteSerializer, ReplySerializer, PointsSerializer
+from feedback.models import Comment, Vote
+from feedback.serializers import CommentSerializer, VoteSerializer, PointsSerializer
 from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
@@ -75,30 +75,20 @@ class CommentDetail(APIView):
         data['points'] = 0
         data['author'] = request.user.id;
 
-        if data['type']:
-            comment_target_type = data['type']
+        types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile }
+        target_type = types_map[data["type"]];
 
-            if comment_target_type == "entry" and data['slug'] is not None:
-                data["target_content_type"] = ContentType.objects.get_for_model(Entry).id
-                data["target_id"]           = get_object_or_404(Entry, slug=data["slug"]).pk
-            elif comment_target_type == "image" and data['id'] is not None:
-                data["target_content_type"] = ContentType.objects.get_for_model(Image).id
-                data["target_id"]           = data['id']
-            elif comment_target_type == "video" and data['id'] is not None:                
-                data["target_content_type"] = ContentType.objects.get_for_model(Video).id
-                data["target_id"]           = data['id']
-            elif comment_target_type == "profile" and data['id'] is not None:
-                data["target_content_type"] = ContentType.objects.get_for_model(Profile).id
-                data["target_id"]           = data['id']
+        data["target_content_type"] = ContentType.objects.get_for_model(target_type).id
+        data["target_id"]           = data['id']
 
         serializer = CommentSerializer(data=data)
         
         if serializer.is_valid():
             serializer.save()
-            if comment_target_type == "entry":
+            if target_type == Entry:
                 trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
-                entry = Entry.objects.get(slug=data['slug'])
-                entry.trending_points += trending_weight
+                entry = Entry.objects.get(id=data['id'])
+                entry.trending_points += trending_weight # Someone commented, so the entry should get trend points
                 entry.save(update_fields=['trending_points'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -119,53 +109,6 @@ class CommentDetail(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         elif comment.author != request.user:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-class ReplyDetail(APIView):
-    def get(self, request):
-        reply_id      = request.GET.get('id')
-
-        if reply_id:
-            reply = get_object_or_404(Reply, pk=reply_id)
-            serializer = ReplySerializer(reply, many=False)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    def post(self, request):
-        data = request.data.copy()
-        data['points'] = 0
-        data['author'] = request.user.id;
-
-        serializer = ReplySerializer(data=data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def patch(self, request):
-        """Parameters: id and is_deleted"""
-        data = request.data.copy()
-        id = data['id']
-        is_deleted = data["is_deleted"]
-
-        args = {"id": id, "is_deleted": is_deleted}
-
-        if id:
-            reply = get_object_or_404(Reply, pk=data['id'])
-
-        serializer = ReplySerializer(reply, data=args, partial=True)
-
-        if not reply.is_deleted and serializer.is_valid() and reply.author == request.user:
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif reply.author != request.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -208,7 +151,6 @@ class VoteDetail(APIView):
         direction = request.POST.get('direction', False)
 
         content_type_mapping = {"comment": ContentType.objects.get_for_model(Comment).id,
-                                "reply": ContentType.objects.get_for_model(Reply).id,
                                 "image": ContentType.objects.get_for_model(Image).id,
                                 "video": ContentType.objects.get_for_model(Video).id}
 
@@ -270,12 +212,9 @@ class CommentPageDetail(APIView):
 
         for comment in comments:
             comment_type_id = ContentType.objects.get_for_model(Comment).id
-            reply_type_id = ContentType.objects.get_for_model(Reply).id
             comment.points = (Vote.objects.filter(target_id=comment.pk, 
                                               target_content_type=comment_type_id).aggregate(Sum('direction')))['direction__sum']
             
-            replies = Reply.objects.filter(comment=comment)
-
             for reply in replies:
                 reply.points = (Vote.objects.filter(target_id=reply.pk, 
                                               target_content_type=reply_type_id).aggregate(Sum('direction')))['direction__sum']
@@ -295,8 +234,6 @@ class PointsDetail(APIView):
 
         target_type_id = None
         target_id      = None
-
-        type_content_map = {'comment': Comment, 'reply': Reply }
 
         if vote_target_type is not None:
             target_type = type_content_map[vote_target_type]

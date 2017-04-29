@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.contrib.auth.models import Permission, User
 from django.db import models
 from entry.models import Entry
@@ -29,24 +30,18 @@ class Comment(models.Model):
     update_date         = models.DateTimeField(auto_now=True, blank=True)
     hidden              = models.BooleanField(default=False)
     is_deleted          = models.BooleanField(default=False)
+    parent              = models.ForeignKey('feedback.Comment', on_delete=models.CASCADE, null=True, blank=True, 
+                                            related_name="children") # for tracking the main comment when replying a reply
+    reply_to            = models.ForeignKey('feedback.Comment', on_delete=models.CASCADE, null=True, blank=True, 
+                                            related_name="replies") # the immediate response (may not be the main comment)
 
     def __unicode__(self):
         text = "#{} - {}".format(self.id, self.author.username)
+        if self.parent: 
+            text += " (child of #{})".format(self.parent.id)
         return text
 
-class Reply(models.Model):    
-    author          = models.ForeignKey(User)
-    content         = models.CharField(max_length=250)
-    creation_date   = models.DateTimeField(auto_now_add=True, blank=True)
-    update_date     = models.DateTimeField(auto_now=True, blank=True)
-    comment         = models.ForeignKey(Comment, default=None, blank=True, null=True, related_name="replies")
-    response_to     = models.ForeignKey('self', default=None, blank=True, null=True, related_name="responses")
-    hidden          = models.BooleanField(default=False)
-    is_deleted      = models.BooleanField(default=False)
-
-    def __unicode__(self):
-        text = "#{} - {}".format(self.id, self.author.username)
-        return text
-
-    class Meta:
-        verbose_name_plural = "replies"
+    def get_points(self):
+        content_type = ContentType.objects.get_for_model(Comment)
+        points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('direction'))['direction__sum']
+        return points or 0
