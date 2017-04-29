@@ -1,6 +1,8 @@
+import math
 from .models import Comment, Vote
 from entry.models import Entry
 from gallery.models import Image, Video
+from profile.models import Profile
 from django.contrib.contenttypes.models import ContentType
 
 def create_comment(id = None, type = None, user = None, content = None):
@@ -24,12 +26,22 @@ def get_target_comment_page(id = None, type = None, page = 1, limit = 10):
     target_type = ContentType.objects.get_for_model(target)
     target_id = target.id
 
-    comments = Comment.objects.filter(target_content_type = target_type, target_id = target_id, parent = None)
+    comments = Comment.objects.filter(target_content_type = target_type, target_id = target_id, parent = None)[::-1]
     return get_page(comments, page, limit)
 
 def get_comment_children(comment = None): #is this still needed?
     """Returns a queryset of replies associated with the comment."""
     return comment.children
+
+def get_target_page_count(id = None, type = None, page_limit = 10): #is this still needed?
+    """Returns the number of pages by counting the comments."""
+    target = find_target(id, type)
+    target_type = ContentType.objects.get_for_model(target)
+    target_id = target.id
+
+    comments = Comment.objects.filter(target_content_type = target_type, target_id = target_id, parent = None).count()
+    page_count = math.ceil(float(comments) / page_limit)
+    return page_count
 
 def vote_target(id = None, type = None, user = None, direction = 0):
     """
@@ -52,7 +64,7 @@ def get_votes_from_target(id = None, type = None):
 
 def find_target(id = None, type = None):
     """Returns a target based on the type."""
-    types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry }
+    types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile }
     type = types_map[type]
 
     target = type.objects.get(id = id)

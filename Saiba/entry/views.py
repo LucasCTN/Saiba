@@ -38,12 +38,13 @@ def detail(request, entry_slug):
     trending_entries    = utils.get_trending_entries(request)
 
     args = {'entry'             : entry,
+            'id'                : entry.id,
+            'type'              : 'entry',
             'last_revision'     : last_revision,
             'first_revision'    : first_revision,
             'images'            : last_images,
             'videos'            : last_videos,
             'related_entries'   : related_entries,
-            'type'              : 'entry',
             'trending_galleries': trending_galleries,
             'trending_entries'  : trending_entries }
 

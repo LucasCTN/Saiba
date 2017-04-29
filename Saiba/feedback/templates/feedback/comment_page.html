@@ -1,13 +1,6 @@
-﻿{% load staticfiles %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="{% static 'home/scripts.js' %}"></script>
-
-{% for comment in comments %}
-    <div class="comment container media col-md-12" data-id="{{comment.id}}" id="chain-{{comment.id}}">
-        <div class="comment container media col-md-12" data-id="{{comment.id}}" id="comment-{{comment.id}}">
+﻿{% for comment in comments %}
+    <div class="comment comment-parent container media col-md-12" data-id="{{comment.id}}" id="chain-{{comment.id}}">
+        <div id="comment-{{comment.id}}" class="comment container media col-md-12" data-id="{{comment.id}}" id="comment-{{comment.id}}">
             <div class="col-md-1 avatar-container">
                 <a href="/perfil/{{comment.author.profile.slug}}">
                     <img class="col-md-12 img-rounded media-object" src="/media/{{comment.author.profile.avatar}}" style="width: 80px;">
@@ -23,20 +16,22 @@
                 </div>
                 <div class="col-md-12 feedback-container">
                     <span class="col-md-1 comment-points">{{comment.get_points}}</span>
-                    <button class="btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
-                    <button class="btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
+                    <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
+                    <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                     | 
-                    <button class="btn btn-default btn-xs" style="">Responder</button>
-                    <button class="btn btn-default btn-xs">Apagar</button>
-                    <textarea style="display: none;"></textarea>
-                    <button class="btn btn-default btn-xs">Enviar</button>
+                    <button class="comment-reply btn btn-default btn-xs" style="">Responder</button>
+                    {% if comment.author == request.user %}
+                    <button class="comment-delete btn btn-default btn-xs">Apagar</button>
+                    {% endif %}
+                    <textarea class="replybox form-control col-md-12" rows="2" style="display: none;"></textarea>
+                    <button class="replybox-send btn btn-primary btn-xs col-md-2" style="display: none;">Responder</button>
                 </div>
             </div>
         </div>
         <div class="col-md-12"><hr></div>
         {% for child in comment.children.all %}
         <div class="comment-children col-md-12">
-            <div class="comment-child container media col-md-12" data-id="{{child.id}}">
+            <div id="comment-{{child.id}}" class="comment comment-child container media col-md-12" data-id="{{child.id}}">
                 <div class="col-md-1 avatar-container">
                     <a href="/perfil/{{child.author.profile.slug}}">
                         <img class="col-md-12 img-rounded media-object" src="/media/{{child.author.profile.avatar}}" style="width: 80px;">
@@ -45,18 +40,25 @@
                 <div class="col-md-11 content-container">
                     <div class="col-md-11 info-container">
                         <span class="col-md-12"><a href="/perfil/{{child.author.profile.slug}}"><b>{{child.author}}</b></a></span>
-                        <span class="col-md-12 comment-date" title="{{child.creation_date}}">{{child.creation_date|timesince}}</span>
+                        <span class="col-md-12">
+                            <span class="comment-date" title="{{child.creation_date}}">{{child.creation_date|timesince}}</span>
+                            {% if child.parent != child.reply_to %}
+                            <span data-reply-id="{{child.reply_to.id}}"> em resposta a <a href="#comment-{{child.reply_to.id}}">{{child.reply_to.author}}</a></span>
+                            {% endif %}
+                        </span>
                         <span class="col-md-12 comment-content">{{child.content}}</span>
                     </div>
                     <div class="col-md-12 feedback-container">
                         <span class="col-md-1 comment-points">{{child.get_points}}</span>
-                        <button class="btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
-                        <button class="btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
+                        <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
+                        <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                         |
-                        <button class="btn btn-default btn-xs">Responder</button>
+                        <button class="comment-reply btn btn-default btn-xs">Responder</button>
+                        {% if child.author == request.user %}
                         <button class="btn btn-default btn-xs">Apagar</button>
-                        <textarea style="display: none;"></textarea>
-                        <button class="btn btn-default btn-xs" style="display: none;">Enviar</button>
+                        {% endif %}
+                        <textarea class="replybox form-control col-md-12" rows="2" style="display: none;"></textarea>
+                        <button class="replybox-send btn btn-primary btn-xs col-md-2" style="display: none;">Responder</button>
                     </div>
                 </div>
                 <div class="col-md-12"><hr></div>
@@ -65,3 +67,13 @@
         {% endfor %}
     </div>
 {% endfor %}
+<div class="col-md-12"> Páginas: 
+    {% for page in pages_total %}
+        {% if current_page == page %}<strong>{% endif %}
+        {% if not current_page == page %}<a class="change-page" data-id="{{page}}" href="#" onclick="return false;">{% endif %}
+        {{page}}
+        {% if not current_page == page %}</a>{% endif %}
+        {% if current_page == page %}</strong>{% endif %}
+        {% if not forloop.last %} {% endif %}
+    {% endfor %}
+</div>

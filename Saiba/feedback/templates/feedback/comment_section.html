@@ -8,11 +8,10 @@
     <form id="comment-form" method="post" class="form-horizontal col-md-10" role="form" target="dummyframe">
         {% csrf_token %}
         <div class="form-group">
-            <label for="content" class="control-label">Comentando como:</label>
+            <label for="content" class="control-label">Comentando como: <a href="{% url 'profile:detail' user.profile.slug %}">{{user.username}}</a></label>
             <textarea name="content" class="form-control" id="post_content" rows="3"></textarea>
         </div>
         <input type="hidden" name="type" value="{{type}}" />
-        <input type="hidden" name="slug" value="{{entry.slug}}" />
         <input type="hidden" name="id" value="{{id}}" />
         <button type="submit" class="btn btn-primary col-md-1" id="post-comment">Enviar</button>
     </form>
@@ -27,30 +26,29 @@
         var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=5&slug={{entry.slug}}&type={{type}}&id={{id}}&page=1";
         var voteApiEndpoint         = "{% url 'api:api_vote' %}";
 
+        var commentPage             = "{% url 'feedback:comment_page' %}" + "?id={{id}}&type={{type}}";
+        var contentId               = "{{id}}";
+        var contentType             = "{{type}}";
+
         var comment_section = new CommentSection("comment-section", "{{user.profile.slug}}", getCommentApiEndpoint, voteApiEndpoint);
 
         comment_section.loadCommentPage(function(){
-            $(window).scroll(function() {
-                if($(window).scrollTop() + window.innerHeight == $(document).height()) {
-                    comment_section.appendNextCommentPage();
-                }
-            });
+            
         });
         
         $('#post-comment').click(function(){
 
             var type    = $("[name='type']").val();
-            var slug    = $("[name='slug']").val();
             var content = $("[name='content']").val();
             var id      = $("[name='id']").val();
             
             var api = new API();
-            api.sendComment(id, type, slug, content, sendCommentApiEndpoint, getCommentApiEndpoint).done(function(data){
+            api.sendComment(id, type, content, null, null, sendCommentApiEndpoint).done(function(data){
                 var comment_id = data.id;
                 comment_section.loadCommentPage(1, function(){
                     $('html, body').animate({
                         scrollTop: $("#comment-" + comment_id).offset().top
-                    }, 1500);
+                    }, 1);
                 });
             })
         });

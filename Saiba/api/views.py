@@ -75,30 +75,20 @@ class CommentDetail(APIView):
         data['points'] = 0
         data['author'] = request.user.id;
 
-        if data['type']:
-            comment_target_type = data['type']
+        types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile }
+        target_type = types_map[data["type"]];
 
-            if comment_target_type == "entry" and data['slug'] is not None:
-                data["target_content_type"] = ContentType.objects.get_for_model(Entry).id
-                data["target_id"]           = get_object_or_404(Entry, slug=data["slug"]).pk
-            elif comment_target_type == "image" and data['id'] is not None:
-                data["target_content_type"] = ContentType.objects.get_for_model(Image).id
-                data["target_id"]           = data['id']
-            elif comment_target_type == "video" and data['id'] is not None:                
-                data["target_content_type"] = ContentType.objects.get_for_model(Video).id
-                data["target_id"]           = data['id']
-            elif comment_target_type == "profile" and data['id'] is not None:
-                data["target_content_type"] = ContentType.objects.get_for_model(Profile).id
-                data["target_id"]           = data['id']
+        data["target_content_type"] = ContentType.objects.get_for_model(target_type).id
+        data["target_id"]           = data['id']
 
         serializer = CommentSerializer(data=data)
         
         if serializer.is_valid():
             serializer.save()
-            if comment_target_type == "entry":
+            if target_type == Entry:
                 trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
-                entry = Entry.objects.get(slug=data['slug'])
-                entry.trending_points += trending_weight
+                entry = Entry.objects.get(id=data['id'])
+                entry.trending_points += trending_weight # Someone commented, so the entry should get trend points
                 entry.save(update_fields=['trending_points'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
