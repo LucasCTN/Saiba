@@ -117,8 +117,10 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
                 var comment_id = $(this).parents(".comment").attr("data-id");
                 api.markComment(comment_id, true, sendCommentApiEndpoint).done(function () {
                     $(this).parents(".comment").remove();
+                    comment_section.loadCommentPage();
+                    comment_section.scrollToComment(comment_id);
                 })
-                comment_section.loadCommentPage();
+                
             });
 
             $(".change-page").click(function () {
