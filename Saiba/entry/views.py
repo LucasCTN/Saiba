@@ -35,7 +35,6 @@ def detail(request, entry_slug):
     last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
 
     trending_galleries  = utils.get_popular_galleries(request)
-    trending_entries    = utils.get_trending_entries(request)
 
     args = {'entry'             : entry,
             'id'                : entry.id,
@@ -45,26 +44,21 @@ def detail(request, entry_slug):
             'images'            : last_images,
             'videos'            : last_videos,
             'related_entries'   : related_entries,
-            'trending_galleries': trending_galleries,
-            'trending_entries'  : trending_entries }
+            'trending_galleries': trending_galleries }
 
     return render(request, 'entry/detail.html', args)
 
 def history(request, entry_slug):
-    trending_entries    = utils.get_trending_entries(request)
     entry = get_object_or_404(Entry, slug=entry_slug)
     revisions = Revision.objects.filter(entry=entry, hidden=False).order_by('-id')
 
     context = {'revisions'          : revisions, 
                'entry_name'         :entry.title, 
-               'entry_slug'         :entry.slug,
-               'trending_entries'   :trending_entries }
+               'entry_slug'         :entry.slug }
 
     return render(request, escape('entry/history.html'), context)
 
 def edit(request, entry_slug):
-    trending_entries    = utils.get_trending_entries(request)
-
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -105,8 +99,7 @@ def edit(request, entry_slug):
         context = { "entry_form": entry_form, 
                    "revision_form": revision_form, 
                    "entry":entry, 
-                   "user":user, 
-                   'trending_entries':trending_entries }
+                   "user":user }
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -118,7 +111,6 @@ def edit(request, entry_slug):
     return render(request, 'entry/edit.html', context)
 
 def revision(request, entry_slug, revision_id):
-    trending_entries    = utils.get_trending_entries(request)
     revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
     previous_revision = Revision.objects.filter(entry=revision.entry.pk, hidden=False, pk__lt=revision_id).order_by('-id').first()
 
@@ -130,10 +122,9 @@ def revision(request, entry_slug, revision_id):
 
     html_result = ghdiff.diff(previous_revision_text, revision_text)
 
-    return render(request, escape('entry/revision.html'), { 'revision': revision, 'html': html_result, 'trending_entries': trending_entries })
+    return render(request, escape('entry/revision.html'), { 'revision': revision, 'html': html_result })
 
 def create_entry(request):
-    trending_entries    = utils.get_trending_entries(request)
     trending_gallery    = utils.get_popular_galleries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
@@ -193,7 +184,6 @@ def create_entry(request):
 
         context = { "entry_form"        : entry_form,
                     "revision_form"     : revision_form,
-                    "trending_entries"  : trending_entries,
                     "trending_gallery"  : trending_gallery,
                     "error_messages"    : errors }
 
@@ -207,7 +197,6 @@ def create_entry(request):
     return render(request, 'entry/create_entry.html', context)
 
 def editorship(request, entry_slug):
-    trending_entries    = utils.get_trending_entries(request)
     entry = get_object_or_404(Entry, slug=entry_slug)
     editor_list = entry.editorship.all()
     
@@ -216,10 +205,11 @@ def editorship(request, entry_slug):
     for user_in_list in editor_list:
         user_editor_list.append(user_in_list.user)
 
-    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list, 'trending_entries':trending_entries}
-    return render(request, 'entry/editorship.html', context)
+    context = { 'entry':entry,
+                'editor_list': editor_list,
+                'user_editor_list':user_editor_list}
 
-    trending_entries    = utils.get_trending_entries(request)
+    return render(request, 'entry/editorship.html', context)
 
 def manage_editorship(request, entry_slug):
     trending_gallery    = utils.get_popular_galleries(request)
@@ -243,6 +233,6 @@ def manage_editorship(request, entry_slug):
 
         entry.editorship.remove(editor)
 
-    context = { 'entry': entry, 'trending_entries': trending_entries, 'trending_gallery': trending_gallery }
+    context = { 'entry': entry, 'trending_gallery': trending_gallery }
    
     return render(request, 'entry/manage_editorship.html', context)

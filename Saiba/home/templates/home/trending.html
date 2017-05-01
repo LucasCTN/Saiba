@@ -1,9 +1,8 @@
-﻿<div id="trending-entries" class="col-md-12">
+﻿<div id="trending-entries" class="col-md-offset-1">
     {% for entry in trending_entries %}
         <a href="{% url 'entry:detail' entry.slug %}" class="trending-entry col-md-2">
             <span class="trending-container col-md-12" style="text-align: center;">
-                <img class="trending-image col-md-12 col-centered" src="{{entry.icon}}" 
-                     style="height:100px; width:auto; border:1px;"/>
+                <img class="trending-image col-md-12 col-centered" src="{{entry.icon}}"/>
                 <span class="trending-title col-md-12">{{entry.title}}</span>
             </span>            
         </a>

@@ -58,6 +58,19 @@
             }
         });
     }
+
+    this.trending = function (url, callback) {
+        return $.ajax({
+            type: "PATCH",
+            url: url,
+            success: function (data) {
+                if (callback)
+                {
+                    callback(data);
+                }
+            }
+        });
+    }
 }
 
 function CommentSection(section_id, user_slug) {
