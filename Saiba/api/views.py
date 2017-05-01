@@ -84,12 +84,14 @@ class CommentDetail(APIView):
         serializer = CommentSerializer(data=data)
         
         if serializer.is_valid():
-            serializer.save()
+            new_comment = serializer.save()
             if target_type == Entry:
                 trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
                 entry = Entry.objects.get(id=data['id'])
                 entry.trending_points += trending_weight # Someone commented, so the entry should get trend points
                 entry.save(update_fields=['trending_points'])
+                new_vote = Vote.objects.create(target=new_comment, author=request.user, direction=1) # Vote in own comment
+                new_vote.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -106,7 +108,7 @@ class CommentDetail(APIView):
         serializer = CommentSerializer(comment, data=args, partial=True)
 
         if not comment.is_deleted and serializer.is_valid() and comment.author == request.user:
-            serializer.save()
+            serializer.save()            
             return Response(serializer.data, status=status.HTTP_200_OK)
         elif comment.author != request.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
