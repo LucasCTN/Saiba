@@ -4,6 +4,7 @@
 
     <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
 
+    {% if user.is_authenticated %}
     <form id="comment-form" method="post" class="form-horizontal col-md-10" role="form" target="dummyframe">
         {% csrf_token %}
         <div class="form-group">
@@ -14,6 +15,9 @@
         <input type="hidden" name="id" value="{{id}}" />
         <button type="submit" class="btn btn-primary col-md-1" id="post-comment">Enviar</button>
     </form>
+    {% else %}
+    <textarea name="content" class="form-control" id="post_content" rows="3" readonly>Autentique-se para comentar.</textarea>    
+    {% endif %}
 
     <br/><br/><br/>
 
