@@ -4,7 +4,6 @@
 
     <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
 
-    <!--<form id="comment-form" method="post" class="form-horizontal" role="form" action="{% url 'api:api_comments' %}" target="dummyframe">-->
     <form id="comment-form" method="post" class="form-horizontal col-md-10" role="form" target="dummyframe">
         {% csrf_token %}
         <div class="form-group">
@@ -23,14 +22,13 @@
 
     <script>
         var sendCommentApiEndpoint  = "{% url 'api:api_comments' %}";
-        var getCommentApiEndpoint   = "{% url 'api:api_comment_page' %}?reply_limit=5&slug={{entry.slug}}&type={{type}}&id={{id}}&page=1";
         var voteApiEndpoint         = "{% url 'api:api_vote' %}";
 
         var commentPage             = "{% url 'feedback:comment_page' %}" + "?id={{id}}&type={{type}}";
         var contentId               = "{{id}}";
         var contentType             = "{{type}}";
 
-        var comment_section = new CommentSection("comment-section", "{{user.profile.slug}}", getCommentApiEndpoint, voteApiEndpoint);
+        var comment_section = new CommentSection("comment-section", "{{user.profile.slug}}");
 
         comment_section.loadCommentPage(function(){
             

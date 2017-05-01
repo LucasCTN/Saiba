@@ -38,7 +38,11 @@
             <div class="col-md-11"><em><strong>[comentário deletado]</strong></em></div>
             {% endif %}
         </div>
-        {% for child in comment.children.all %}
+        {% load commenttags %}
+        {% with comment_pk=comment.pk|stringformat:"i" %}
+        {% with chain_filter=""|add:comment_pk|add:","|add:chain %}
+        {% with chain_limit=child_limit|should_hide_chain:chain_filter %}
+        {% for child in comment.children.all|slice:chain_limit %}
         <div class="comment-children col-md-12">
             <div id="comment-{{child.id}}" class="comment comment-child container media col-md-12" data-id="{{child.id}}">
                 <div class="col-md-1 avatar-container">
@@ -77,8 +81,16 @@
                 <div class="col-md-11"><em><strong>[comentário deletado]</strong></em></div>
                 {% endif %}
             </div>
-        </div>
+        </div>        
         {% endfor %}
+        {% if chain_limit == "" and comment.children.all|length > child_limit %}
+        <a class="close-thread col-md-11" href="#"><em><strong>[Menos comentários]</strong></em></a>
+        {% elif comment.children.all|length > child_limit %}
+        <a class="open-thread col-md-11" href="#"><em><strong>[Mais comentários]</strong></em></a>
+        {% endif %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
     </div>
 {% endfor %}
 <div class="pages col-md-12"> Páginas:

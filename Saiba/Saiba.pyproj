@@ -53,9 +53,15 @@
     <Compile Include="entry\__init__.py" />
     <Compile Include="feedback\admin.py" />
     <Compile Include="feedback\apps.py" />
+    <Compile Include="feedback\templatetags\commenttags.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="feedback\migrations\__init__.py" />
     <Compile Include="feedback\models.py" />
     <Compile Include="feedback\services.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="feedback\templatetags\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="feedback\tests.py" />
@@ -144,6 +150,7 @@
     <Folder Include="entry\static\entry\" />
     <Folder Include="feedback\" />
     <Folder Include="feedback\migrations\" />
+    <Folder Include="feedback\templatetags\" />
     <Folder Include="feedback\templates\" />
     <Folder Include="feedback\templates\feedback\" />
     <Folder Include="forum\" />

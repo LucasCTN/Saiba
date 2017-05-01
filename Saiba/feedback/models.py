@@ -45,3 +45,12 @@ class Comment(models.Model):
         content_type = ContentType.objects.get_for_model(Comment)
         points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('direction'))['direction__sum']
         return points or 0
+
+    def teste(self, arg):
+        return arg
+
+    def should_limit_child(self, id, limit):
+        if self.id == id:
+            return ""
+        else:
+            return limit

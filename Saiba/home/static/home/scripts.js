@@ -60,10 +60,11 @@
     }
 }
 
-function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) {
+function CommentSection(section_id, user_slug) {
     var api = new API();
     var id = "#" + section_id;
     var current_page = 1;
+    var chain = "";
 
     var comment_page_endpoint = commentPage;
     var comment_section = this;
@@ -71,7 +72,7 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
     this.loadCommentPage = function (callback) {
         var comment_section = this;
 
-        api.getCommentPage(comment_page_endpoint + "&page=" + current_page).done(function (data) {
+        api.getCommentPage(comment_page_endpoint + "&page=" + current_page + "&chain=" + chain).done(function (data) {
             $(id).empty().append(data);
 
             $(".comment-reply").click(function () {
@@ -128,6 +129,21 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
                 current_page = $(this).attr("data-id");
                 $("#comment-section").empty();
                 comment_section.loadCommentPage();
+            });
+
+            $(".open-thread").click(function () {
+                var comment_id = $(this).parents(".comment-chain").attr("data-id");
+                chain = comment_id.toString();
+                comment_section.loadCommentPage(function(){
+                    comment_section.scrollToComment(comment_id);
+                });
+            });
+
+            $(".close-thread").click(function () {
+                chain = "";
+                comment_section.loadCommentPage(function(){
+                    comment_section.scrollToComment(comment_id);
+                });
             });
 
             if (callback){
