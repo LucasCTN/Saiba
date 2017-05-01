@@ -80,14 +80,14 @@
                 {% else %}
                 <div class="col-md-11"><em><strong>[comentário deletado]</strong></em></div>
                 {% endif %}
+                {% if chain_limit == "" and comment.children.all|length > child_limit and forloop.last %}
+                <a class="close-thread comment-children col-md-11" href="#"><em><strong>← esconder esta conversa</strong></em></a>
+                {% elif comment.children.all|length > child_limit and forloop.last %}
+                <a class="open-thread comment-children col-md-11" href="#"><em><strong>ver o restante desta conversa →</strong></em></a>
+                {% endif %}
             </div>
         </div>        
-        {% endfor %}
-        {% if chain_limit == "" and comment.children.all|length > child_limit %}
-        <a class="close-thread col-md-11" href="#"><em><strong>[Menos comentários]</strong></em></a>
-        {% elif comment.children.all|length > child_limit %}
-        <a class="open-thread col-md-11" href="#"><em><strong>[Mais comentários]</strong></em></a>
-        {% endif %}
+        {% endfor %}        
         {% endwith %}
         {% endwith %}
         {% endwith %}

@@ -64,7 +64,7 @@
         <h1>Videos recentes <small>({{ videos|length }})</small></h1>
         {% for video in videos %}
             <div class='inline-block col-md-4'>
-                {% if related_entry.icon %}<a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>{% endif %}
+                <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>
                 <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
             </div>
         {% endfor %}
