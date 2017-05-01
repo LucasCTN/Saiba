@@ -66,9 +66,6 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
     var current_page = 1;
 
     var comment_page_endpoint = commentPage;
-    var next_page = null;
-    var loadedPages = 0;
-
     var comment_section = this;
 
     this.loadCommentPage = function (callback) {

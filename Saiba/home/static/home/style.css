@@ -109,3 +109,23 @@ h3 { font-size: 18px; line-height: 40px; }
 h4 { font-size: 14px; line-height: 20px; }
 h5 { font-size: 12px; line-height: 20px; }
 h6 { font-size: 10px; line-height: 20px; }
+
+.comment {
+    border-left-style: solid;
+    border-left-width: 3px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding: 8px 1px 8px 1px;
+}
+
+.comment-parent {
+    background-color: #f7f7f7;
+    border-left-color: lightgray;
+    border-bottom-color: lightgray;
+}
+
+.comment-child {
+    background-color: #f7f7f7;
+    border-left-color: #e8e6e6;
+    border-bottom-color: lightgray;
+}

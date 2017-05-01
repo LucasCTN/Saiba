@@ -1,6 +1,6 @@
 ﻿{% for comment in comments %}
-    <div class="comment comment-parent container media col-md-12" data-id="{{comment.id}}" id="chain-{{comment.id}}">
-        <div id="comment-{{comment.id}}" class="comment container media col-md-12" data-id="{{comment.id}}">
+    <div id="chain-{{comment.id}}" data-id="{{comment.id}}">
+        <div id="comment-{{comment.id}}" class="comment-parent comment container media col-md-12" data-id="{{comment.id}}">
             <div class="col-md-1 avatar-container">
                 {% if not comment.is_deleted %}
                 <a href="{% url 'profile:detail' comment.author.profile.slug %}">
@@ -23,9 +23,9 @@
                      {% else %}
                     <span class="col-md-12 comment-content">[conteúdo apagado]</span>
                     {% endif %}
-                </div>
+                </div>  
                 <div class="col-md-12 feedback-container">
-                    <span class="col-md-1 comment-points">{{comment.get_points}}</span>
+                    <span class="comment-points">{{comment.get_points}}</span>
                     {% if not comment.is_deleted %}
                     <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
                     <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
@@ -40,7 +40,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12"><hr></div>
         {% for child in comment.children.all %}
         <div class="comment-children col-md-12">
             <div id="comment-{{child.id}}" class="comment comment-child container media col-md-12" data-id="{{child.id}}">
@@ -61,25 +60,24 @@
                         <span class="col-md-12 comment-content">{{child.content}}</span>
                     </div>
                     <div class="col-md-12 feedback-container">
-                        <span class="col-md-1 comment-points">{{child.get_points}}</span>
+                        <span class="comment-points">{{child.get_points}}</span>
                         <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
                         <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                         |
                         <button class="comment-reply btn btn-default btn-xs">Responder</button>
                         {% if child.author == request.user %}
-                        <button class="btn btn-default btn-xs">Apagar</button>
+                        <button class="comment-delete btn btn-default btn-xs">Apagar</button>
                         {% endif %}
                         <textarea class="replybox form-control col-md-12" rows="2" style="display: none;"></textarea>
                         <button class="replybox-send btn btn-primary btn-xs col-md-2" style="display: none;">Responder</button>
                     </div>
                 </div>
-                <div class="col-md-12"><hr></div>
             </div>
         </div>
         {% endfor %}
     </div>
 {% endfor %}
-<div class="col-md-12"> Páginas: 
+<div class="col-md-12"> <h4>Páginas:</h4>
     {% for page in pages_total %}
         {% if current_page == page %}<strong>{% endif %}
         {% if not current_page == page %}<a class="change-page" data-id="{{page}}" href="#" onclick="return false;">{% endif %}
