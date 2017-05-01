@@ -102,11 +102,14 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
                 $(this).siblings('.comment-reply').css('display', '');
 
                 var replybox_content = $(this).siblings(".replybox").val();
-                var parent = $(this).parents(".comment-parent").attr("data-id");
+                var parent = $(this).parents(".comment-chain").attr("data-id");
                 var reply_to = $(this).parents(".comment").attr("data-id");
 
                 api.sendComment(contentId, contentType, replybox_content, parent, reply_to, sendCommentApiEndpoint).done(function (data) {                    
-                comment_section.loadCommentPage();
+                        var comment_id = data.id;
+                        comment_section.loadCommentPage(function(){
+                        comment_section.scrollToComment(comment_id);
+                    });
                 })
             });
 
@@ -114,8 +117,9 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
                 var comment_id = $(this).parents(".comment").attr("data-id");
                 api.markComment(comment_id, true, sendCommentApiEndpoint).done(function () {
                     $(this).parents(".comment").remove();
-                    comment_section.loadCommentPage();
-                    comment_section.scrollToComment(comment_id);
+                    comment_section.loadCommentPage(function(){
+                        comment_section.scrollToComment(comment_id);
+                    });
                 })
                 
             });
@@ -140,7 +144,7 @@ function CommentSection(section_id, user_slug, api_comment_page, api_send_vote) 
         var div_id = "#comment-" + id;
 
         $('html, body').animate({
-            scrollTop: $(div_id).parents(".comment-parent").offset().top
+            scrollTop: $(div_id).offset().top
         }, 3);
     }
 }
