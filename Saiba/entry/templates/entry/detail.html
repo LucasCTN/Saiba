@@ -49,7 +49,7 @@
     </section>
 
     <section id="relacionados" class="container media col-md-12"><hr/>
-        <h1>Entradas relacionadas <small>({{ related_entries|length }})</small></h1>
+        <h1 class="section-title">Entradas relacionadas <small>({{ related_entries|length }})</small></h1>
         {% for related_entry in related_entries %}
             <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}">
                 <span class="col-md-12" style="text-align: center;">
@@ -61,7 +61,7 @@
     </section>
 
     <section id="galeria-video" class="container media col-md-12"><hr/>
-        <h1>Videos recentes <small>({{ videos|length }})</small></h1>
+        <h1 class="section-title">Videos recentes <small>({{ videos|length }})</small></h1>
         {% for video in videos %}
             <div class='inline-block col-md-4'>
                 <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>
@@ -72,7 +72,7 @@
 
     <section id="galeria-imagem" class="container media col-md-12">
         <hr/>
-        <h1>Imagens recentes <small>({{ images|length }})</small></h1>
+        <h1 class="section-title">Imagens recentes <small>({{ images|length }})</small></h1>
         {% for image in images %}
             <div class='inline-block col-md-4'>
                 <a href="{% url 'gallery:image_detail' image.id %}"><img class='media-object' src='{{ image.file.url }}' alt='image.title' height='100'/></a>

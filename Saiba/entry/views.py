@@ -16,8 +16,11 @@ from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
 import Saiba.saibadown, textile, ghdiff, Saiba.utils as utils
 from django.contrib.contenttypes.models import ContentType
-
 from Saiba import utils, custom_messages
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -32,7 +35,7 @@ def detail(request, entry_slug):
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
 
-    last_revision.content = Saiba.saibadown.parse(textile.textile(last_revision.content))
+    last_revision.content = Saiba.saibadown.parse(textile.textile(unicode(last_revision.content.decode('utf-8'))))
 
     trending_galleries  = utils.get_popular_galleries(request)
     trending_entries    = utils.get_trending_entries(request)

@@ -55,6 +55,6 @@ def parse(text):
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds
-    #text = re.sub(r'<img src=".+?\/>'       , resize_image          , text) # Resizing images (the worst way possible)
-
+    text = re.sub(r'<(?:.+|)script(?:([\s\S]+?)|)>', r'&ltscript\1&gt', text) # Disabling <script/> tags
+    text = re.sub(r'<meta([\s\S]+?)>', r'&ltmeta\1&gt'   , text) # Disabling <meta/> tags
     return text
