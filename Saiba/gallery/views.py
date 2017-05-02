@@ -22,14 +22,12 @@ def image_detail(request, image_id):
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
 
     trending_galleries = utils.get_popular_galleries(request)
-    trending_entries = utils.get_trending_entries(request)
 
     context = { 'image'             : image,
                 'type'              : 'image',
                 'id'                : image.pk,
                 'related_images'    : related_images,
-                'trending_galleries': trending_galleries, 
-                'trending_entries': trending_entries  }
+                'trending_galleries': trending_galleries }
 
     return render(request, 'gallery/image.html', context)
 
@@ -39,32 +37,27 @@ def video_detail(request, video_id):
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=video.pk)[:5]
     
     trending_galleries = utils.get_popular_galleries(request)
-    trending_entries = utils.get_trending_entries(request)
 
     context = { 'video'             : video,
                 'type'              : 'video',
                 'id'                : video.pk,
                 'related_videos'    : related_videos,
-                'trending_galleries': trending_galleries,
-                'trending_entries': trending_entries  }
+                'trending_galleries': trending_galleries }
 
     return render(request, 'gallery/video.html', context)
 
 def historic(request, entry_slug):
     trending_galleries = utils.get_popular_galleries(request)
-    trending_entries = utils.get_trending_entries(request)
     entry = get_object_or_404(Entry, slug=entry_slug)
     revisions = Revision.objects.filter(entry=entry, hidden=False)
-    return render(request, 'entry/historic.html', {'revisions': revisions, 'entry_name':entry.title, 'trending_entries':trending_entries})
+    return render(request, 'entry/historic.html', {'revisions': revisions, 'entry_name':entry.title })
 
 def revision(request, revision_id):
     trending_galleries = utils.get_popular_galleries(request)
-    trending_entries = utils.get_trending_entries(request)
     revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
-    return render(request, 'entry/revision.html', {'revision': revision, 'trending_entries':trending_entries})
+    return render(request, 'entry/revision.html', {'revision': revision})
 
 def upload_image(request):
-    trending_entries = utils.get_trending_entries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -92,10 +85,9 @@ def upload_image(request):
     image_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
     image_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
-    return render(request, 'gallery/upload-image.html', {"form": image_form, 'trending_entries':trending_entries})
+    return render(request, 'gallery/upload-image.html', {"form": image_form})
 
 def upload_video(request):
-    trending_entries = utils.get_trending_entries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -122,10 +114,9 @@ def upload_video(request):
     video_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
     video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
-    return render(request, 'gallery/upload-video.html', {"form": video_form, 'trending_entries':trending_entries})
+    return render(request, 'gallery/upload-video.html', {"form": video_form})
 
 def image_edit(request, image_id):
-    trending_entries = utils.get_trending_entries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -148,7 +139,7 @@ def image_edit(request, image_id):
             image.save()
             return redirect('gallery:image_detail', image_id=image.pk)
 
-        context = { "image_form": image_form, "image": image, "user": user, 'trending_entries':trending_entries }
+        context = { "image_form": image_form, "image": image, "user": user }
 
     image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     image_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
@@ -158,8 +149,6 @@ def image_edit(request, image_id):
     return render(request, 'gallery/edit-image.html', context)
 
 def video_edit(request, video_id):
-    trending_entries = utils.get_trending_entries(request)
-
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -189,7 +178,7 @@ def video_edit(request, video_id):
         else:
             print video_form.errors
         
-        context = { "video_form": video_form, "video": video, "user": user, 'trending_entries':trending_entries }
+        context = { "video_form": video_form, "video": video, "user": user }
 
     video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'

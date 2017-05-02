@@ -90,8 +90,14 @@
             </div>
         </nav>
 
-        <div class="">
-            {% include "home/trending.html" %}
+        <div id="trending" class="col-md-12">
+            <script>
+                var trending_url = {% url 'home:trending_page' %}
+                var api = new API();
+                api.trending(trending_url, function( data ){
+                    $("#trending").append(data);
+                });
+            </script>
         </div>
 
         <div id="site-conteudo" class="col-md-12">

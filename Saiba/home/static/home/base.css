@@ -24,12 +24,21 @@
     border-right: 1px solid #FFF;
 }
 
-#trending-entries{
+#trending{
     background-color: #faffff;
-    padding: 5px 0px 5px 0px;
+    padding: 15px 0px 15px 0px;
     border-width: 2px 0px 2px 0px;
     border-style: solid;
     border-color: #d7e7cf;
+    margin-top: 15px;
+}
+
+.trending-image{
+    max-width: 200px;
+    max-height: 100px;
+    width:auto;
+    height:auto;
+    border:1px;
 }
 
 .col-centered{

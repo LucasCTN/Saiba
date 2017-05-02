@@ -12,10 +12,11 @@ from profile.models import Profile
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from Saiba import utils
+import copy
+from api.views import TrendingDetail
 
 def index(request):
     entries = Entry.objects.all()
-    trending_entries    = utils.get_trending_entries(request)
 
     posts = Post.objects.all().order_by('-date')
     fixed_posts = Post.objects.filter(fixed=True).order_by('-date')
@@ -24,8 +25,7 @@ def index(request):
     args = {'entries': entries,
             'posts': posts,
             'fixed_posts': fixed_posts,
-            'normal_posts': normal_posts,
-            'trending_entries': trending_entries}
+            'normal_posts': normal_posts}
 
     return render(request, 'home/index.html', args)
 
@@ -210,3 +210,12 @@ def search_tag(request):
     args = { 'tag_search_result' : tag_search_result }
 
     return render(request, 'home/search_tag.html', args)
+
+def trending_page(request):
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
+
+    trending_entries = TrendingDetail.as_view()(new_request, "entry").data
+    result = trending_entries[:5]
+
+    return render(request, 'home/trending.html', {'trending_entries': result}) #deve ser assim
