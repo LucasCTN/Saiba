@@ -2,8 +2,9 @@
 {% block title %}Entrar{% endblock %}
 
 {% block body %}
-<div class="container-fluid col-md-offset-3">
-    <div id="login">
+<div class="container-fluid panel panel-default">
+    <h3 class="col-md-12 panel-heading">Autenticar em Saiba</h3>
+    <div id="login" class="col-md-12 panel-body">
         <form class="form-horizontal col-md-12" role="form" action="{% url 'home:login' %}" method="post" enctype="multipart/form-data" name="LoginForm">
             {% csrf_token %}
 
@@ -16,17 +17,17 @@
             {% endif %}
 
             <div class="form-group">
-                <label class="control-label col-sm-2" for="field">Nome de Usuário:</label>
-                <div class="col-sm-3">{{ form.username }}</div>
+                <label class="control-label col-sm-4" for="field">Nome de Usuário:</label>
+                <div class="col-sm-4">{{ form.username }}</div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-2" for="field">Senha:</label>
-                <div class="col-sm-3">{{ form.password }}</div>
+                <label class="control-label col-sm-4" for="field">Senha:</label>
+                <div class="col-sm-4">{{ form.password }}</div>
             </div>
 
-            <div class="control-group col-md-12 col-md-offset-2">
-				<button type="submit" class="btn btn-primary col-md-2">Entrar</button>
+            <div class="control-group col-md-12 col-md-offset-1">
+				<button type="submit" class="btn btn-success col-md-2">Entrar</button> <span class="col-md-4" style="line-height:30px;">ou <a style="font-size:small;" href="{% url "home:register" %}">Registrar-se</a></span>
             </div>
 
         </form>
