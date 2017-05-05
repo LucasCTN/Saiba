@@ -58,6 +58,13 @@
                 </span>                
             </a>
         {% endfor %}
+        {% if related_entries|length == 0 %}
+        <span class="col-md-12" style="text-align:center;">Não há entradas disponíveis</span>
+        {% else %}
+        <span class="col-md-12">
+            <a href="#" class="col-md-2 btn btn-primary">Ver todas</a>
+        </span>
+        {% endif %}        
     </section>
 
     <section id="galeria-video" class="container media col-md-12"><hr/>
@@ -68,6 +75,13 @@
                 <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
             </div>
         {% endfor %}
+        {% if videos|length == 0 %}
+        <span class="col-md-12" style="text-align:center;">Não há vídeos disponíveis</span>
+        {% else %}
+        <span class="col-md-12">
+            <a href="#" class="col-md-2 btn btn-primary">Ver todas</a>
+        </span>
+        {% endif %}
     </section>
 
     <section id="galeria-imagem" class="container media col-md-12">
@@ -79,6 +93,13 @@
                 <a href="{% url 'gallery:image_detail' image.id %}">{{ image.title }}</a>
             </div>
         {% endfor %}
+        {% if images|length == 0 %}
+        <span class="col-md-12" style="text-align:center;">Não há imagens disponíveis</span>
+        {% else %}
+        <span class="col-md-12">
+            <a href="#" class="col-md-2 btn btn-primary">Ver todas</a>
+        </span>
+        {% endif %}
     </section>
 
     {% include "feedback/comment_section.html" %}
