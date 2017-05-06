@@ -18,8 +18,12 @@
 
 .post
 {
+    background-color: whitesmoke;
     padding-left: 2%;
-    border-left: 4px solid;
+    border: 1px solid;
+    border-color: #cecece;
+    border-left-width: 4px;
+    border-left-color: black;
 }
 
 .image-from-post
