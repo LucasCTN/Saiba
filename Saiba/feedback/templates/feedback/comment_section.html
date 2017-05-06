@@ -16,7 +16,9 @@
         <button type="submit" class="btn btn-primary col-md-1" id="post-comment">Enviar</button>
     </form>
     {% else %}
-    <textarea name="content" class="form-control" id="post_content" rows="3" readonly>Autentique-se para comentar.</textarea>    
+    <textarea name="content" class="form-control" id="post_content" rows="3" readonly>Autentique-se para comentar.</textarea>
+    <br/>   
+    <button type="submit" class="btn btn-primary col-md-1" id="post-comment" disabled>Enviar</button>
     {% endif %}
 
     <br/><br/><br/>
