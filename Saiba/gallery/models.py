@@ -19,7 +19,7 @@ class Image(models.Model):
     tags        = models.ManyToManyField('home.Tag', blank=True)
     entry       = models.ForeignKey('entry.Entry', on_delete=models.CASCADE, related_name="images")
     hidden      = models.BooleanField(default=False)
-    file        = models.ImageField(blank=True, upload_to='icon/')
+    file        = models.ImageField(upload_to='icon/')
     description = models.TextField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)

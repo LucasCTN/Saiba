@@ -25,6 +25,7 @@ def get_error_message( label_name, message_type ):
 
 def get_custom_error_message( message_type ):
     custom_messages = { 'duplicated_entry' : "Já existe uma entrada com este título.",
+                        'invalid_entry' : "A entrada inserida não existe.",
                         'invalid_date' : "A data inserida é inválida." }
 
     return custom_messages[message_type]

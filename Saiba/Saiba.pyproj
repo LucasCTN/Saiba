@@ -4,7 +4,8 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>Saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
-    <InterpreterId>MSBuild|{086cdf49-2ba7-4623-82f6-ec4b76184c3c}|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>{086cdf49-2ba7-4623-82f6-ec4b76184c3c}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -194,6 +195,9 @@
     <Content Include="home\static\home\file-script.js" />
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />
+    <Content Include="home\static\home\search.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="home\templates\home\form_template.html" />
     <Content Include="home\templates\home\search_entry.html" />
     <Content Include="home\templates\home\search_tag.html" />

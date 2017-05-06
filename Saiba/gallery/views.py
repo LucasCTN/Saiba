@@ -10,8 +10,8 @@ from .models import Image, Video
 from .forms import ImageForm, VideoForm
 from home.models import Tag
 from entry.models import Entry
+from Saiba import utils, custom_messages
 from feedback.models import Action
-from Saiba import utils
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -62,17 +62,31 @@ def upload_image(request):
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
+        error_messages = []
+        valid_form = True
+    
+
         entry_name = request.POST.get('entry-selected')
         image_form = ImageForm(request.POST or None, request.FILES or None)
+        image_entry = Entry.objects.filter(title=entry_name, hidden=False).first()
 
-        if image_form.is_valid():
+        if not entry_name:
+            valid_form = False
+            error_messages.append(custom_messages.get_error_message("entrada", "required"))
+        elif not image_entry:
+            valid_form = False
+            error_messages.append(custom_messages.get_custom_error_message("invalid_entry"))
+
+        if not image_form.is_valid():
+            error_messages = None
+
+        if image_form.is_valid() and valid_form:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
-            #image_form = ImageForm(request.POST, request.FILES)
             image = image_form.save(commit=False)
             image.author = request.user
-            image.entry = Entry.objects.filter(title=entry_name, hidden=False).first()
+            image.entry = image_entry
             image.save()
             image_form.save_m2m()
             image.tags = Tag.objects.filter(label__in=set_tags)
@@ -87,7 +101,10 @@ def upload_image(request):
     image_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
     image_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
-    return render(request, 'gallery/upload-image.html', {"form": image_form})
+    args = {    "form"      : image_form,
+                "errors"    : error_messages }
+
+    return render(request, 'gallery/upload-image.html', args)
 
 def upload_video(request):
     if not request.user.is_authenticated():

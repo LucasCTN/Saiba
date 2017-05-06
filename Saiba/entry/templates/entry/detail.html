@@ -51,9 +51,9 @@
     <section id="relacionados" class="container media col-md-12"><hr/>
         <h1 class="section-title">Entradas relacionadas <small>({{ related_entries|length }})</small></h1>
         {% for related_entry in related_entries %}
-            <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}">
+            <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}" style="width:12%;">
                 <span class="col-md-12" style="text-align: center;">
-                    {% if related_entry.icon %}<img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:100px;"/>{% endif %}
+                    {% if related_entry.icon %}<img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:110%; padding: 0 10% 0 10%;"/>{% endif %}
                     <span class="col-md-12">{{ related_entry.title }}</span>
                 </span>                
             </a>
