@@ -151,6 +151,17 @@ def page_search(request):
         search_result = search_result.order_by('-id')
     elif(order_by == 'older'):
         search_result = search_result.order_by('id')
+
+    for result in search_result:
+        if(type == 'entry'):
+            result.href = "/entrada/" + result.slug
+            result.src = "/media/" + str(result.icon)
+        elif(type == 'image'):
+            result.href = "/galeria/imagem/" + str(result.id)
+            result.src = "/media/" + str(result.file)
+        else:
+            result.href = "/galeria/video/" + str(result.id)
+            result.src = "https://img.youtube.com/vi/" + result.link + "/mqdefault.jpg"
     
     args = {'entries' : entries,
             'search_result' : search_result,
