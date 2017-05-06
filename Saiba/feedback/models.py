@@ -1,8 +1,7 @@
+# -*- coding: utf-8 -*-
 from django.db.models import Sum
 from django.contrib.auth.models import Permission, User
 from django.db import models
-from entry.models import Entry
-from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils import timezone
@@ -54,3 +53,38 @@ class Comment(models.Model):
             return ""
         else:
             return limit
+
+    def create_action(self, action_type_number = "0"):
+        new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
+        new_action.save()
+
+# Class used for the activity system
+class Action(models.Model):
+    ACTION_TYPE_CHOICES = (
+        ("0", "Unknown"),
+        ("1", "New comment"),
+        ("2", "New reply"),
+        ("3", "New entry"),
+        ("4", "New image"),
+        ("5", "New video"),
+        ("6", "Edit entry"),
+        ("7", "Edit image"),
+        ("8", "Edit video"),
+    )
+
+    target_content_type     = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    target_id               = models.PositiveIntegerField(null=True, blank=True)
+    target                  = GenericForeignKey('target_content_type', 'target_id')
+    author                  = models.ForeignKey(User)
+    action_type             = models.CharField(
+        max_length=1,
+        choices=ACTION_TYPE_CHOICES,
+        default="0",
+    )
+    date                = models.DateTimeField(auto_now_add=True, blank=True)
+    is_public           = models.BooleanField(default=True)
+    is_staff_only       = models.BooleanField(default=False)
+    
+    def __unicode__(self):
+        text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
+        return text

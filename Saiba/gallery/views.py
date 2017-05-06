@@ -10,6 +10,7 @@ from .models import Image, Video
 from .forms import ImageForm, VideoForm
 from home.models import Tag
 from entry.models import Entry
+from feedback.models import Action
 from Saiba import utils
 
 def index(request):
@@ -75,6 +76,7 @@ def upload_image(request):
             image.save()
             image_form.save_m2m()
             image.tags = Tag.objects.filter(label__in=set_tags)
+            image.create_action("4")
             image.save()
             return redirect('gallery:image_detail', image_id=image.pk)
 
@@ -104,6 +106,7 @@ def upload_video(request):
             video.save()
             video_form.save_m2m()
             video.tags = Tag.objects.filter(label__in=set_tags)
+            video.create_action("5")
             video.save()
 
             return redirect('gallery:video_detail', video_id=video.id)
@@ -136,6 +139,7 @@ def image_edit(request, image_id):
             image = image_form.save(commit=False)
             image.entry = Entry.objects.filter(title=entry_name, hidden=False).first()
             image.tags = Tag.objects.filter(label__in=set_tags)
+            image.create_action("7")
             image.save()
             return redirect('gallery:image_detail', image_id=image.pk)
 
@@ -173,6 +177,7 @@ def video_edit(request, video_id):
             video = video_form.save(commit=False)
             video.entry = Entry.objects.filter(title=entry_name, hidden=False).first()
             video.tags = Tag.objects.filter(label__in=set_tags)
+            video.create_action("8")
             video.save()
             return redirect('gallery:video_detail', video_id=video.pk)
         else:

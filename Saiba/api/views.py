@@ -36,7 +36,7 @@ class EntryDetail(APIView):
 
     def post(self, request):
         data = request.data.copy()
-        data['author'] = request.user.id;
+        data['author'] = request.user.id
 
         serializer = EntrySerializer(data=data)
         
@@ -73,10 +73,10 @@ class CommentDetail(APIView):
     def post(self, request):
         data = request.data.copy()
         data['points'] = 0
-        data['author'] = request.user.id;
+        data['author'] = request.user.id
 
         types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile }
-        target_type = types_map[data["type"]];
+        target_type = types_map[data["type"]]
 
         data["target_content_type"] = ContentType.objects.get_for_model(target_type).id
         data["target_id"]           = data['id']
@@ -85,6 +85,11 @@ class CommentDetail(APIView):
         
         if serializer.is_valid():
             new_comment = serializer.save()
+            if new_comment.reply_to:
+                new_comment.create_action("2")
+            else:
+                new_comment.create_action("1")
+                
             if target_type == Entry:
                 trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
                 entry = Entry.objects.get(id=data['id'])
@@ -146,7 +151,7 @@ class VoteDetail(APIView):
 
     def post(self, request):
         data = request.data.copy()
-        data['author'] = request.user.id;
+        data['author'] = request.user.id
 
         id = request.POST.get('id', False)
         type = request.POST.get('type', False)

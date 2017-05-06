@@ -68,7 +68,7 @@
     </section>
 
     <section id="galeria-video" class="container media col-md-12"><hr/>
-        <h1 class="section-title">Videos recentes <small>({{ videos|length }})</small></h1>
+        <h1 class="section-title">Vídeos recentes <small>({{ videos|length }})</small></h1>
         {% for video in videos %}
             <div class='inline-block col-md-4'>
                 <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>

@@ -1,4 +1,12 @@
-﻿function API() {
+﻿$( document ).ready(function() {
+    $(".saiba-date").each(function(i, obj) {
+        var value = $(this).text();
+        console.log(value);
+        $(this).text(GetDateText(value));
+    });
+});
+
+function API() {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

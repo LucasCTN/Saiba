@@ -5,7 +5,7 @@
                 <a href='{% url 'profile:detail' user.profile.slug %}'><button type='button' class='btn btn-default'>Início</button></a>
             </div>
             <div class="btn-group" role="group">
-                <a href='#'><button type='button' class='btn btn-default'>Atividade</button></a>
+                <a href='{% url 'profile:activity' user.profile.slug %}'><button type='button' class='btn btn-default'>Atividade</button></a>
             </div>
             <div class="btn-group" role="group">
                 <a href='{% url 'profile:editorships' user.profile.slug %}'><button type='button' class='btn btn-default'>Editoria</button></a>

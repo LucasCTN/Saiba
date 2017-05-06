@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.db import models
 import datetime
 from django.contrib.contenttypes.fields import GenericRelation
+from feedback.models import Action
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
@@ -47,6 +48,10 @@ class Entry(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def create_action(self, action_type_number = "0"):
+        new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
+        new_action.save()
 
     class Meta:
         verbose_name_plural = "entries"

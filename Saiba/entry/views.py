@@ -1,4 +1,5 @@
-﻿from django.contrib.auth import logout, authenticate, login
+﻿# -*- coding: utf-8 -*-
+from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -18,10 +19,6 @@ import Saiba.saibadown, textile, ghdiff, Saiba.utils as utils
 from django.contrib.contenttypes.models import ContentType
 from Saiba import utils, custom_messages
 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 def index(request):
     return render(request, 'entry/index.html')
 
@@ -34,8 +31,10 @@ def detail(request, entry_slug):
     
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
-
-    last_revision.content = Saiba.saibadown.parse(textile.textile(unicode(last_revision.content.decode('utf-8'))))
+    
+    content = last_revision.content
+    content_textile_parsed = textile.textile(content)
+    last_revision.content = Saiba.saibadown.parse(content_textile_parsed)
 
     trending_galleries  = utils.get_popular_galleries(request)
 
@@ -90,12 +89,14 @@ def edit(request, entry_slug):
             entry.save()
             entry_form.save_m2m()
             entry.tags = Tag.objects.filter(label__in=set_tags)
+            entry.create_action("6")
             entry.save()
 
             revision = revision_form.save(commit=False)
             revision.entry = entry
             revision.author = user
-            revision.save()            
+            revision.save()
+
 
             return redirect('entry:detail', entry_slug=entry.slug)
 
@@ -167,8 +168,9 @@ def create_entry(request):
                 entry.save()
                 entry.tags = Tag.objects.filter(label__in=set_tags)
                 entry.editorship.add(user.profile)
+                entry.create_action("3")
                 entry.save()
-            
+
                 revision = revision_form.save(commit=False)
                 revision.entry = entry
                 revision.author = user
@@ -177,18 +179,18 @@ def create_entry(request):
                 last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
                 first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
                 last_images = Image.objects.filter(hidden=False).order_by('-id')[:10]
-            
+
                 return redirect('entry:detail', entry_slug=entry.slug)
             else:
-                errors['date_origin'] = custom_messages.get_custom_error_message( 'invalid_date' )
+                errors['date_origin'] = custom_messages.get_custom_error_message('invalid_date')
 
         elif entry_duplicate_title != None:
-            errors['title'] = custom_messages.get_custom_error_message( 'duplicated_entry' )
+            errors['title'] = custom_messages.get_custom_error_message('duplicated_entry')
 
-        context = { "entry_form"        : entry_form,
+        context =  {"entry_form"        : entry_form,
                     "revision_form"     : revision_form,
                     "trending_gallery"  : trending_gallery,
-                    "error_messages"    : errors }
+                    "error_messages"    : errors}
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
