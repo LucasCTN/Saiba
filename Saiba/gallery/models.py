@@ -2,6 +2,7 @@ from django.contrib.auth.models import Permission, User
 from django.db import models
 from django.utils import timezone
 from feedback.models import Action
+from home.models import SaibaSettings
 
 class State(models.Model):
     label       = models.CharField(max_length=250)
@@ -31,6 +32,11 @@ class Image(models.Model):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
 
+    def increase_trending_points(self, criteria=""):
+        trending_weight = int(SaibaSettings.objects.get(type=criteria).value)
+        self.trending_points += trending_weight
+        self.save()
+
 class Video(models.Model):
     author      = models.ForeignKey(User, blank=True)
     title       = models.CharField(max_length=250)
@@ -42,6 +48,7 @@ class Video(models.Model):
     link        = models.CharField(max_length=250)
     description = models.TextField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
+    trending_points = models.IntegerField(default=0)
 
     def __unicode__(self):
         return "{} - {}".format(self.entry.title, self.title)
@@ -49,3 +56,8 @@ class Video(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
+
+    def increase_trending_points(self, criteria=""):
+        trending_weight = int(SaibaSettings.objects.get(type=criteria).value)
+        self.trending_points += trending_weight
+        self.save()

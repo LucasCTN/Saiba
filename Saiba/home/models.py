@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import Permission, User
-from entry.models import Entry
-from gallery.models import Image, Video
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -12,7 +10,7 @@ class Label(models.Model):
     icon        = models.ImageField(blank=True, upload_to='label/')
 
     def __unicode__(self):
-        return "[" + self.color + "] " + self.name
+        return "[ {} ] {}".format(self.color, self.name)
 
 class Post(models.Model):
     author      = models.ForeignKey(User, default=1)
@@ -21,9 +19,9 @@ class Post(models.Model):
     content     = models.TextField(max_length=2500, blank=True)
     hidden      = models.BooleanField(default=False)
     date        = models.DateTimeField(auto_now_add=True, blank=True)
-    entry       = models.ForeignKey(Entry, blank=True, null=True)
-    image       = models.ForeignKey(Image, blank=True, null=True)
-    video       = models.ForeignKey(Video, blank=True, null=True)
+    entry       = models.ForeignKey('entry.Entry', blank=True, null=True)
+    image       = models.ForeignKey('gallery.Image', blank=True, null=True)
+    video       = models.ForeignKey('gallery.Video', blank=True, null=True)
     fixed       = models.BooleanField(default=False)
 
     def __unicode__(self):
