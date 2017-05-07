@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^pesquisar-entrada/$', views.search_entry, name = 'search_entry'),
     url(r'^pesquisar-tag/$', views.search_tag, name='search_tag'),
     url(r'^trending/$', views.trending_page, name='trending_page'),
+    url(r'^imagens-populares/$', views.popular_images, name='popular_images'),
 ]
