@@ -1,0 +1,6 @@
+﻿{% for gallery in galleries %}
+    <a href="{% url 'entry:detail' gallery.slug %}">
+        <img class="img-thumbnail" src="{{gallery.icon}}" style="width:60px;"/>
+        <span>{{gallery.title}}</span>
+    </a><br/>
+{% endfor %}

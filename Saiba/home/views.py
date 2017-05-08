@@ -229,4 +229,13 @@ def trending_page(request):
     trending_entries = TrendingDetail.as_view()(new_request, "entry").data
     result = trending_entries[:5]
 
-    return render(request, 'home/trending.html', {'trending_entries': result}) #deve ser assim
+    return render(request, 'home/trending.html', {'trending_entries': result})
+
+
+def popular_images(request):
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
+
+    trending_galleries = TrendingDetail.as_view()(new_request, "gallery").data
+    result = trending_galleries[:5]
+    return render(request, 'home/popular_galleries.html', {'galleries': result})
