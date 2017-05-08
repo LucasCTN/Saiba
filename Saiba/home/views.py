@@ -233,5 +233,9 @@ def trending_page(request):
 
 
 def popular_images(request):
-    images = Image.objects.all().order_by('trending_points')[:5]
-    return render(request, 'home/popular_images.html', {'images': images})
+    new_request = copy.copy(request)
+    new_request.method = "GET" #This is horrible
+
+    trending_galleries = TrendingDetail.as_view()(new_request, "gallery").data
+    result = trending_galleries[:5]
+    return render(request, 'home/popular_galleries.html', {'galleries': result})
