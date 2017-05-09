@@ -119,7 +119,7 @@ class CommentDetail(APIView):
 
         serializer = CommentSerializer(comment, data=args, partial=True)
 
-        if not comment.is_deleted and serializer.is_valid() and comment.author == request.user:
+        if not comment.is_deleted and serializer.is_valid() and (comment.author == request.user or request.user.profile.HasPermission('delete_comment')):
             serializer.save()            
             return Response(serializer.data, status=status.HTTP_200_OK)
         elif comment.author != request.user:

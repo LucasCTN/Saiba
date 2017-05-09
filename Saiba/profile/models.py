@@ -16,6 +16,8 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.user.username)
+
+        self.groups.add(UserGroup.objects.get(id=3))
         super(Profile, self).save(*args, **kwargs)
 
     def __unicode__(self):

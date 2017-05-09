@@ -25,8 +25,8 @@
                     <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
                     <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                     | 
-                    <button class="comment-reply btn btn-default btn-xs" style="">Responder</button>
-                    {% if comment.author == request.user %}
+                    <button class="comment-reply btn btn-default btn-xs">Responder</button>
+                    {% if comment.author == request.user or user_can_delete == True %}
                     <button class="comment-delete btn btn-default btn-xs">Apagar</button>
                     {% endif %}
                     {% endif %}
@@ -70,7 +70,7 @@
                         <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                         |
                         <button class="comment-reply btn btn-default btn-xs">Responder</button>
-                        {% if child.author == request.user %}
+                        {% if child.author == request.user or user_can_delete == True %}
                         <button class="comment-delete btn btn-default btn-xs">Apagar</button>
                         {% endif %}
                         <textarea class="replybox form-control col-md-12" rows="2" style="display: none;"></textarea>
