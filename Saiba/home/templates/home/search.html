@@ -11,16 +11,17 @@
         <form class="form-horizontal col-md-4 col-md-offset-4" action="{% url 'home:page_search' %}" method="get">
             <div class="input-group">
                 <input name="q" type="text" class="form-control" placeholder="Pesquisar" value="{{query}}">
-                <input name="type" type="text" value="{{type}}" hidden>
-                <input name="order_by" type="text" value="{{order_by}}" hidden>
+                <input name="tipo" type="text" value="{{type}}" hidden>
+                <input name="ordenar_por" type="text" value="{{order_by}}" hidden>
+                <input name="entrada" type="text" value="{{entry}}" hidden>
                 <span class="input-group-btn">
                     <button class="btn btn-secondary" type="submit">Pesquisar</button>
                 </span>
             </div>
         </form>
         <br><hr/>
-        <div class="col-md-offset-5 col-md-12"><a href="/pesquisar/?q={{query}}&type=entry&order_by={{order_by}}">Entradas</a> | <a href="/pesquisar/?q={{query}}&type=image&order_by={{order_by}}">Imagens</a> | <a href="/pesquisar/?q={{query}}&type=video&order_by={{order_by}}">Vídeos</a></div>
-        <div class="col-md-12" style="margin-bottom: 20px"><b>Organizar por:</b> <a href="/pesquisar/?q={{query}}&type={{type}}&order_by=newer">Novos</a> | <a href="/pesquisar/?q={{query}}&type={{type}}&order_by=older">Antigos</a></div>
+        <div class="col-md-offset-5 col-md-12"><a href="{% url 'home:page_search' %}?q={{query}}&tipo=entrada&ordem={{order_by}}&entrada={{entry}}">Entradas</a> | <a href="{% url 'home:page_search' %}?q={{query}}&tipo=imagem&ordenar_por={{order_by}}&entrada={{entry}}">Imagens</a> | <a href="{% url 'home:page_search' %}?q={{query}}&tipo=video&ordenar_por={{order_by}}&entrada={{entry}}">Vídeos</a></div>
+        <div class="col-md-12" style="margin-bottom: 20px"><b>Ordenar por:</b> <a href="{% url 'home:page_search' %}?q={{query}}&tipo={{type}}&ordenar_por=novo&entrada={{entry}}">Novos</a> | <a href="{% url 'home:page_search' %}?q={{query}}&tipo={{type}}&ordenar_por=antigo&entrada={{entry}}">Antigos</a></div>
 
         {% if search_result %}
             {% for result in search_result %}
@@ -33,7 +34,7 @@
             {% endfor %}
         {% else %}
             <span class="col-md-12" style="margin-top: 20px; margin-bottom: 20px">
-                Não existem entradas com este(s) termo(s).
+                Não existem resultados com este(s) termo(s).
             </span>
         {% endif %}
     </section>

@@ -124,50 +124,60 @@ def user_register(request):
 
 def page_search(request):
     query = request.GET.get('q')
-    type = request.GET.get('type')
-    order_by = request.GET.get('order_by')
-    
-    entries = Entry.objects.all()
+    type = request.GET.get('tipo')
+    order_by = request.GET.get('ordenar_por')
+    entry_slug = request.GET.get('entrada')
 
     if query == None:
         query = ''
 
     if type == None:
-        type = 'entry'
+        type = 'entrada'
 
     if order_by == None:
-        order_by = 'newer'
-    
-    search_result = None;
-    
-    if(type == 'entry'):
-        search_result = Entry.objects.filter(Q(title__contains=query, hidden=False) | Q(tags__label__contains=query)).distinct()
-    elif(type == 'image'):
-        search_result = Image.objects.filter(Q(title__contains=query, hidden=False) | Q(tags__label__contains=query)).distinct()
-    elif(type == 'video'):
-        search_result = Video.objects.filter(Q(title__contains=query, hidden=False) | Q(tags__label__contains=query)).distinct()
+        order_by = 'novo'
 
-    if(order_by == 'newer'):
-        search_result = search_result.order_by('-id')
-    elif(order_by == 'older'):
-        search_result = search_result.order_by('id')
+    if entry_slug == None:
+        entry_slug = ''
 
-    for result in search_result:
-        if(type == 'entry'):
-            result.href = "/entrada/" + result.slug
-            result.src = "/media/" + str(result.icon)
-        elif(type == 'image'):
-            result.href = "/galeria/imagem/" + str(result.id)
-            result.src = "/media/" + str(result.file)
+    if(type == 'entrada' and entry_slug != ''):
+        search_result = None
+    else:
+        if(type == 'entrada'):
+            search_result = Entry.objects.filter(hidden=False)
+        elif(type == 'imagem'):
+            search_result = Image.objects.filter(hidden=False)
         else:
-            result.href = "/galeria/video/" + str(result.id)
-            result.src = "https://img.youtube.com/vi/" + result.link + "/mqdefault.jpg"
+            search_result = Video.objects.filter(hidden=False)
+
+        if(query != ''):
+            search_result = search_result.filter(Q(title__contains=query) | Q(tags__label__contains=query)).distinct()
+
+        if(entry_slug != '' and type != 'entrada'):
+            entrada = Entry.objects.filter(slug=entry_slug, hidden=False).first()
+            search_result = search_result.filter(entry=entrada)
+
+        if(order_by == 'novo'):
+            search_result = search_result.order_by('-id')
+        elif(order_by == 'antigo'):
+            search_result = search_result.order_by('id')
+
+        for result in search_result:
+            if(type == 'entrada'):
+                result.href = "/entrada/" + result.slug
+                result.src = "/media/" + str(result.icon)
+            elif(type == 'imagem'):
+                result.href = "/galeria/imagem/" + str(result.id)
+                result.src = "/media/" + str(result.file)
+            else:
+                result.href = "/galeria/video/" + str(result.id)
+                result.src = "https://img.youtube.com/vi/" + result.link + "/mqdefault.jpg"
     
-    args = {'entries' : entries,
-            'search_result' : search_result,
+    args = {'search_result' : search_result,
             'query' : query,
             'type' : type,
-            'order_by' : order_by}
+            'order_by' : order_by,
+            'entry' : entry_slug}
 
     return render(request, 'home/search.html', args)
 
