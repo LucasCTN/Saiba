@@ -79,7 +79,7 @@
         <span class="col-md-12" style="text-align:center;">Não há vídeos disponíveis</span>
         {% else %}
         <span class="col-md-12" style="text-align:center;">
-            <a href="#" class="btn btn-success">Ver todos</a>
+            <a href="{% url 'home:page_search' %}?tipo=video&entrada={{entry.slug}}" class="btn btn-success">Ver todos</a>
         </span>
         {% endif %}
     </section>
@@ -97,7 +97,7 @@
         <span class="col-md-12" style="text-align:center;">Não há imagens disponíveis</span>
         {% else %}
         <span class="col-md-12" style="text-align:center;">
-            <a href="#" class="btn btn-success">Ver todas</a>
+            <a href="{% url 'home:page_search' %}?tipo=imagem&entrada={{entry.slug}}" class="btn btn-success">Ver todas</a>
         </span>
         {% endif %}
     </section>
