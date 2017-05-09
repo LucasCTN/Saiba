@@ -69,7 +69,20 @@ function API() {
 
     this.trending = function (url, callback) {
         return $.ajax({
-            type: "PATCH",
+            type: "GET",
+            url: url,
+            success: function (data) {
+                if (callback)
+                {
+                    callback(data);
+                }
+            }
+        });
+    }
+
+    this.getPage = function (url, callback) {
+        return $.ajax({
+            type: "GET",
             url: url,
             success: function (data) {
                 if (callback)

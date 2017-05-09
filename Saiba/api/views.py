@@ -95,8 +95,15 @@ class CommentDetail(APIView):
                 entry = Entry.objects.get(id=data['id'])
                 entry.trending_points += trending_weight # Someone commented, so the entry should get trend points
                 entry.save(update_fields=['trending_points'])
-                new_vote = Vote.objects.create(target=new_comment, author=request.user, direction=1) # Vote in own comment
-                new_vote.save()
+            elif target_type == Image:
+                image = Image.objects.get(id=data['id'])
+                print "Comentei numa imagem, seu id eh " + str(image.id)
+                image.increase_trending_points("trending_weight_comment")
+            elif target_type == Video:
+                video = Video.objects.get(id=data['id'])
+                video.increase_trending_points("trending_weight_comment")
+            new_vote = Vote.objects.create(target=new_comment, author=request.user, direction=1) # Vote in own comment
+            new_vote.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

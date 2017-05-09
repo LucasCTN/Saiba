@@ -21,12 +21,15 @@
 {% endif %}
 
 <hr/>
-<section id="galerias-populares" class="container media col-md-12">
+<section id="imagens-populares" class="container media col-md-12">
     <h2>Galerias populares</h2>
-    {% for gallery in trending_galleries %}
-        <a href="{{gallery.slug}}">
-            <img class="img-thumbnail" src="{{gallery.icon}}" style="width:60px;"/>
-            <span>{{gallery.title}}</span>
-        </a><br/>
-    {% endfor %}
+    <script> 
+    var api = new API();
+    var url = "{% url 'home:popular_images' %}";
+
+    api.getPage(url, function(data){
+        $("#imagens-populares").append(data);
+    });
+    
+    </script>
 </section>

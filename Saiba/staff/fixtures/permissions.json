@@ -1,0 +1,18 @@
+[
+  {
+    "model": "staff.UserPermission",
+    "pk": 1,
+    "fields": {
+      "code_name": "ban_user",
+      "label": "Ban user"
+    }
+  },
+  {
+    "model": "staff.UserPermission",
+    "pk": 2,
+    "fields": {
+      "code_name": "delete_comment",
+      "label": "Delete comment"
+    }
+  }
+]

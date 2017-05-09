@@ -26,7 +26,7 @@ class Category(models.Model):
 class Entry(models.Model):
     author                  = models.ForeignKey(User, default=1)
     title                   = models.CharField(max_length=250)
-    slug                    = models.SlugField(max_length=250, default="", blank=True)
+    slug                    = models.SlugField(max_length=250, default="", blank=True, unique=True)
     status                  = models.ForeignKey(Status, default=1)
     category                = models.ForeignKey(Category, default=1)
     type                    = models.CharField(max_length=100, blank=True)

@@ -1,0 +1,18 @@
+[
+  {
+    "model": "home.SaibaSettings",
+    "pk": 1,
+    "fields": {
+      "value": "3",
+      "type": "trending_weight_comment"
+    }
+  },
+  {
+    "model": "home.SaibaSettings",
+    "pk": 2,
+    "fields": {
+      "value": "1",
+      "type": "trending_weight_entry_edit"
+    }
+  }
+]
