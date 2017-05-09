@@ -33,6 +33,7 @@ class Comment(models.Model):
                                             related_name="children") # for tracking the main comment when replying a reply
     reply_to            = models.ForeignKey('feedback.Comment', on_delete=models.CASCADE, null=True, blank=True, 
                                             related_name="replies") # the immediate response (may not be the main comment)
+    points              = models.IntegerField(default=0)
 
     def __unicode__(self):
         text = "#{} - {}".format(self.id, self.author.username)
@@ -45,14 +46,18 @@ class Comment(models.Model):
         points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('direction'))['direction__sum']
         return points or 0
 
-    def teste(self, arg):
-        return arg
-
     def should_limit_child(self, id, limit):
         if self.id == id:
             return ""
         else:
             return limit
+
+    def save(self, *args, **kwargs):
+        super(Comment, self).save(*args, **kwargs)
+
+    def update_points(self):
+        self.points = self.get_points()
+        self.save()
 
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)

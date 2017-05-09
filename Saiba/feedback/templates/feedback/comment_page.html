@@ -1,4 +1,48 @@
-﻿{% for comment in comments %}
+﻿<h3 class="col-md-12">Comentários mais populares</h3>
+{% for top_comment in top_comments %}
+<div id="chain-{{top_comment.id}}" class="comment-chain" data-id="{{top_comment.id}}">
+        <div id="comment-{{top_comment.id}}" class="comment-parent comment container media col-md-12" data-id="{{top_comment.id}}">
+            <div class="col-md-1 avatar-container">
+                {% if not top_comment.is_deleted %}
+                <a href="{% url 'profile:detail' top_comment.author.profile.slug %}">
+                    <img class="col-md-12 img-rounded media-object" src="/media/{{top_comment.author.profile.avatar}}" style="width: 80px;">
+                </a>
+                {% endif %}
+            </div>
+            {% if not top_comment.is_deleted %}
+            <div class="col-md-11 content-container">
+                <div class="col-md-11 info-container">
+                    <span class="col-md-12">
+                        {% if not top_comment.is_deleted %}
+                        <a href="/perfil/{{top_comment.author.profile.slug}}"><strong>{{top_comment.author}}</strong></a>
+                        {% endif %}
+                    </span>
+                    <span class="col-md-12 comment-date" title="{{top_comment.creation_date}}">{{top_comment.creation_date|timesince}}</span>
+                    <span class="col-md-12 comment-content">{{top_comment.content}}</span>
+                </div>  
+                <div class="col-md-12 feedback-container">
+                    <span class="col-md-1 comment-points">{{top_comment.get_points}}</span>
+                    {% if not top_comment.is_deleted %}
+                    <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
+                    <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
+                    | 
+                    <button class="comment-reply btn btn-default btn-xs">Responder</button>
+                    {% if top_comment.author == request.user or user_can_delete == True %}
+                    <button class="comment-delete btn btn-default btn-xs">Apagar</button>
+                    {% endif %}
+                    {% endif %}
+                    <textarea class="replybox form-control col-md-12" rows="2" style="display: none;"></textarea>
+                    <button class="replybox-send btn btn-primary btn-xs col-md-2" style="display: none;">Responder</button>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-md-11"><em><strong>[comentário deletado]</strong></em></div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+<h3 class="col-md-12">Comentários</h3>
+{% for comment in comments %}
     <div id="chain-{{comment.id}}" class="comment-chain" data-id="{{comment.id}}">
         <div id="comment-{{comment.id}}" class="comment-parent comment container media col-md-12" data-id="{{comment.id}}">
             <div class="col-md-1 avatar-container">

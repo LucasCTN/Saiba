@@ -185,9 +185,12 @@ class VoteDetail(APIView):
                 data["target_content_type"] = content_type_mapping[type]
 
         serializer = VoteSerializer(data=data)
-        
+
         if serializer.is_valid():
             serializer.save()
+            if type == "comment":
+                comment = Comment.objects.filter(id=id).first()
+                comment.update_points()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
