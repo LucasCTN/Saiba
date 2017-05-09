@@ -16,5 +16,13 @@
       "label": "Moderator",
       "permissions": [1,2]
     }
+  },
+  {
+    "model": "staff.UserGroup",
+    "pk": 3,
+    "fields": {
+      "code_name": "normal_user",
+      "label": "Normal User"
+    }
   }
 ]
