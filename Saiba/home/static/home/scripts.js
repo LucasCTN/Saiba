@@ -1,8 +1,25 @@
 ﻿$( document ).ready(function() {
     $(".saiba-date").each(function(i, obj) {
         var value = $(this).text();
-        console.log(value);
         $(this).text(GetDateText(value));
+    });
+
+    $("#custom-file-button").click(function() {
+        $("#custom-file-field").css("display", "");
+        $("#custom-link-field").css("display", "none");
+        $("#id_file").val("");
+        $("#id_file_url").val("");
+        $("#id_entry_icon").val("");
+        $("#id_icon_url").val("");
+    });
+
+    $("#custom-link-button").click(function() {
+        $("#custom-file-field").css("display", "none");
+        $("#custom-link-field").css("display", "");
+        $("#id_file").val("");
+        $("#id_file_url").val("");
+        $("#id_entry_icon").val("");
+        $("#id_icon_url").val("");
     });
 });
 

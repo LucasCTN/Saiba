@@ -5,9 +5,23 @@ from .models import Entry, Revision
 from Saiba import custom_messages
 
 class EntryForm(forms.ModelForm):
+    icon_url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Coloque aqui um link para uma imagem.',
+        'class': 'form-control form-state'}), required=False)
+    icon = forms.ImageField(widget=forms.FileInput(attrs={'id': 'id_entry_icon'}), required=False)
+
+    def clean(self):
+        cleaned_data = super(EntryForm, self).clean()
+        icon = cleaned_data.get("icon")
+        icon_url = cleaned_data.get("icon_url")
+
+        if bool(icon) == bool(icon_url):
+            raise forms.ValidationError(
+                "Preencha somente um destes campos"
+            )
+
     class Meta:
         model = Entry
-        fields = [ "title", "category", "origin", "date_origin", "icon", "tags" ]
+        fields = [ "title", "category", "origin", "date_origin", "icon", "icon_url", "tags" ]
 
         labels = {
             'title': ('Título'),
@@ -16,6 +30,7 @@ class EntryForm(forms.ModelForm):
             'date_origin': ('Data'),
             'icon': ('Ícone'),
             'tags': ('Marcações'),
+            'icon_url': ('Link do ícone'),
         }
 
         error_messages = custom_messages.get_all_error_messages(fields, labels)

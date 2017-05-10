@@ -100,10 +100,10 @@ def edit(request, entry_slug):
 
             return redirect('entry:detail', entry_slug=entry.slug)
 
-        context = { "entry_form": entry_form, 
+        context = {"entry_form": entry_form, 
                    "revision_form": revision_form, 
                    "entry":entry, 
-                   "user":user }
+                   "user":user}
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
@@ -129,7 +129,7 @@ def revision(request, entry_slug, revision_id):
     return render(request, escape('entry/revision.html'), { 'revision': revision, 'html': html_result })
 
 def create_entry(request):
-    trending_gallery    = utils.get_popular_galleries(request)
+    trending_gallery = utils.get_popular_galleries(request)
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
@@ -147,7 +147,7 @@ def create_entry(request):
 
             for error in revision_form.errors:
                 errors[error] = revision_form.errors[error].as_text[2:]
-        
+
         if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:            
             entry = entry_form.save(commit=False) 
 
@@ -158,13 +158,6 @@ def create_entry(request):
 
             if date_origin != False:
                 entry.date_origin = date_origin
-
-                if request.POST.get('icon') == "":
-                    image_name, image_content = utils.save_image_link(request.POST.get('custom-link-field'))
-
-                    if image_content:
-                        entry.icon.save(image_name, image_content, save=True)
-
                 entry.save()
                 entry.tags = Tag.objects.filter(label__in=set_tags)
                 entry.editorship.add(user.profile)
@@ -196,7 +189,7 @@ def create_entry(request):
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
     entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
     entry_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
+    #entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
     revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'entry/create_entry.html', context)

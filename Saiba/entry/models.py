@@ -5,6 +5,7 @@ from django.db import models
 import datetime
 from django.contrib.contenttypes.fields import GenericRelation
 from feedback.models import Action
+import Saiba.image_utils
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
@@ -32,7 +33,8 @@ class Entry(models.Model):
     type                    = models.CharField(max_length=100, blank=True)
     date_origin             = models.CharField(max_length=100, blank=True)
     origin                  = models.CharField(max_length=100)
-    icon                    = models.ImageField(blank=True, upload_to='icon/')
+    icon                    = models.ImageField(upload_to='icon/', blank=True)
+    icon_url                = models.URLField(blank=True)
     hidden                  = models.BooleanField(default=False)
     images_locked           = models.BooleanField(default=False)
     videos_locked           = models.BooleanField(default=False)
@@ -45,6 +47,7 @@ class Entry(models.Model):
         if not self.id:
             self.slug = slugify(self.title)
         super(Entry, self).save(*args, **kwargs)
+        self.get_remote_image()
 
     def __unicode__(self):
         return self.title
@@ -52,6 +55,15 @@ class Entry(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
+    
+    def get_remote_image(self):
+        if self.icon_url and not self.icon:
+            image_name, image_content = Saiba.image_utils.save_image_link(self.icon_url)
+
+            if image_content:
+                self.icon.save(image_name, image_content, save=True)
+
+            self.save()
 
     class Meta:
         verbose_name_plural = "entries"
