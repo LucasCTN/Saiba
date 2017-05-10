@@ -146,3 +146,51 @@ h6 { font-size: 10px; line-height: 20px; }
     left: 3%;
     width: 90%;
 }
+
+/* Profile page */
+#profile-username{
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+#profile-title{
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 0px;
+}
+
+#profile-menu{
+    padding: 20px 0px 20px 0px;
+}
+
+#profile-navbar{
+    border-style: solid;
+    border-color: lightgrey;
+    border-radius: 0px;
+    background: #f7f7f7;
+}
+
+.profile-navbar-item{
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+}
+
+.profile-navbar-item:hover{
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    border-bottom-style: solid;
+    border-bottom-color: #bdbdbd;
+    border-bottom-width: 3px;
+}
+
+.profile-navbar-selected-item{
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    border-bottom-style: solid;
+    border-bottom-color: #676262;
+    border-bottom-width: 3px;
+}

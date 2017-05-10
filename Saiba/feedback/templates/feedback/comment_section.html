@@ -1,8 +1,4 @@
-﻿<section id="comentarios" class="container col-md-12">
-    <hr/>            
-    <h2>Comentários</h2>
-
-    <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
+﻿    <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
 
     {% if user.is_authenticated %}
     <form id="comment-form" method="post" class="form-horizontal col-md-10" role="form" target="dummyframe">
@@ -30,7 +26,7 @@
         var sendCommentApiEndpoint  = "{% url 'api:api_comments' %}";
         var voteApiEndpoint         = "{% url 'api:api_vote' %}";
 
-        var commentPage             = "{% url 'feedback:comment_page' %}" + "?id={{id}}&type={{type}}";
+        var commentPage             = "{% url 'feedback:comment_page' %}" + "?id={{id}}&type={{type}}&hide_top_comments={{hide_top_comments}}";
         var contentId               = "{{id}}";
         var contentType             = "{{type}}";
 
@@ -57,4 +53,3 @@
             })
         });
     </script>
-</section>

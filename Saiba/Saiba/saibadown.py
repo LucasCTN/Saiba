@@ -52,6 +52,7 @@ def resize_image(image_match):
     return image
 
 def parse(text):
+    '''Parse the text with custom rules.'''
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds

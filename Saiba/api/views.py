@@ -97,7 +97,6 @@ class CommentDetail(APIView):
                 entry.save(update_fields=['trending_points'])
             elif target_type == Image:
                 image = Image.objects.get(id=data['id'])
-                print "Comentei numa imagem, seu id eh " + str(image.id)
                 image.increase_trending_points("trending_weight_comment")
             elif target_type == Video:
                 video = Video.objects.get(id=data['id'])

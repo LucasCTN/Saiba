@@ -10,7 +10,7 @@ class Profile(models.Model):
     avatar      = models.ImageField(blank=True, upload_to='icon/', default='icon/perfil.png')
     gender      = models.CharField(max_length = 500, blank=True)
     location    = models.CharField(max_length = 500)
-    about       = models.CharField(max_length = 1500)
+    about       = models.TextField(max_length = 1500)
     groups      = models.ManyToManyField(UserGroup)
 
     def save(self, *args, **kwargs):

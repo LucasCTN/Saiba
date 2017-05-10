@@ -1,4 +1,5 @@
-﻿<h3 class="col-md-12">Comentários mais populares</h3>
+﻿{% if hide_top_comments == False %}
+<h3 class="col-md-12">Comentários mais populares</h3>
 {% for top_comment in top_comments %}
 <div id="chain-{{top_comment.id}}" class="comment-chain" data-id="{{top_comment.id}}">
         <div id="comment-{{top_comment.id}}" class="comment-parent comment container media col-md-12" data-id="{{top_comment.id}}">
@@ -41,6 +42,7 @@
         </div>
     </div>
 {% endfor %}
+{% endif %}
 <h3 class="col-md-12">Comentários</h3>
 {% for comment in comments %}
     <div id="chain-{{comment.id}}" class="comment-chain" data-id="{{comment.id}}">

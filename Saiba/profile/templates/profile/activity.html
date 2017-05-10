@@ -2,22 +2,7 @@
 
 {% block title %}Perfil de {{ profile.user.username }} - Saiba{% endblock %}
 {% block body %}  
-    <section id="profile" class="container media col-md-12">
-        <div class="media-left media-middle" style="background-color: ghostwhite; ">
-            {% if profile.avatar %}
-            <img style="border-style:solid; border-width:1px; border-color:lightgrey" class='media-object' src='{{profile.avatar.url}}' width='100' height='100'>
-            {% else %}
-            <img style="border-style:solid; border-width:1px; border-color:lightgrey" class='media-object' src='/media/icon/perfil.png' width='100' height='100'>
-            {% endif %}
-        </div>
-        <div class="media-body media-middle">
-            <h3 class="media-heading">{{ profile.user.username }}</h3>
-            <span class=""><b>Localização:</b> {{ profile.location }}</span><br/>
-            <span class=""><b>Sobre:</b> {{ profile.about }}</span><br/>
-            <span class=""><b>Registrado em:</b> {{ profile.user.date_joined }}</span><br/>
-            <span class=""><b>Último login em:</b> {{ profile.user.last_login }}</span><br/>
-        </div>        
-    </section>
+    {% include "profile/profile_information.html" %}
 
     {% include "profile/profile_menu.html" %}
 
@@ -47,7 +32,7 @@
                         {% elif action.location_type == "video" %}
                         o vídeo <a href="{% url "gallery:video_detail" action.location.id %}">{{action.location.title}}</a>
                         {% elif action.location_type == "profile" %}
-                        o perfil de <a href="{% url "profile:profile" action.location.profile.slug %}">{{action.location.username}}</a>
+                        o perfil de <a href="{% url "profile:detail" action.location.slug %}">{{action.location.user.username}}</a>
                         {% endif %}
                     a <span class="saiba-date" title="{{action.date}}">{{action.date|date:"c"}}</span>.
                     {% if action.target.content %}<span class="activity-content panel-body col-md-12">{{action.target.content}}</span>{% endif %}

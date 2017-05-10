@@ -9,6 +9,7 @@ def comment_page(request):
     child_limit = request.GET.get('child_limit') or 5
     chain = request.GET.get('chain') or ""
     page = int(request.GET.get('page')) or 1
+    hide_top_comments = request.GET.get('hide_top_comments') or False
 
     comments_limit = 10
 
@@ -23,6 +24,6 @@ def comment_page(request):
     top_comments = top_comments.order_by('-points')[:2]
 
     args = {'comments' : comments, 'pages_total': range(1, pages_total + 1), 'current_page': page,
-            'chain': chain, 'child_limit': child_limit, 'user_can_delete': user_can_delete, 'top_comments':top_comments}
+            'chain': chain, 'child_limit': child_limit, 'user_can_delete': user_can_delete, 'top_comments':top_comments, 'hide_top_comments':hide_top_comments}
 
     return render(request, 'feedback/comment_page.html', args)

@@ -75,6 +75,6 @@ def get_page(full_list, page, page_length):
     return full_list[(page-1)*page_length:][:page_length]
 
 def convert_type(type_name):
-    type_map = {"comment":Comment, "entry":Entry, "image":Image}
+    type_map = {"comment":Comment, "entry":Entry, "image":Image, "profile":Profile}
     target_type = ContentType.objects.get_for_model(type_map[type_name])
     return target_type
