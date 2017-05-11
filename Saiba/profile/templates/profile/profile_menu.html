@@ -1,27 +1,30 @@
 ﻿    <nav id="profile-navbar" class="navbar">
         {% if current_page == "mural" %}
-        <a class="profile-navbar-selected-item navbar-brand col-md-offset-1" href="{% url 'profile:detail' user.profile.slug %}">Mural</a>            
+        <a class="profile-navbar-selected-item navbar-brand col-md-offset-1" href="{% url 'profile:detail' profile.slug %}">Mural</a>            
         {% else %}
-        <a class="profile-navbar-item navbar-brand col-md-offset-1" href="{% url 'profile:detail' user.profile.slug %}">Mural</a>            
+        <a class="profile-navbar-item navbar-brand col-md-offset-1" href="{% url 'profile:detail' profile.slug %}">Mural</a>            
         {% endif %}
         {% if current_page == "atividade" %}
-        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:activity' user.profile.slug %}">Atividade</a>            
+        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:activity' profile.slug %}">Atividade</a>            
         {% else %}
-        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:activity' user.profile.slug %}">Atividade</a>            
+        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:activity' profile.slug %}">Atividade</a>            
         {% endif %}
         {% if current_page == "editorias" %}
-        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:editorships' user.profile.slug %}">Editorias</a>            
+        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:editorships' profile.slug %}">Editorias</a>            
         {% else %}
-        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:editorships' user.profile.slug %}">Editorias</a>            
+        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:editorships' profile.slug %}">Editorias</a>            
         {% endif %}
         {% if current_page == "imagens" %}
-        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:images' user.profile.slug %}">Imagens</a>            
+        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:images' profile.slug %}">Imagens</a>            
         {% else %}
-        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:images' user.profile.slug %}">Imagens</a>            
+        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:images' profile.slug %}">Imagens</a>            
         {% endif %}
         {% if current_page == "videos" %}
-        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:videos' user.profile.slug %}">Vídeos</a>            
+        <a class="profile-navbar-selected-item navbar-brand" href="{% url 'profile:videos' profile.slug %}">Vídeos</a>            
         {% else %}
-        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:videos' user.profile.slug %}">Vídeos</a>            
+        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:videos' profile.slug %}">Vídeos</a>            
+        {% endif %}
+        {% if profile.id == user.id or user.is_staff %}
+        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:edit' profile.slug %}">Editar</a>
         {% endif %}
     </nav>
