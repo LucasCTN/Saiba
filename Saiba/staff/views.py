@@ -54,13 +54,33 @@ def search_user(request):
         return redirect('home:index')
 
     search_term = request.GET.get("q")
+    banned_user_id = request.GET.get("banned_user")
+    unbanned_user_id = request.GET.get("unbanned_user")
 
     if search_term == None:
         all_users = User.objects.order_by("-date_joined")
     else:
         all_users = User.objects.filter(username__contains=search_term).order_by("-date_joined")
 
-    args = {'all_users': all_users}
+    if banned_user_id != None:
+        banned_user = User.objects.filter(id=banned_user_id).first()
+        if banned_user.is_staff and request.user.profile.HasPermission('ban_staff_user') or not banned_user.is_staff and request.user.profile.HasPermission('ban_normal_user'): 
+            banned_user.is_active = False
+            banned_user.save()
+            print banned_user.username + " foi banido!"
+
+    if unbanned_user_id != None:
+        print "oi"
+        unbanned_user = User.objects.filter(id=unbanned_user_id).first()
+        if not unbanned_user.is_active and unbanned_user.is_staff and request.user.profile.HasPermission('ban_staff_user') or not unbanned_user.is_staff and request.user.profile.HasPermission('ban_normal_user'): 
+            unbanned_user.is_active = True
+            unbanned_user.save()
+            print unbanned_user.username + " foi desbanido!"
+    
+    ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
+    ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
+
+    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user, 'ban_staff_user': ban_staff_user}
 
     return render(request, 'staff/search_user.html', args)
 
@@ -69,7 +89,9 @@ def search_user_result(request):
         return redirect('home:index')
 
     all_users = User.objects.order_by("-date_joined")
+    ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
+    ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
 
-    args = {'all_users': all_users}
+    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user, 'ban_staff_user': ban_staff_user}
 
     return render(request, 'staff/search_user.html', args)

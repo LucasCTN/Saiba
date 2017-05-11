@@ -9,32 +9,39 @@
             <span class="input-group-btn">
                 <button class="btn btn-secondary" type="submit">Procurar</button>
             </span>
-        </div>
-    </form>
+        </div>    
 
-    <div class="col-md-12"><hr></div>
+        <div class="col-md-12"><hr></div>
 
-    <table class="table">
-        <tr>
-            <th>Avatar</th>
-            <th>Nome</th>
-            <th>Registro</th>
-            <th>Último login</th>
-            <th>Pertence à Staff</th>
-        <tr>
-        {% for user in all_users %}
-            <tr style="vertical-align:middle">
-                <td><img class="img-thumbnail" style="width:50px" src="{{user.profile.avatar.url}}"/></td>
-                <td><a href="{% url 'profile:detail' user.profile.slug %}">{{user.username}}</a></td>
-                <td>{{user.date_joined}}</td>
-                <td>{{user.last_login}}</td>
-
-                {% if user.is_staff %}
-                    <td><span class="glyphicon glyphicon-ok" style="color:green"/></td>
-                {% else %}
-                    <td><span class="glyphicon glyphicon-remove" style="color:red"/></td>
-                {% endif %}
+        <table class="table">
             <tr>
-        {% endfor %}
-    </table>
+                <th>Avatar</th>
+                <th>Nome</th>
+                <th>Registro</th>
+                <th>Último login</th>
+                <th>Pertence à Staff</th>
+                <th>Ações</th>
+            <tr>
+            {% for searched_user in all_users %}
+                <tr style="vertical-align:middle">
+                    <td><img class="img-thumbnail" style="width:50px" src="{{searched_user.profile.avatar.url}}"/></td>
+                    <td><a href="{% url 'profile:detail' searched_user.profile.slug %}">{{searched_user.username}}</a></td>
+                    <td>{{searched_user.date_joined}}</td>
+                    <td>{{searched_user.last_login}}</td>
+
+                    {% if searched_user.is_staff %}
+                        <td><span class="glyphicon glyphicon-ok" style="color:green"/></td>
+                    {% else %}
+                        <td><span class="glyphicon glyphicon-remove" style="color:red"/></td>
+                    {% endif %}
+                    {% if searched_user.is_active and not searched_user.is_staff and ban_normal_user or searched_user.is_staff and ban_staff_user %}
+                        <td><button class="btn btn-default" name="banned_user" value="{{searched_user.id}}" type="submit">Banir</button></td>
+                    {% endif %}
+                    {% if searched_user.is_active == False and not searched_user.is_staff and ban_normal_user or searched_user.is_staff and ban_staff_user %}
+                        <td><button class="btn btn-default" name="unbanned_user" value="{{searched_user.id}}" type="submit">Desbanir</button></td>
+                    {% endif %}                    
+                <tr>
+            {% endfor %}
+        </table>
+    </form>
 {% endblock %}
