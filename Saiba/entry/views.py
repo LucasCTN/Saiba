@@ -143,10 +143,10 @@ def create_entry(request):
 
         if(request.POST):
             for error in entry_form.errors:
-                errors[error] = entry_form.errors[error].as_text[2:]
+                errors[error] = entry_form.errors[error].as_text
 
             for error in revision_form.errors:
-                errors[error] = revision_form.errors[error].as_text[2:]
+                errors[error] = revision_form.errors[error].as_text
 
         if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:            
             entry = entry_form.save(commit=False) 

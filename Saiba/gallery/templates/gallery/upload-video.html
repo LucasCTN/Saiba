@@ -20,12 +20,12 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="field">Título:</label>
+            <label class="control-label col-sm-2" for="field">* Título:</label>
             <div class="col-md-8">{{ form.title }}</div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="field">Entrada:</label>
+            <label class="control-label col-sm-2" for="field">* Entrada:</label>
             <div class="col-md-8"><input id="search-entries" name="entry-selected" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
             <div class="col-md-offset-2 search-box">
                 <ul id="search-entry-results" class="search-results" hidden>
@@ -34,9 +34,10 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="field">{{ form.link.label_tag }}</label>
+            <label class="control-label col-sm-2" for="field">* {{ form.link.label_tag }}</label>
             <div class="col-md-8">{{ form.link }}</div>
-            <p class="help-block col-md-8">Use somente o id do vídeo. Exemplo: https://www.youtube.com/watch?v=<strong>45U2fjfru1E</strong> .</p>
+            <p class="help-block col-md-8 col-md-offset-2">Apenas vídeos do YouTube são aceitos.</p>
+            <p class="help-block col-md-8 col-md-offset-2">Insira somente o id do vídeo, por exemplo exemplo: https://www.youtube.com/watch?v=<strong>45U2fjfru1E</strong>.</p>
         </div>
 
         <div class="form-group">

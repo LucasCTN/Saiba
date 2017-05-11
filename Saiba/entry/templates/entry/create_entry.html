@@ -42,7 +42,7 @@
                                 <strong>Aviso!</strong>
                                 <ul>
                                     {% for key, message in error_messages.items %}
-                                        <li>{{ message }}</li>
+                                        <li>{{ message|slice:"2:" }}</li>
                                     {% endfor %}
                                 </ul>
                             </div>

@@ -1,17 +1,21 @@
 ﻿    <section id="profile" class="media">
-        <div class="media-left" style="background-color: ghostwhite; ">
-            {% if profile.avatar %}
-            <img style="border-style:solid; border-width:1px; border-color:lightgrey" class='media-object' src='{{profile.avatar.url}}' height='120'>
-            {% else %}
-            <img style="border-style:solid; border-width:1px; border-color:lightgrey" class='media-object' src='/media/icon/perfil.png' height='120'>
-            {% endif %}
+        <div class="info-left col-md-4" style="border-radius: 7px; padding: 14px 0 10px 0; background-color:#fff;">
+            <div class="media-avatar col-md-4">
+                {% if profile.avatar %}
+                    <img class='media-object' style="border-style:solid; border-width:1px; border-color:lightgrey" src='{{profile.avatar.url}}' height='120'>
+                {% else %}
+                    <img class='media-object' style="border-style:solid; border-width:1px; border-color:lightgrey" src='/media/icon/perfil.png' height='120'>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <span id="profile-username" class="media-heading col-md-12">{{ profile.user.username }}</span>
+                <span id="profile-title" class="media-heading col-md-12">{{ profile.title }}</span>
+                {% if profile.location %}<span class="col-md-12"><b>Localização:</b> {{ profile.location }}</span>{% endif %}
+                <span class="col-md-12"><b>Registro:</b> <span class="saiba-date">{{ profile.user.date_joined|date:"c" }}</span></span>
+                <span class="col-md-12"><b>Último login:</b> <span class="saiba-date">{{ profile.user.last_login|date:"c" }}</span></span>
+            </div>
         </div>
-        <div class="media-body">
-            <span id="profile-username" class="media-heading col-md-12">{{ profile.user.username }}</span>
-            <span id="profile-title" class="media-heading col-md-12">{{ profile.title }}</span>
-            {% if profile.location %}<span class="col-md-12"><b>Localização:</b> {{ profile.location }}</span>{% endif %}
-            <span class="col-md-12"><b>Registro:</b> <span class="saiba-date">{{ profile.user.date_joined|date:"c" }}</span></span>
-            <span class="col-md-12"><b>Último login:</b> <span class="saiba-date">{{ profile.user.last_login|date:"c" }}</span></span>
+        <div class="info-right col-md-7" style="border-radius: 7px; padding: 14px 0 10px 0; background-color:#fff; margin-left: 2%;">
             {% if profile.about %}<span class="col-md-12"><b>Sobre:</b><br/> {{ profile.about|linebreaks }}</span>{% endif %}
         </div>
     </section>

@@ -57,6 +57,7 @@ class Entry(models.Model):
         new_action.save()
     
     def get_remote_image(self):
+        # if the entry has an image, you can't change it by url, only by uploading a new one.
         if self.icon_url and not self.icon:
             image_name, image_content = Saiba.image_utils.save_image_link(self.icon_url)
 

@@ -223,6 +223,7 @@
     <Content Include="home\templates\home\index.html" />
     <Content Include="home\templates\home\post_content.html" />
     <Content Include="entry\templates\entry\manage_editorship.html" />
+    <Content Include="profile\templates\profile\profile_information.html" />
     <Content Include="profile\templates\profile\videos.html" />
     <Content Include="profile\templates\profile\images.html" />
     <Content Include="profile\templates\profile\editorship.html" />
@@ -236,7 +237,6 @@
     <Content Include="home\templates\home\search.html" />
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
-    <Content Include="profile\templates\profile\index.html" />
     <Content Include="requirements - old.txt" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
