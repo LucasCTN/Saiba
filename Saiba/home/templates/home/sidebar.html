@@ -3,33 +3,34 @@
 </section>
 
 {% if entry.editorship.all %}
-<hr/>
-<section id="lista-editores" class="panel panel-default">
-    <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a> ({{entry.editorship.all|length}})</div>
-    {% for editor in entry.editorship.all %}
-        <div class="media" style="padding-left:5px; padding-bottom: 5px;">
-          <div class="media-left media-middle">
-            <img src="{{editor.avatar.url}}" class="media-object img-thumbnail" style="width:50px">
-          </div>
-          <div class="media-body">
-            <a class='media-heading' href="{% url 'profile:detail' editor.slug %}">{{editor.user.username}}</a>
-            <p><small>{{editor.user.profile.title}}</small></p>
-          </div>
-        </div>
-    {% endfor %}
-</section>
+    <hr/>
+    <section id="lista-editores" class="panel panel-default">
+        <div class="panel-heading"><a href="{% url 'entry:editorship' entry.slug %}">Editores da entrada</a> ({{entry.editorship.all|length}})</div>
+        {% for editor in entry.editorship.all %}
+            <div class="media" style="padding-left:5px; padding-bottom: 5px;">
+                <div class="media-left media-middle">
+                    {% if editor.avatar %}
+                        <img src="{{editor.avatar.url}}" class="media-object img-thumbnail" style="width:50px">
+                    {% endif%}
+                </div>
+                <div class="media-body">
+                    <a class='media-heading' href="{% url 'profile:detail' editor.slug %}">{{editor.user.username}}</a>
+                    <p><small>{{editor.user.profile.title}}</small></p>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
 {% endif %}
 
 <hr/>
 <section id="imagens-populares" class="container media col-md-12">
     <h2>Galerias populares</h2>
     <script> 
-    var api = new API();
-    var url = "{% url 'home:popular_images' %}";
+        var api = new API();
+        var url = "{% url 'home:popular_images' %}";
 
-    api.getPage(url, function(data){
-        $("#imagens-populares").append(data);
-    });
-    
+        api.getPage(url, function(data){
+            $("#imagens-populares").append(data);
+        });
     </script>
 </section>

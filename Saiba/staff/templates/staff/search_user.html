@@ -24,7 +24,11 @@
             <tr>
             {% for searched_user in all_users %}
                 <tr style="vertical-align:middle">
-                    <td><img class="img-thumbnail" style="width:50px" src="{{searched_user.profile.avatar.url}}"/></td>
+                    <td>
+                        {% if searched_user.profile.avatar %}
+                            <img class="img-thumbnail" style="width:50px" src="{{searched_user.profile.avatar.url}}"/>
+                        {% endif %}
+                    </td>
                     <td><a href="{% url 'profile:detail' searched_user.profile.slug %}">{{searched_user.username}}</a></td>
                     <td>{{searched_user.date_joined}}</td>
                     <td>{{searched_user.last_login}}</td>

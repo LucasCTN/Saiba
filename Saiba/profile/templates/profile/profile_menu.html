@@ -24,9 +24,7 @@
     {% else %}
     <a class="profile-navbar-item navbar-brand" href="{% url 'profile:videos' profile.slug %}">Vídeos</a>            
     {% endif %}
-    {% comment %}
-        {% if profile.id == user.id or user.is_staff %}
-        <a class="profile-navbar-item navbar-brand" href="{% url 'profile:edit' profile.slug %}">Editar</a>
-        {% endif %}
-    {% endcomment %}
+    {% if profile.id == user.id or user.is_staff %}
+    <a class="profile-navbar-item navbar-brand" href="{% url 'profile:edit' profile.slug %}">Editar</a>
+    {% endif %}
 </nav>

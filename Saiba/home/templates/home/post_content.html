@@ -6,7 +6,8 @@
         </div>
     {% endif %}
     <br>
-    <iframe class="video-from-post" width="560" height="315" src="{{ post.video.link }}" frameborder="0" allowfullscreen></iframe>
+    <iframe class="video-from-post" width="560" height="315" src="https://www.youtube.com/embed/{{ post.video.link }}" frameborder="0" allowfullscreen></iframe>
+
     <br/><br/>
 {% else %}
     {% if post.image != None %}
