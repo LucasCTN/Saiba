@@ -22,5 +22,13 @@
       "code_name": "delete_comment",
       "label": "Delete comment"
     }
+  },
+  {
+    "model": "staff.UserPermission",
+    "pk": 4,
+    "fields": {
+      "code_name": "edit_user",
+      "label": "Edit user"
+    }
   }
 ]
