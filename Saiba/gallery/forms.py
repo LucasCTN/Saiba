@@ -1,6 +1,13 @@
+# -*- coding: utf-8 -*-
 from django.forms import ModelForm
 from .models import Image, Video
 from django import forms
+
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+import urllib2
+
+from PIL import Image as ImagePIL
 
 class ImageForm(ModelForm):
     file_url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Coloque aqui um link para uma imagem.',
@@ -15,6 +22,24 @@ class ImageForm(ModelForm):
             raise forms.ValidationError(
                 "Preencha somente um destes campos"
             )
+
+        if not self.image_validity(file_url):
+            raise forms.ValidationError(
+                "A imagem inserida é inválida."
+            )
+
+    def image_validity(self, file_url):
+        img_temp = NamedTemporaryFile()
+        img_temp.write(urllib2.urlopen(file_url).read())
+        img_temp.flush()
+
+        image_file = File(img_temp)
+
+        try:
+            ImagePIL.open(image_file)
+            return True
+        except:
+            return False
 
     class Meta:
         model = Image

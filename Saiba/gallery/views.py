@@ -64,8 +64,6 @@ def upload_image(request):
     else:
         error_messages = []
         valid_form = True
-    
-
         entry_name = request.POST.get('entry-selected')
         image_form = ImageForm(request.POST or None, request.FILES or None)
         image_entry = Entry.objects.filter(title=entry_name, hidden=False).first()

@@ -5,6 +5,10 @@ from feedback.models import Action
 from home.models import SaibaSettings
 import Saiba.image_utils
 
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+import urllib2
+
 class State(models.Model):
     label       = models.CharField(max_length=250)
     description = models.CharField(max_length=250)
@@ -39,18 +43,13 @@ class Image(models.Model):
         self.trending_points += trending_weight
         self.save()
 
-    def get_remote_image(self):
-        if self.file_url and not self.file:
-            image_name, image_content = Saiba.image_utils.save_image_link(self.file_url)
-
-            if image_content:
-                self.file.save(image_name, image_content, save=True)
-
-            self.save()
-
     def save(self, *args, **kwargs):
+        img_temp = NamedTemporaryFile()
+        img_temp.write(urllib2.urlopen(self.file_url).read())
+        img_temp.flush()
+
+        self.file.save(self.file_url.split('/')[-1], File(img_temp))
         super(Image, self).save(*args, **kwargs)
-        self.get_remote_image()
 
 class Video(models.Model):
     author      = models.ForeignKey(User, blank=True)
