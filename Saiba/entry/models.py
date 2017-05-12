@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import Permission, User
-from django.template.defaultfilters import slugify
-from django.db import models
 import datetime
+
+from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.fields import GenericRelation
-from feedback.models import Action
+from django.core.files.base import ContentFile
+from django.db import models
+from django.template.defaultfilters import slugify
+
 import Saiba.image_utils
+from feedback.models import Action
+
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
@@ -43,11 +47,19 @@ class Entry(models.Model):
     trending_points         = models.IntegerField(default=0)
     editorship              = models.ManyToManyField('profile.Profile', blank=True)
 
-    def save(self, *args, **kwargs):
+    '''def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.title)
         super(Entry, self).save(*args, **kwargs)
-        self.get_remote_image()
+        self.get_remote_image()'''
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.title)
+        if self.icon_url and not self.icon:
+            image_name, image_content = Saiba.image_utils.download_external_image(self.icon_url)
+            self.icon.save(image_name, ContentFile(image_content), save=False)
+        super(Entry, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.title
@@ -55,16 +67,6 @@ class Entry(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
-    
-    def get_remote_image(self):
-        # if the entry has an image, you can't change it by url, only by uploading a new one.
-        if self.icon_url and not self.icon:
-            image_name, image_content = Saiba.image_utils.save_image_link(self.icon_url)
-
-            if image_content:
-                self.icon.save(image_name, image_content, save=True)
-
-            self.save()
 
     class Meta:
         verbose_name_plural = "entries"

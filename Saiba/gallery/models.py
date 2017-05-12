@@ -1,13 +1,15 @@
+import urllib2
+import os
 from django.contrib.auth.models import Permission, User
+from django.core.files.base import ContentFile
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
+
+import Saiba.image_utils
 from feedback.models import Action
 from home.models import SaibaSettings
-import Saiba.image_utils
 
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
-import urllib2
 
 class State(models.Model):
     label       = models.CharField(max_length=250)
@@ -42,13 +44,11 @@ class Image(models.Model):
         trending_weight = int(SaibaSettings.objects.get(type=criteria).value)
         self.trending_points += trending_weight
         self.save()
-
-    def save(self, *args, **kwargs):
-        img_temp = NamedTemporaryFile()
-        img_temp.write(urllib2.urlopen(self.file_url).read())
-        img_temp.flush()
-
-        self.file.save(self.file_url.split('/')[-1], File(img_temp))
+    
+    def save(self, *args, **kwargs):        
+        if self.file_url and not self.file:
+            image_name, image_content = Saiba.image_utils.download_external_image(self.file_url)
+            self.file.save(image_name, ContentFile(image_content), save=False)
         super(Image, self).save(*args, **kwargs)
 
 class Video(models.Model):

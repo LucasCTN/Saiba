@@ -4,8 +4,8 @@ import urllib, urllib2, json
 from django.core.files import File
 from django.core.files.base import ContentFile
 from datetime import datetime
-import imghdr
-import copy
+import imghdr, copy, os
+from django.utils.crypto import get_random_string
 
 def save_image_link( link ):
     link = str(link)
@@ -26,3 +26,9 @@ def save_image_link( link ):
 
         # Returning the image and the original name
         return (name, content)
+
+def download_external_image(url):
+    '''Downloads an image from the url and returns, in order, the file name and the actual file.'''
+    img_file = urllib2.urlopen(url).read()
+    file_name = get_random_string(length=15) + os.path.splitext(url)[1]
+    return (file_name, img_file)
