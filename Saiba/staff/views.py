@@ -9,7 +9,7 @@ def index(request):
     if not request.user.is_staff:
         return redirect('home:index')
 
-    return render(request, 'staff/index.html')
+    return render(request, 'staff/index.html', {'current_page': 'index'})
 
 def create_post(request):
     if not request.user.is_staff:
@@ -17,7 +17,6 @@ def create_post(request):
 
     text_form = PostForm(request.POST or None)
 
-    #text_form.fields['label'].widget.attrs['style'] = 'color:red;'
     text_form.fields['label'].widget.attrs['class'] = 'form-control form-label'
     text_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     text_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
@@ -29,7 +28,6 @@ def create_post(request):
 
     text_form = PostForm(request.POST or None)
 
-    #text_form.fields['label'].widget.attrs['style'] = 'color:red;'
     text_form.fields['label'].widget.attrs['class'] = 'form-control form-label'
     text_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     text_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
@@ -45,7 +43,7 @@ def create_post(request):
         post.save()
         return redirect('home:index')
 
-    args = {'form': text_form}
+    args = {'form': text_form, 'current_page': 'postagem'}
 
     return render(request, 'staff/create_post.html', args)
 
@@ -80,7 +78,7 @@ def search_user(request):
     ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
     ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
 
-    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user, 'ban_staff_user': ban_staff_user}
+    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user, 'ban_staff_user': ban_staff_user, 'current_page': 'usuarios'}
 
     return render(request, 'staff/search_user.html', args)
 

@@ -241,6 +241,7 @@
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="staff\templates\staff\index.html" />
+    <Content Include="staff\templates\staff\search_user.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.mht">

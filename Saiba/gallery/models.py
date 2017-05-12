@@ -66,7 +66,7 @@ class Video(models.Model):
     trending_points = models.IntegerField(default=0)
 
     def __unicode__(self):
-        return "{} - {}".format(self.entry.title, self.title)
+        return self.entry.title + ' - ' + self.title
 
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)

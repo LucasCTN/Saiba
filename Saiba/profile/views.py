@@ -4,6 +4,7 @@ from entry.models import Entry
 from gallery.models import Image, Video
 from feedback.models import Action
 import Saiba.saibadown, textile
+
 def index(request, name_slug):
     profile = get_object_or_404(Profile, slug=name_slug)
     

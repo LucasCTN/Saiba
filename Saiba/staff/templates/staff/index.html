@@ -1,16 +1,30 @@
 ﻿{% extends 'home/base.html' %}
 
 {% block body %}
-    <section id="panel" class="container col-md-12">
+    <section id="staff-panel" class="container col-md-12">
         <h3>Painel de controle</h3>
-        <hr>
-        <div class="form-group col-md-12">
-            <label class="control-label col-sm-2" for="field">Fazer uma nova postagem:</label>
-            <button class="btn btn-default" onclick="location.href='{% url 'staff:create_post' %}';">Criar Postagem</button>
-        </div>
-        <div class="form-group col-md-12">
-            <label class="control-label col-sm-2" for="field">Procurar usuário:</label>
-            <button class="btn btn-default" onclick="location.href='{% url 'staff:search_user' %}';">Procurar</button>
-        </div>
+        <nav id="profile-navbar" class="navbar col-md-12">
+
+            {% if current_page == "index" %}
+                <a class="profile-navbar-selected-item navbar-brand col-md-offset-1" href="{% url 'staff:index' %}">Início</a>
+            {% else %}
+                <a class="profile-navbar-item navbar-brand col-md-offset-1" href="{% url 'staff:index' %}">Início</a>
+            {% endif %}
+
+            {% if current_page == "postagem" %}
+                <a class="profile-navbar-selected-item navbar-brand" href="{% url 'staff:create_post' %}">Postagem</a>
+            {% else %}
+                <a class="profile-navbar-item navbar-brand" href="{% url 'staff:create_post' %}">Postagem</a>
+            {% endif %}
+
+            {% if current_page == "usuarios" %}
+                <a class="profile-navbar-selected-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
+            {% else %}
+                <a class="profile-navbar-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
+            {% endif %}
+        </nav>
     </section>
+
+    {% block content %}
+    {% endblock %}
 {% endblock %}
