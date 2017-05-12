@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.forms.models import model_to_dict
 from .models import Profile
+from.forms import EditProfileForm
 from entry.models import Entry
 from gallery.models import Image, Video
 from feedback.models import Action
@@ -75,3 +77,17 @@ def activity(request, name_slug, page = 1):
 
     context = {"profile": profile, 'type': 'profile', "id": profile.user.id, "actions": actions, "current_page": current_page}
     return render(request, 'profile/activity.html', context)
+
+def edit(request, name_slug):
+    profile = get_object_or_404(Profile, slug=name_slug)
+    edit_form = EditProfileForm(request.POST or None, instance=profile)
+
+    if (request.user.profile.HasPermission('edit_user') or request.user.profile.slug == name_slug) == False:
+        return redirect('profile:detail', name_slug=profile.slug)
+        
+    if edit_form.is_valid():
+        saved_profile = edit_form.save()
+        return redirect('profile:detail', name_slug=saved_profile.slug)
+
+    context = {"profile": profile, 'edit_form': edit_form}
+    return render(request, 'profile/profile_edit.html', context)

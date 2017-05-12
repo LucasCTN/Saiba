@@ -11,7 +11,7 @@ class LoginForm(forms.Form):
 class RegisterProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = [ "gender"]
+        fields = ["gender"]
 
 class RegisterUserForm(ModelForm):
     email       = models.EmailField(max_length = 500, blank = False)
@@ -20,3 +20,8 @@ class RegisterUserForm(ModelForm):
     class Meta:
         model = User
         fields = [ "username", "password", "email"]
+
+class EditProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["avatar", "gender", "location", "about"]

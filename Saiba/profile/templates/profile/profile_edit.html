@@ -1,0 +1,45 @@
+﻿{% extends 'home/base.html' %}
+
+{% block title %}Perfil de {{ profile.user.username }} - Saiba{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h2>Modificar perfil - <a href={% url 'profile:detail' profile.slug %}>{{profile.user.username}}</a></h2>
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Avatar</label>
+                            <div class="col-sm-8">{{ edit_form.avatar }}</div>
+                            {% if profile.avatar %}
+                            <img class='media-object col-sm-2' style="border-style:solid; border-width:1px; border-color:lightgrey;" src='{{profile.avatar.url}}' width='100' height='100'>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Localização</label>
+                            <div class="col-sm-8">{{ edit_form.location }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Sobre</label>
+                            <div class="col-sm-8">{{ edit_form.about }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" id="send" class="btn btn-primary submit-media">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+user.date_joined()
