@@ -1,23 +1,31 @@
 ﻿# -*- coding: utf-8 -*-
-from django.contrib.auth import logout, authenticate, login
+import ghdiff
+import textile
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.template.defaultfilters import slugify
-from django.db.models import Q, Count, Max
-from .models import Entry, Revision, Category
-from feedback.models import Comment
-from .forms import EntryForm, RevisionForm
-from django.utils.html import escape
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
+from django.db.models import Count, Max, Q
 from django.forms.models import model_to_dict
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.defaultfilters import slugify
+from django.utils.html import escape
+
+import Saiba.saibadown
+import Saiba.utils as utils
 from entry.serializers import EntrySerializer, RevisionSerializer
+from feedback.models import Comment
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
-import Saiba.saibadown, textile, ghdiff, Saiba.utils as utils
-from django.contrib.contenttypes.models import ContentType
-from Saiba import utils, custom_messages
+from profile.models import Profile
+from Saiba import utils as utils
+from Saiba import custom_messages
+
+from .forms import EntryForm, RevisionForm
+from .models import Category, Entry, Revision
+
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -28,9 +36,11 @@ def detail(request, entry_slug):
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
     last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
-    
+
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
+
+    can_see_editorship = entry.editorship.filter(user=request.user).exists() or request.user.profile.HasPermission('edit_entry')
     
     content = last_revision.content
     content_textile_parsed = textile.textile(content)
@@ -46,7 +56,8 @@ def detail(request, entry_slug):
             'images'            : last_images,
             'videos'            : last_videos,
             'related_entries'   : related_entries,
-            'trending_galleries': trending_galleries }
+            'trending_galleries': trending_galleries,
+            'can_see_editorship': can_see_editorship }
 
     return render(request, 'entry/detail.html', args)
 
@@ -203,34 +214,31 @@ def editorship(request, entry_slug):
     for user_in_list in editor_list:
         user_editor_list.append(user_in_list.user)
 
-    context = { 'entry':entry,
-                'editor_list': editor_list,
-                'user_editor_list':user_editor_list}
+    context = {'entry':entry, 'editor_list': editor_list, 'user_editor_list':user_editor_list}
 
     return render(request, 'entry/editorship.html', context)
 
 def manage_editorship(request, entry_slug):
-    trending_gallery    = utils.get_popular_galleries(request)
+    entry = Entry.objects.get(slug=entry_slug)
+    has_full_rights = request.user == entry.author or request.user.profile.HasPermission('edit_entry')
 
-    if not request.user.is_staff:
-        return redirect('home:index')
+    if not has_full_rights and not entry.editorship.filter(user=request.user).exists():
+        return redirect('entry:detail', entry_slug=entry_slug)
+
+    editor_added = request.POST.get('editor_added')
+    editor_removed = request.POST.get('editor_removed')
 
     entry = Entry.objects.get(slug=entry_slug)
 
-    editor = None
-
-    editor_name = request.POST['editor_name'] #sanitize this
-
-    if ('editor_name' in request.POST) and (request.POST['editor_name'] is not None) and request.POST['editor_name']:
+    if editor_added:
+        editor = Profile.objects.get(slug=editor_added)
         entry.editorship.add(editor)
-        editor = Profile.objects.get(user__username=editor_name)
 
-    if 'remove_editor' in request.POST:
-        editor = Profile.objects.get(user__username=editor_name)
-        editor_name = request.POST['remove_editor'] #sanitize this
+    if editor_removed:
+        editor = Profile.objects.get(slug=editor_removed)
+        if editor.user == request.user or has_full_rights:
+            entry.editorship.remove(editor)
 
-        entry.editorship.remove(editor)
+    context = {'entry': entry, 'has_full_rights': has_full_rights}
 
-    context = { 'entry': entry, 'trending_gallery': trending_gallery }
-   
     return render(request, 'entry/manage_editorship.html', context)

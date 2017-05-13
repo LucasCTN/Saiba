@@ -32,10 +32,10 @@
             <div class="btn-group" role="group">
                 <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
             </div>
-            {% if user.is_staff %}
+            {% if can_see_editorship %}
             <div class="btn-group" role="group">
                 <a href='{% url 'entry:manage_editorship' entry.slug %}'>
-                    <button type='button' class='btn btn-default'>Editoria</button>
+                    <button type='button' class='btn btn-default'>Gerenciar editoria</button>
                 </a>
             </div>
             {% endif %}

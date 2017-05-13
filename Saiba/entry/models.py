@@ -47,12 +47,6 @@ class Entry(models.Model):
     trending_points         = models.IntegerField(default=0)
     editorship              = models.ManyToManyField('profile.Profile', blank=True)
 
-    '''def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.title)
-        super(Entry, self).save(*args, **kwargs)
-        self.get_remote_image()'''
-
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.title)
