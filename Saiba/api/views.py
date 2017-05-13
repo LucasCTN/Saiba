@@ -230,7 +230,6 @@ class CommentPageDetail(APIView):
             comment_type_id = ContentType.objects.get_for_model(Comment).id
             comment.points = (Vote.objects.filter(target_id=comment.pk, 
                                               target_content_type=comment_type_id).aggregate(Sum('direction')))['direction__sum']
-            
             for reply in replies:
                 reply.points = (Vote.objects.filter(target_id=reply.pk, 
                                               target_content_type=reply_type_id).aggregate(Sum('direction')))['direction__sum']

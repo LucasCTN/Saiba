@@ -18,11 +18,11 @@
 
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8000/api/v1/preview/",
+                url: "{% url 'api:api_preview' %}",
                 data: { content: content },
                 success: function (data) {
                     $("#preview").show();
-                    $("#preview-content").html(content);
+                    $("#preview-content").html(data);
                 }
             });
         });
