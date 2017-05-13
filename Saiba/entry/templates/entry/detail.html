@@ -21,7 +21,7 @@
             <span class="saiba-data">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
             <p><small>Tags: {% if entry.tags.all|length > 0 %}{% for tag in entry.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=entry">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}<em style="color: grey;">Nenhuma</em>{% endif %}</small></p>
         </div>
-    </section>
+    </section>    
 
     <div class="media-right media-middle col-md-12">
         <hr>
@@ -52,7 +52,14 @@
             {% endif %}
         </nav>
     </div>
-      
+    
+    {% if entry.status.label != "Confirmado"  %}
+    <section id="entry-status-{{entry.status.code_name}}" class="entry-status panel panel-default col-md-12">
+        <div id="entry-status-{{entry.status.code_name}}" class="entry-status-label panel-body col-md-12">{{entry.status.label}}</div>
+        <div id="entry-status-{{entry.status.code_name}}" class="entry-status-description panel-body col-md-12">{{entry.status.description}}</div>
+    </section>
+    {% endif %}
+
     <section id="conteudo-artigo" class="container col-md-12">        
         <div id="conteudo">
             {{ last_revision.content|safe }}

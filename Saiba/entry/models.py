@@ -13,10 +13,14 @@ from feedback.models import Action
 
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
+    code_name = models.CharField(max_length=2500, blank=True)
     description = models.CharField(max_length=2500, blank=True)
 
     def __unicode__(self):
         return self.label
+
+    class Meta:
+        verbose_name_plural = "status"
 
 class Category(models.Model):
     label = models.CharField(max_length=2500, blank=True)

@@ -1,0 +1,42 @@
+[
+  {
+    "model": "entry.Category",
+    "pk": 1,
+    "fields": {
+      "label": "Meme",
+      "description": ""
+    }
+  },
+  {
+    "model": "entry.Category",
+    "pk": 2,
+    "fields": {
+      "label": "Subcultura",
+      "description": ""
+    }
+  },
+  {
+    "model": "entry.Category",
+    "pk": 3,
+    "fields": {
+      "label": "Pessoa",
+      "description": ""
+    }
+  },
+  {
+    "model": "entry.Category",
+    "pk": 4,
+    "fields": {
+      "label": "Site",
+      "description": ""
+    }
+  },
+  {
+    "model": "entry.Category",
+    "pk": 5,
+    "fields": {
+      "label": "Subcultura",
+      "description": ""
+    }
+  }
+]
