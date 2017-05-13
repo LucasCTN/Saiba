@@ -5,3 +5,4 @@ ghdiff==0.4
 Pillow==3.4.2
 six==1.10.0
 textile==2.3.5
+beautifulsoup4==4.6.0
