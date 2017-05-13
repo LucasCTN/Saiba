@@ -40,7 +40,10 @@ def detail(request, entry_slug):
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
 
-    can_see_editorship = entry.editorship.filter(user=request.user).exists() or request.user.profile.HasPermission('edit_entry')
+    if request.user.is_authenticated():
+        can_see_editorship = entry.editorship.filter(user=request.user).exists() or request.user.profile.HasPermission('edit_entry')
+    else:
+        can_see_editorship = False
     
     content = last_revision.content
     content_textile_parsed = textile.textile(content)
