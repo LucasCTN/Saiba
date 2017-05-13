@@ -1,5 +1,6 @@
 import re
-import urllib, json
+import urllib, json, textile
+from bs4 import BeautifulSoup
 
 youtube_video_width = "640"
 youtube_video_height = "390"
@@ -37,7 +38,7 @@ def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
         result += term
         if counter != len(terms):
             result += ","
-    
+
     result += '","guestPath":"https://www.google.com.br:443/trends/embed/"}); </script>'
     return result
 
@@ -52,10 +53,15 @@ def resize_image(image_match):
     return image
 
 def parse(text):
-    '''Parse the text with custom rules.'''
+    '''Parse the text with textile, removes meta and script tags and apply custom rules.'''
+    soup = BeautifulSoup(text, "html.parser")
+    [s.extract() for s in soup('script')]
+    [s.extract() for s in soup('meta')]
+
+    text = soup.text
+    text = textile.textile(text)
+
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds
-    text = re.sub(r'<(?:.+|)script(?:([\s\S]+?)|)>', r'&ltscript\1&gt', text) # Disabling <script/> tags
-    text = re.sub(r'<meta([\s\S]+?)>', r'&ltmeta\1&gt'   , text) # Disabling <meta/> tags
     return text

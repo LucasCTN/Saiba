@@ -1,4 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
+from profile.models import Profile
+
 import ghdiff
 import textile
 from django.contrib.auth import authenticate, login, logout
@@ -12,14 +14,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 from django.utils.html import escape
 
-import Saiba.saibadown
+import Saiba.parser
 import Saiba.utils as utils
 from entry.serializers import EntrySerializer, RevisionSerializer
 from feedback.models import Comment
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
-from profile.models import Profile
 from Saiba import utils as utils
 from Saiba import custom_messages
 
@@ -41,10 +42,8 @@ def detail(request, entry_slug):
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
 
     can_see_editorship = entry.editorship.filter(user=request.user).exists() or request.user.profile.HasPermission('edit_entry')
-    
-    content = last_revision.content
-    content_textile_parsed = textile.textile(content)
-    last_revision.content = Saiba.saibadown.parse(content_textile_parsed)
+
+    last_revision.content = Saiba.parser.parse(last_revision.content)
 
     trending_galleries  = utils.get_popular_galleries(request)
 

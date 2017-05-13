@@ -16,7 +16,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from rest_framework.pagination import PageNumberPagination
 import Saiba.utils
-import Saiba.saibadown, textile
+import Saiba.parser
 
 class EntryDetail(APIView):
     def get(self, request):
@@ -305,7 +305,7 @@ class PreviewDetail(APIView):
         content = request.POST.get('content')
 
         if content:
-            result = Saiba.saibadown.parse(textile.textile(content))
+            result = Saiba.parser.parse(content)
             return Response(result, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)

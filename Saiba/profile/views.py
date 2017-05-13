@@ -5,23 +5,20 @@ from.forms import EditProfileForm
 from entry.models import Entry
 from gallery.models import Image, Video
 from feedback.models import Action
-import Saiba.saibadown, textile
+import Saiba.parser
 
 def index(request, name_slug):
     profile = get_object_or_404(Profile, slug=name_slug)
-    
+
     context = { "profile": profile }
     return render(request, 'profile/index.html', context)
 
 def detail(request, name_slug):
     current_page = "mural"
     profile = get_object_or_404(Profile, slug=name_slug)
+    about = Saiba.parser.parse(profile.about)
 
-    about = profile.about
-    about_textile_parsed = textile.textile(about)
-    about = Saiba.saibadown.parse(about_textile_parsed)
-
-    context = {"profile": profile, 'type': 'profile', "id": profile.user.id, "about": about, 
+    context = {"profile": profile, 'type': 'profile', "id": profile.user.id, "about": about,
                "hide_top_comments": True, "current_page": current_page}
     return render(request, 'profile/detail.html', context)
 
