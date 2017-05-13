@@ -25,22 +25,32 @@
 
     <div class="media-right media-middle col-md-12">
         <hr>
-        <div class="btn-group btn-group-justified" role="group" aria-label="...">
-            <div class="btn-group" role="group">
-                <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
+        {% comment %}
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <a href='{% url 'entry:edit' entry.slug %}'><button type='button' class='btn btn-default'>Editar</button></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
+                </div>
+                {% if can_see_editorship %}
+                <div class="btn-group" role="group">
+                    <a href='{% url 'entry:manage_editorship' entry.slug %}'>
+                        <button type='button' class='btn btn-default'>Gerenciar editoria</button>
+                    </a>
+                </div>
+                {% endif %}
             </div>
-            <div class="btn-group" role="group">
-                <a href='{% url 'entry:history' entry.slug %}'><button type='button' class='btn btn-default'>Histórico</button></a>
-            </div>
+            <hr>
+        {% endcomment %}
+        
+        <nav id="entry-navbar" class="navbar col-md-12">
+            <a class="entry-navbar-item navbar-brand col-md-offset-1" href="{% url 'entry:edit' entry.slug %}">Editar</a>
+            <a class="entry-navbar-item navbar-brand" href="{% url 'entry:history' entry.slug %}">Histórico</a>
             {% if can_see_editorship %}
-            <div class="btn-group" role="group">
-                <a href='{% url 'entry:manage_editorship' entry.slug %}'>
-                    <button type='button' class='btn btn-default'>Gerenciar editoria</button>
-                </a>
-            </div>
+                <a class="entry-navbar-item navbar-brand" href="{% url 'entry:manage_editorship' entry.slug %}">Gerenciar editoria</a>
             {% endif %}
-        </div>
-        <hr>
+        </nav>
     </div>
       
     <section id="conteudo-artigo" class="container col-md-12">        
