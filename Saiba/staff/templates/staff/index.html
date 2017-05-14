@@ -3,24 +3,24 @@
 {% block body %}
     <section id="staff-panel" class="container col-md-12">
         <h3>Painel de controle</h3>
-        <nav id="profile-navbar" class="navbar col-md-12">
+        <nav id="sub-menu-navbar" class="navbar col-md-12">
 
             {% if current_page == "index" %}
-                <a class="profile-navbar-selected-item navbar-brand col-md-offset-1" href="{% url 'staff:index' %}">Início</a>
+                <a class="sub-menu-navbar-selected-item navbar-brand col-md-offset-1" href="{% url 'staff:index' %}">Início</a>
             {% else %}
-                <a class="profile-navbar-item navbar-brand col-md-offset-1" href="{% url 'staff:index' %}">Início</a>
+                <a class="sub-menu-navbar-item navbar-brand col-md-offset-1" href="{% url 'staff:index' %}">Início</a>
             {% endif %}
 
             {% if current_page == "postagem" %}
-                <a class="profile-navbar-selected-item navbar-brand" href="{% url 'staff:create_post' %}">Postagem</a>
+                <a class="sub-menu-navbar-selected-item navbar-brand" href="{% url 'staff:create_post' %}">Postagem</a>
             {% else %}
-                <a class="profile-navbar-item navbar-brand" href="{% url 'staff:create_post' %}">Postagem</a>
+                <a class="sub-menu-navbar-item navbar-brand" href="{% url 'staff:create_post' %}">Postagem</a>
             {% endif %}
 
             {% if current_page == "usuarios" %}
-                <a class="profile-navbar-selected-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
+                <a class="sub-menu-navbar-selected-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
             {% else %}
-                <a class="profile-navbar-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
+                <a class="sub-menu-navbar-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
             {% endif %}
         </nav>
     </section>

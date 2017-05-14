@@ -177,6 +177,7 @@
     <Folder Include="profile\templates\profile\" />
     <Folder Include="Saiba\" />
     <Folder Include="staff\" />
+    <Folder Include="staff\fixtures\" />
     <Folder Include="staff\migrations\" />
     <Folder Include="staff\templates\" />
     <Folder Include="staff\templates\staff\" />
@@ -228,6 +229,9 @@
     <Content Include="profile\templates\profile\images.html" />
     <Content Include="profile\templates\profile\editorship.html" />
     <Content Include="profile\templates\profile\profile_menu.html" />
+    <Content Include="staff\fixtures\groups.json" />
+    <Content Include="staff\fixtures\permissions.json" />
+    <Content Include="staff\fixtures\trending.json" />
     <Content Include="staff\templates\staff\create_post.html" />
     <Content Include="home\templates\home\register.html" />
     <Content Include="home\templates\home\logout.html" />

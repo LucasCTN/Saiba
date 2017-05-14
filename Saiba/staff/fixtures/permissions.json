@@ -38,5 +38,13 @@
       "code_name": "edit_entry",
       "label": "Edit entry"
     }
+  },
+  {
+    "model": "staff.UserPermission",
+    "pk": 6,
+    "fields": {
+      "code_name": "lock_gallery",
+      "label": "Lock gallery"
+    }
   }
 ]

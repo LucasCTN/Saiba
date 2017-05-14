@@ -53,6 +53,7 @@ class Entry(models.Model):
         if self.icon_url and not self.icon:
             image_name, image_content = Saiba.image_utils.download_external_image(self.icon_url)
             self.icon.save(image_name, ContentFile(image_content), save=False)
+
         super(Entry, self).save(*args, **kwargs)
 
     def __unicode__(self):

@@ -24,7 +24,7 @@ from home.models import SaibaSettings, Tag
 from Saiba import utils as utils
 from Saiba import custom_messages
 
-from .forms import EntryForm, RevisionForm
+from .forms import EntryForm, RevisionForm, StaffEntryForm
 from .models import Category, Entry, Revision
 
 
@@ -50,6 +50,8 @@ def detail(request, entry_slug):
 
     trending_galleries  = utils.get_popular_galleries(request)
 
+    can_lock_gallery = request.user.profile.HasPermission('lock_gallery') or False
+
     args = {'entry'             : entry,
             'id'                : entry.id,
             'type'              : 'entry',
@@ -59,7 +61,8 @@ def detail(request, entry_slug):
             'videos'            : last_videos,
             'related_entries'   : related_entries,
             'trending_galleries': trending_galleries,
-            'can_see_editorship': can_see_editorship }
+            'can_see_editorship': can_see_editorship,
+            'can_lock_gallery'  : can_lock_gallery }
 
     return render(request, 'entry/detail.html', args)
 
@@ -84,8 +87,12 @@ def edit(request, entry_slug):
 
         is_editor = user.profile in entry.editorship.all()
 
-        entry_form = EntryForm(request.POST or None, initial=model_to_dict(entry))
         revision_form = RevisionForm(request.POST or None, initial=model_to_dict(last_revision))
+
+        if request.user.profile.HasPermission('lock_gallery'):
+            entry_form = StaffEntryForm(request.POST or None, request.FILES or None, initial=model_to_dict(entry), instance=entry)
+        else:
+            entry_form = EntryForm(request.POST or None, request.FILES or None, initial=model_to_dict(entry), instance=entry)
 
         if entry_form.is_valid() and revision_form.is_valid() and is_editor:
             all_tags = utils.string_tags_to_list(request.POST.get('tags-selected'))
@@ -95,7 +102,6 @@ def edit(request, entry_slug):
             entry.trending_points += trending_weight
             entry.save(update_fields=['trending_points'])
 
-            entry_form = EntryForm(request.POST, request.FILES, instance = entry)
             entry = entry_form.save(commit=False)
             entry.author = user
             entry.slug = slugify(entry.title)
@@ -110,13 +116,12 @@ def edit(request, entry_slug):
             revision.author = user
             revision.save()
 
-
             return redirect('entry:detail', entry_slug=entry.slug)
 
-        context = {"entry_form": entry_form, 
-                   "revision_form": revision_form, 
-                   "entry":entry, 
-                   "user":user}
+        context = { "entry_form"        : entry_form,
+                    "revision_form"     : revision_form,
+                    "entry"             : entry,
+                    "user"              : user}
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
