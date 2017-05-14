@@ -1,0 +1,29 @@
+[
+  {
+    "model": "entry.Status",
+    "pk": 1,
+    "fields": {
+      "label": "Pesquisando",
+      "code_name": "pesquisando",
+      "description": "Essa entrada está sob pesquisa. Ajude a confirmá-la, fazendo contribuições!"
+    }
+  },
+  {
+    "model": "entry.Status",
+    "pk": 2,
+    "fields": {
+      "label": "Confirmado",
+      "code_name": "confirmado",
+      "description": ""
+    }
+  },
+  {
+    "model": "entry.Status",
+    "pk": 3,
+    "fields": {
+      "label": "Rejeitado",
+      "code_name": "rejeitado",
+      "description": "Essa entrada foi rejeitada por estar incompleta ou por falta de notabilidade. Para disputar esta marcação, sugira modificações ou peça permissões de editor."
+    }
+  }
+]
