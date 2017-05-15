@@ -43,7 +43,13 @@
                     {% endif %}
                     {% if searched_user.is_active == False and not searched_user.is_staff and ban_normal_user or searched_user.is_staff and ban_staff_user %}
                         <td><button class="btn btn-default" name="unbanned_user" value="{{searched_user.id}}" type="submit">Desbanir</button></td>
-                    {% endif %}                    
+                    {% endif %}
+                    {% if can_promote_users == True %}
+                        <td><button class="btn btn-default" name="promoted_user_mod" value="{{searched_user.id}}" type="submit">Promover a moderador</button></td>
+                        <td><button class="btn btn-default" name="demoted_user_mod" value="{{searched_user.id}}" type="submit">Rebaixar de moderador</button></td>
+                        <td><button class="btn btn-default" name="promoted_user_admin" value="{{searched_user.id}}" type="submit">Promover a administrador</button></td>
+                        <td><button class="btn btn-default" name="demoted_user_admin" value="{{searched_user.id}}" type="submit">Rebaixar de administrador</button></td>
+                    {% endif %}
                 <tr>
             {% endfor %}
         </table>

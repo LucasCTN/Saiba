@@ -5,7 +5,8 @@
     "fields": {
       "code_name": "admin",
       "label": "Administrator",
-      "permissions": [1,2,3,4,5]
+      "assign_to_staff": true,
+      "permissions": [1,2,3,4,5,7]
     }
   },
   {
@@ -14,12 +15,14 @@
     "fields": {
       "code_name": "mod",
       "label": "Moderator",
+      "assign_to_staff": true,
       "permissions": [1,3,4,5]
     }
   },
   {
     "model": "staff.UserGroup",
     "pk": 3,
+    "assign_to_staff": false,
     "fields": {
       "code_name": "normal_user",
       "label": "Normal User"

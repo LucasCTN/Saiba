@@ -46,5 +46,13 @@
       "code_name": "lock_gallery",
       "label": "Lock gallery"
     }
+  },
+  {
+    "model": "staff.UserPermission",
+    "pk": 7,
+    "fields": {
+      "code_name": "promote_user",
+      "label": "Promote user"
+    }
   }
 ]

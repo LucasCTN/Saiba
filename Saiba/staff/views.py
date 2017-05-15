@@ -51,45 +51,49 @@ def search_user(request):
     if not request.user.is_staff:
         return redirect('home:index')
 
+    can_promote_users = request.user.profile.HasPermission('promote_user') or False
+
     search_term = request.GET.get("q")
     banned_user_id = request.GET.get("banned_user")
     unbanned_user_id = request.GET.get("unbanned_user")
+    promoted_user_mod_id = request.GET.get("promoted_user_mod")
+    promoted_user_admin_id = request.GET.get("promoted_user_admin")
 
-    if search_term == None:
+    if search_term is None:
         all_users = User.objects.order_by("-date_joined")
     else:
         all_users = User.objects.filter(username__contains=search_term).order_by("-date_joined")
 
+    # Banning an normal user
     if banned_user_id != None:
         banned_user = User.objects.filter(id=banned_user_id).first()
-        if banned_user.is_staff and request.user.profile.HasPermission('ban_staff_user') or not banned_user.is_staff and request.user.profile.HasPermission('ban_normal_user'): 
+        if banned_user.is_staff and request.user.profile.HasPermission('ban_staff_user') or not banned_user.is_staff and request.user.profile.HasPermission('ban_normal_user'):
             banned_user.is_active = False
             banned_user.save()
-            print banned_user.username + " foi banido!"
 
+    # Banning an staff user
     if unbanned_user_id != None:
-        print "oi"
         unbanned_user = User.objects.filter(id=unbanned_user_id).first()
-        if not unbanned_user.is_active and unbanned_user.is_staff and request.user.profile.HasPermission('ban_staff_user') or not unbanned_user.is_staff and request.user.profile.HasPermission('ban_normal_user'): 
+        if not unbanned_user.is_active and unbanned_user.is_staff and request.user.profile.HasPermission('ban_staff_user') or not unbanned_user.is_staff and request.user.profile.HasPermission('ban_normal_user'):
             unbanned_user.is_active = True
             unbanned_user.save()
-            print unbanned_user.username + " foi desbanido!"
-    
+
+    # Promoting a user to moderator
+    if promoted_user_mod_id != None:
+        promoted_user = User.objects.filter(id=promoted_user_mod_id).first()
+        if can_promote_users:
+            promoted_user.profile.SetGroup('mod')
+
+    # Promoting a user to administrator
+    if promoted_user_admin_id != None:
+        promoted_user = User.objects.filter(id=promoted_user_admin_id).first()
+        if can_promote_users:
+            promoted_user.profile.SetGroup('admin')
+
     ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
     ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
 
-    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user, 'ban_staff_user': ban_staff_user, 'current_page': 'usuarios'}
-
-    return render(request, 'staff/search_user.html', args)
-
-def search_user_result(request):
-    if not request.user.is_staff:
-        return redirect('home:index')
-
-    all_users = User.objects.order_by("-date_joined")
-    ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
-    ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
-
-    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user, 'ban_staff_user': ban_staff_user}
+    args = {'all_users': all_users, 'ban_normal_user': ban_normal_user,
+            'ban_staff_user': ban_staff_user, 'current_page': 'usuarios', 'can_promote_users':True}
 
     return render(request, 'staff/search_user.html', args)

@@ -16,18 +16,27 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.user.username)
+            self.groups.add(UserGroup.objects.get(id=3))
 
-        self.groups.add(UserGroup.objects.get(id=3))
         super(Profile, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.user.username
 
-    def HasPermission(self, permission_label):
-        permission = UserPermission.objects.filter(code_name=permission_label).first()
+    def HasPermission(self, permission_code):
+        permission = UserPermission.objects.filter(code_name=permission_code).first()
 
         if permission:
             for group in self.groups.all():
                 if group.permissions.filter(id=permission.id).exists():
                     return True
         return False
+
+    def SetGroup(self, group_code):
+        group = UserGroup.objects.filter(code_name=group_code).first()
+
+        if group:
+            self.groups.add(group)
+            self.is_staff = group.assign_to_staff
+            self.save()
+                
