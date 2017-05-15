@@ -57,7 +57,9 @@ def search_user(request):
     banned_user_id = request.GET.get("banned_user")
     unbanned_user_id = request.GET.get("unbanned_user")
     promoted_user_mod_id = request.GET.get("promoted_user_mod")
+    demoted_user_mod_id = request.GET.get("demoted_user_mod")
     promoted_user_admin_id = request.GET.get("promoted_user_admin")
+    demoted_user_admin_id = request.GET.get("demoted_user_admin")
 
     if search_term is None:
         all_users = User.objects.order_by("-date_joined")
@@ -82,14 +84,20 @@ def search_user(request):
     if promoted_user_mod_id != None:
         promoted_user = User.objects.filter(id=promoted_user_mod_id).first()
         if can_promote_users:
-            promoted_user.profile.SetGroup('mod')
+            promoted_user.profile.AddGroup('mod')
+
+    # Demote a user to moderator
+    if demoted_user_mod_id != None:
+        demoted_user = User.objects.filter(id=demoted_user_mod_id).first()
+        if can_promote_users:
+            demoted_user.profile.RemoveGroup('mod')
 
     # Promoting a user to administrator
     if promoted_user_admin_id != None:
         promoted_user = User.objects.filter(id=promoted_user_admin_id).first()
         if can_promote_users:
-            promoted_user.profile.SetGroup('admin')
-
+            promoted_user.profile.AddGroup('admin')
+    
     ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
     ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
 

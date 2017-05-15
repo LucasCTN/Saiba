@@ -32,11 +32,26 @@ class Profile(models.Model):
                     return True
         return False
 
-    def SetGroup(self, group_code):
+    def AddGroup(self, group_code):
         group = UserGroup.objects.filter(code_name=group_code).first()
 
         if group:
             self.groups.add(group)
-            self.is_staff = group.assign_to_staff
+            self.user.is_staff = group.assign_to_staff
             self.save()
+
+    def RemoveGroup(self, group_code):
+        group = UserGroup.objects.filter(code_name=group_code).first()
+
+        if group:
+            self.groups.remove(group)
+
+        is_staff = False
+        
+        for group in self.groups.all():
+            if group.assign_to_staff:
+                is_staff = True
+
+        self.user.is_staff = is_staff
+        self.save()
                 
