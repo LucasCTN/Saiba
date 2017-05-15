@@ -93,3 +93,26 @@ class Action(models.Model):
     def __unicode__(self):
         text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
         return text
+
+class TrendingVote(models.Model):
+    entry               = models.ForeignKey('entry.Entry')
+    author              = models.ForeignKey(User)
+    vote_type           = models.ForeignKey('home.SaibaSettings')   
+    creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
+    is_deleted          = models.BooleanField(default=False)    
+    points              = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        text = "#{} by {}".format(self.id, self.author.username)        
+        return text
+
+    def get_points(self):
+        content_type = ContentType.objects.get_for_model(Comment)
+        points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('direction'))['direction__sum']
+        return points or 0
+
+    def trending_calculation(self):
+        return trending_list
+
+    def save(self, *args, **kwargs):
+        super(Comment, self).save(*args, **kwargs)
