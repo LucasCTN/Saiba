@@ -1,22 +1,26 @@
-from django.db.models import Sum
-from django.shortcuts import render, get_object_or_404
-from django.views import generic
-from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from profile.models import Profile
-from home.models import SaibaSettings
-from entry.models import Entry, Revision
-from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment, Vote
-from feedback.serializers import CommentSerializer, VoteSerializer, PointsSerializer
-from gallery.models import Image, Video
+
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from django.db import connection
+from django.db.models import F, Sum, Count
+from django.shortcuts import get_object_or_404, render
+from django.views import generic
+from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
-import Saiba.utils
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 import Saiba.parser
+import Saiba.utils
+from entry.models import Entry, Revision
+from entry.serializers import EntrySerializer, RevisionSerializer
+from feedback.models import Comment, TrendingVote, Vote
+from feedback.serializers import (CommentSerializer, PointsSerializer,
+                                  VoteSerializer)
+from gallery.models import Image, Video
+from home.models import SaibaSettings
+
 
 class EntryDetail(APIView):
     def get(self, request):
@@ -39,7 +43,7 @@ class EntryDetail(APIView):
         data['author'] = request.user.id
 
         serializer = EntrySerializer(data=data)
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -269,10 +273,25 @@ class PointsDetail(APIView):
 class TrendingDetail(APIView):
     def get(self, request, type = None):
         trending_type = request.GET.get('type') or type
+        size = request.GET.get('size') or 20
+        #todo: size of trending parameter
 
         if trending_type:
             if trending_type == "entry":
-                entries = Entry.objects.all().order_by('-trending_points')[:20]
+                #entries = Entry.objects.all().annotate(points=Count('votes__points')).order_by('points')
+                #votes = TrendingVote.objects.filter(is_deleted=False).aggregate(points=Sum('vote_type__value').order_by('-creation_date').values_list('points')
+
+                #round_trips = Trip.objects.aggregate(outward=Sum('outward_journey__distance'), inward=Sum('return_journey_distance'))
+                
+                votes = TrendingVote.objects.filter(is_deleted=False).values('target_id', 'target_content_type')
+                print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                print votes
+
+                #entries = Entry.objects.all().order_by('-trending_points')[:size]
+                #Get trending votes
+                #organize by points, then by time
+                #return the number on the parameter
+
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "gallery":
