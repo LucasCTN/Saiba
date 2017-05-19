@@ -95,9 +95,11 @@ class Action(models.Model):
         return text
 
 class TrendingVote(models.Model):
-    entry               = models.ForeignKey('entry.Entry')
+    target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    target_id           = models.PositiveIntegerField(null=True, blank=True)
+    target              = GenericForeignKey('target_content_type', 'target_id')
     author              = models.ForeignKey(User)
-    vote_type           = models.ForeignKey('home.SaibaSettings')   
+    vote_type           = models.ForeignKey('home.SaibaSettings')
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     is_deleted          = models.BooleanField(default=False)    
     points              = models.IntegerField(default=0)
@@ -108,11 +110,12 @@ class TrendingVote(models.Model):
 
     def get_points(self):
         content_type = ContentType.objects.get_for_model(Comment)
-        points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('direction'))['direction__sum']
+        points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('points'))['points__sum']
         return points or 0
 
-    def trending_calculation(self):
-        return trending_list
+    '''def trending_calculation(self):
+        return trending_list'''
 
-    def save(self, *args, **kwargs):
-        super(Comment, self).save(*args, **kwargs)
+    '''def save(self, *args, **kwargs):
+        self.points = self.vote_type.value
+        super(TrendingVote, self).save(*args, **kwargs)'''
