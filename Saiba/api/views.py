@@ -101,13 +101,14 @@ class CommentDetail(APIView):
                                                             vote_type=vote_type_model)
             elif target_type == Image:
                 image = Image.objects.get(id=data['id'])
-                trending_vote = TrendingVote.objects.create(author=request.user, target=image,
+                trending_vote = TrendingVote.objects.create(author=request.user, image=image,
                                                             vote_type=vote_type_model)
             elif target_type == Video:
                 video = Video.objects.get(id=data['id'])
-                trending_vote = TrendingVote.objects.create(author=request.user, target=video,
+                trending_vote = TrendingVote.objects.create(author=request.user, video=video,
                                                             vote_type=vote_type_model)
-            new_vote = Vote.objects.create(target=new_comment, author=request.user, direction=1) # Vote in own comment
+            new_vote = Vote.objects.create(target=new_comment, author=request.user,
+                                           direction=1) # Vote in own comment
             new_vote.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -158,7 +159,6 @@ class VoteDetail(APIView):
                 votes           = Vote.objects.filter(target_id=video.id, target_content_type=video_type_id)
                 serializer      = VoteSerializer(votes, many=True)
                 return Response(serializer.data)
-        
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
@@ -245,7 +245,6 @@ class CommentPageDetail(APIView):
 
         serializer = CommentSerializer(result_page, many=True, context={"reply_limit":reply_limit})
         return paginator.get_paginated_response(serializer.data)        
-        #return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class PointsDetail(APIView):
     def get(self, request):
