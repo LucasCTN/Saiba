@@ -99,19 +99,15 @@ class Action(models.Model):
         text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
         return text
 
-
 class TrendingVote(models.Model):
-    target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
-    target_id           = models.PositiveIntegerField(null=True, blank=True)
-    target              = GenericForeignKey('target_content_type', 'target_id')
     author              = models.ForeignKey(User)
     vote_type           = models.ForeignKey(SaibaSettings)
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     is_deleted          = models.BooleanField(default=False)
     points              = models.FloatField(default=0)
-    entry               = models.ForeignKey('entry.Entry', related_name="trending_votes")
-    image               = models.ForeignKey('gallery.Image', related_name="trending_votes")
-    video               = models.ForeignKey('gallery.Video', related_name="trending_votes")
+    entry               = models.ForeignKey('entry.Entry', related_name="trending_votes", blank=True, null=True)
+    image               = models.ForeignKey('gallery.Image', related_name="trending_votes", blank=True, null=True)
+    video               = models.ForeignKey('gallery.Video', related_name="trending_votes", blank=True, null=True)
 
     def __unicode__(self):
         text = "#{} by {}".format(self.id, self.author.username)        
