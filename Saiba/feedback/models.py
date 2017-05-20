@@ -11,7 +11,6 @@ from django.utils import timezone
 
 from home.models import SaibaSettings
 
-
 class Vote(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     target_id           = models.PositiveIntegerField(null=True, blank=True)
@@ -108,8 +107,11 @@ class TrendingVote(models.Model):
     author              = models.ForeignKey(User)
     vote_type           = models.ForeignKey(SaibaSettings)
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
-    is_deleted          = models.BooleanField(default=False)    
+    is_deleted          = models.BooleanField(default=False)
     points              = models.FloatField(default=0)
+    entry               = models.ForeignKey('entry.Entry', related_name="trending_votes")
+    image               = models.ForeignKey('gallery.Image', related_name="trending_votes")
+    video               = models.ForeignKey('gallery.Video', related_name="trending_votes")
 
     def __unicode__(self):
         text = "#{} by {}".format(self.id, self.author.username)        
