@@ -10,7 +10,6 @@ from django.template.defaultfilters import slugify
 import Saiba.image_utils
 from feedback.models import Action
 
-
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
     code_name = models.CharField(max_length=2500, blank=True)

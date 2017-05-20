@@ -1,6 +1,8 @@
-import urllib2
 import os
+import urllib2
+
 from django.contrib.auth.models import Permission, User
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.files.base import ContentFile
 from django.db import models
 from django.utils import timezone
@@ -32,6 +34,7 @@ class Image(models.Model):
     description = models.TextField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
+    votes = GenericRelation('feedback.TrendingVote', related_query_name='images')
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
@@ -63,6 +66,7 @@ class Video(models.Model):
     description = models.TextField(max_length=250, blank=True)
     state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
+    votes = GenericRelation('feedback.TrendingVote', related_query_name='videos')
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
