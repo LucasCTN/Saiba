@@ -52,6 +52,8 @@ def detail(request, entry_slug):
     trending_galleries  = utils.get_popular_galleries(request)
 
     can_lock_gallery = False
+    if request.user.is_authenticated():
+        can_lock_gallery = request.user.profile.HasPermission('lock_gallery')        
 
     if request.user.is_authenticated():
         can_lock_gallery = request.user.profile.HasPermission('lock_gallery')
