@@ -50,6 +50,7 @@ class Entry(models.Model):
     tags                    = models.ManyToManyField('home.Tag', blank=True)
     trending_points         = models.IntegerField(default=0)
     editorship              = models.ManyToManyField('profile.Profile', blank=True)
+    view                    = GenericRelation('feedback.View')
 
     def save(self, *args, **kwargs):
         if not self.id:

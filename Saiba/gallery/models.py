@@ -5,6 +5,7 @@ from django.core.files.base import ContentFile
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.contrib.contenttypes.fields import GenericRelation
 
 import Saiba.image_utils
 from feedback.models import Action
@@ -19,19 +20,20 @@ class State(models.Model):
         return self.label
 
 class Image(models.Model):
-    author      = models.ForeignKey(User, blank=True)
-    title       = models.CharField(max_length=250)
-    date        = models.DateTimeField(default=timezone.now, blank=True)
-    date_origin = models.CharField(max_length=100, blank=True)
-    source      = models.CharField(max_length=250)
-    tags        = models.ManyToManyField('home.Tag', blank=True)
-    entry       = models.ForeignKey('entry.Entry', on_delete=models.CASCADE, related_name="images")
-    hidden      = models.BooleanField(default=False)
-    file        = models.ImageField(upload_to='icon/', blank=True)
-    file_url    = models.URLField(blank=True)
-    description = models.TextField(max_length=250, blank=True)
-    state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
+    author          = models.ForeignKey(User, blank=True)
+    title           = models.CharField(max_length=250)
+    date            = models.DateTimeField(default=timezone.now, blank=True)
+    date_origin     = models.CharField(max_length=100, blank=True)
+    source          = models.CharField(max_length=250)
+    tags            = models.ManyToManyField('home.Tag', blank=True)
+    entry           = models.ForeignKey('entry.Entry', on_delete=models.CASCADE, related_name="images")
+    hidden          = models.BooleanField(default=False)
+    file            = models.ImageField(upload_to='icon/', blank=True)
+    file_url        = models.URLField(blank=True)
+    description     = models.TextField(max_length=250, blank=True)
+    state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
+    views           = GenericRelation('feedback.View')
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
@@ -52,17 +54,18 @@ class Image(models.Model):
         super(Image, self).save(*args, **kwargs)
 
 class Video(models.Model):
-    author      = models.ForeignKey(User, blank=True)
-    title       = models.CharField(max_length=250)
-    date        = models.DateTimeField(default=timezone.now, blank=True)
-    date_origin = models.CharField(max_length=100, blank=True)
-    tags        = models.ManyToManyField('home.Tag', blank=True)
-    entry       = models.ForeignKey('entry.Entry', on_delete=models.CASCADE)
-    hidden      = models.BooleanField(default=False)
-    link        = models.CharField(max_length=250)
-    description = models.TextField(max_length=250, blank=True)
-    state       = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
+    author          = models.ForeignKey(User, blank=True)
+    title           = models.CharField(max_length=250)
+    date            = models.DateTimeField(default=timezone.now, blank=True)
+    date_origin     = models.CharField(max_length=100, blank=True)
+    tags            = models.ManyToManyField('home.Tag', blank=True)
+    entry           = models.ForeignKey('entry.Entry', on_delete=models.CASCADE)
+    hidden          = models.BooleanField(default=False)
+    link            = models.CharField(max_length=250)
+    description     = models.TextField(max_length=250, blank=True)
+    state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
+    views           = GenericRelation('feedback.View')
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title

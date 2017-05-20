@@ -3,10 +3,14 @@ from rest_framework.reverse import reverse
 import urllib, urllib2, json
 from django.core.files import File
 from django.core.files.base import ContentFile
-from datetime import datetime
+from datetime import datetime, timedelta
 import imghdr
 import copy
 from api.views import TrendingDetail
+from ipware.ip import get_ip
+from feedback.models import View
+from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 
 def is_valid_direction(direction):
     return int(direction) in [-1, 0, 1]
@@ -134,3 +138,27 @@ def date_is_before_datetime( day, month, year, datetime ):
         return True
     else:
         return False
+
+def register_view(request, target):
+    content_type = ContentType.objects.get_for_model(target)
+
+    if request.user.is_authenticated():
+        user = request.user
+    else:
+        user = None
+
+    current_ip = get_ip(request)
+
+    # here the waiting time before another view is set.
+    time_threshold = datetime.now() - timedelta(hours=3)
+
+    already_viewed = View.objects.filter(target_id=target.id, target_content_type=content_type, ip=current_ip, date__gt=time_threshold) or None
+
+    session = request.session.session_key or None
+
+    if not already_viewed:
+        new_view = View.objects.create( author      = user,
+                                        target      = target, 
+                                        ip          = current_ip, 
+                                        user_agent  = request.META['HTTP_USER_AGENT'],
+                                        session     = session)

@@ -21,7 +21,6 @@ from feedback.models import Comment
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
-from Saiba import utils as utils
 from Saiba import custom_messages
 
 from .forms import EntryForm, RevisionForm, StaffEntryForm
@@ -38,6 +37,8 @@ def detail(request, entry_slug):
     last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
 
+    utils.register_view(request, entry)
+
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
 
@@ -50,7 +51,10 @@ def detail(request, entry_slug):
 
     trending_galleries  = utils.get_popular_galleries(request)
 
-    can_lock_gallery = request.user.profile.HasPermission('lock_gallery') or False
+    can_lock_gallery = False
+
+    if request.user.is_authenticated():
+        can_lock_gallery = request.user.profile.HasPermission('lock_gallery')
 
     args = {'entry'             : entry,
             'id'                : entry.id,
@@ -70,9 +74,9 @@ def history(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)
     revisions = Revision.objects.filter(entry=entry, hidden=False).order_by('-id')
 
-    context = {'revisions'          : revisions, 
-               'entry_name'         :entry.title, 
-               'entry_slug'         :entry.slug }
+    context = {'revisions'  : revisions, 
+               'entry_name' : entry.title, 
+               'entry_slug' : entry.slug }
 
     return render(request, escape('entry/history.html'), context)
 

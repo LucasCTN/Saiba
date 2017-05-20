@@ -3,8 +3,9 @@ from django.db.models import Sum
 from django.contrib.auth.models import Permission, User
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.utils import timezone
+from django.contrib.sessions.models import Session
 
 class Vote(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
@@ -92,4 +93,23 @@ class Action(models.Model):
     
     def __unicode__(self):
         text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
+        return text
+
+class View(models.Model):
+    author              = models.ForeignKey(User, blank=True, null=True)
+    ip                  = models.GenericIPAddressField()
+    user_agent          = models.CharField(max_length=200)
+    target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    target_id           = models.PositiveIntegerField(null=True, blank=True)
+    target              = GenericForeignKey('target_content_type', 'target_id')
+    date                = models.DateTimeField(auto_now_add=True, blank=True)
+    session             = models.CharField(max_length=50, null=True, blank=True)
+
+    def __unicode__(self):
+        if self.author:
+            name = self.author.username
+        else:
+            name = "Anonymous"
+
+        text = "#{} - {}: {}".format(self.id, self.target_content_type, name)
         return text

@@ -23,7 +23,13 @@ def comment_page(request):
     top_comments = Comment.objects.filter(target_content_type=model_type, target_id=model_id, is_deleted=False)
     top_comments = top_comments.order_by('-points')[:2]
 
-    args = {'comments' : comments, 'pages_total': range(1, pages_total + 1), 'current_page': page,
-            'chain': chain, 'child_limit': child_limit, 'user_can_delete': user_can_delete, 'top_comments':top_comments, 'hide_top_comments':hide_top_comments}
+    args = {'comments' : comments,
+            'pages_total': range(1, pages_total + 1),
+            'current_page': page,
+            'chain': chain,
+            'child_limit': child_limit,
+            'user_can_delete': user_can_delete,
+            'top_comments':top_comments,
+            'hide_top_comments':hide_top_comments}
 
     return render(request, 'feedback/comment_page.html', args)
