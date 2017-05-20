@@ -3,7 +3,7 @@
     "model": "home.SaibaSettings",
     "pk": 1,
     "fields": {
-      "value": "3",
+      "value": 300,
       "type": "trending_weight_comment"
     }
   },
@@ -11,8 +11,16 @@
     "model": "home.SaibaSettings",
     "pk": 2,
     "fields": {
-      "value": "1",
+      "value": 100,
       "type": "trending_weight_entry_edit"
+    }
+  },
+  {
+    "model": "home.SaibaSettings",
+    "pk": 3,
+    "fields": {
+      "value": 0.0000001,
+      "type": "trending_weight_time"
     }
   }
 ]

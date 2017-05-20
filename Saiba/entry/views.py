@@ -17,7 +17,7 @@ from django.utils.html import escape
 import Saiba.parser
 import Saiba.utils as utils
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment
+from feedback.models import Comment, TrendingVote
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
@@ -114,6 +114,10 @@ def edit(request, entry_slug):
             entry.tags = Tag.objects.filter(label__in=set_tags)
             entry.create_action("6")
             entry.save()
+
+            vote_type_model = SaibaSettings.objects.get(type='trending_weight_entry_edit')
+            trending_vote = TrendingVote.objects.create(author=request.user, target=entry,
+                                                        vote_type=vote_type_model)
 
             revision = revision_form.save(commit=False)
             revision.entry = entry

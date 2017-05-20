@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
-from django.db.models import Sum
+import datetime
+import time
+
 from django.contrib.auth.models import Permission, User
-from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.sessions.models import Session
+
+from home.models import SaibaSettings
+
 
 class Vote(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
@@ -90,7 +96,7 @@ class Action(models.Model):
     date                = models.DateTimeField(auto_now_add=True, blank=True)
     is_public           = models.BooleanField(default=True)
     is_staff_only       = models.BooleanField(default=False)
-    
+
     def __unicode__(self):
         text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
         return text
@@ -142,23 +148,22 @@ class TrendingVote(models.Model):
     target_id           = models.PositiveIntegerField(null=True, blank=True)
     target              = GenericForeignKey('target_content_type', 'target_id')
     author              = models.ForeignKey(User)
-    vote_type           = models.ForeignKey('home.SaibaSettings')
+    vote_type           = models.ForeignKey(SaibaSettings)
     creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
     is_deleted          = models.BooleanField(default=False)    
-    points              = models.IntegerField(default=0)
+    points              = models.FloatField(default=0)
 
     def __unicode__(self):
         text = "#{} by {}".format(self.id, self.author.username)        
         return text
+    
+    def set_points(self):
+        vote_value = self.vote_type.value
+        time_weight = SaibaSettings.objects.get(type="trending_weight_time").value
+        seconds = time.mktime(datetime.datetime.now().timetuple())
 
-    def get_points(self):
-        content_type = ContentType.objects.get_for_model(Comment)
-        points = Vote.objects.filter(target_id=self.id, target_content_type=content_type).aggregate(Sum('points'))['points__sum']
-        return points or 0
+        self.points = vote_value + (time_weight * seconds)
 
-    '''def trending_calculation(self):
-        return trending_list'''
-
-    '''def save(self, *args, **kwargs):
-        self.points = self.vote_type.value
-        super(TrendingVote, self).save(*args, **kwargs)'''
+    def save(self, *args, **kwargs):
+        self.set_points()
+        super(TrendingVote, self).save(*args, **kwargs)

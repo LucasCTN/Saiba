@@ -10,7 +10,6 @@ from django.template.defaultfilters import slugify
 import Saiba.image_utils
 from feedback.models import Action
 
-
 class Status(models.Model):
     label = models.CharField(max_length=2500, blank=True)
     code_name = models.CharField(max_length=2500, blank=True)
@@ -51,6 +50,7 @@ class Entry(models.Model):
     trending_points         = models.IntegerField(default=0)
     editorship              = models.ManyToManyField('profile.Profile', blank=True)
     view                    = GenericRelation('feedback.View')
+    votes                   = GenericRelation('feedback.TrendingVote', related_query_name='entries')
 
     def save(self, *args, **kwargs):
         if not self.id:

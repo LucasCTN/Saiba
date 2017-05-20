@@ -86,25 +86,27 @@ class CommentDetail(APIView):
         data["target_id"]           = data['id']
 
         serializer = CommentSerializer(data=data)
-        
+
         if serializer.is_valid():
             new_comment = serializer.save()
             if new_comment.reply_to:
                 new_comment.create_action("2")
             else:
                 new_comment.create_action("1")
-                
+
+            vote_type_model = SaibaSettings.objects.get(type='trending_weight_comment')
             if target_type == Entry:
-                trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
                 entry = Entry.objects.get(id=data['id'])
-                entry.trending_points += trending_weight # Someone commented, so the entry should get trend points
-                entry.save(update_fields=['trending_points'])
+                trending_vote = TrendingVote.objects.create(author=request.user, target=entry,
+                                                            vote_type=vote_type_model)
             elif target_type == Image:
                 image = Image.objects.get(id=data['id'])
-                image.increase_trending_points("trending_weight_comment")
+                trending_vote = TrendingVote.objects.create(author=request.user, target=image,
+                                                            vote_type=vote_type_model)
             elif target_type == Video:
                 video = Video.objects.get(id=data['id'])
-                video.increase_trending_points("trending_weight_comment")
+                trending_vote = TrendingVote.objects.create(author=request.user, target=video,
+                                                            vote_type=vote_type_model)
             new_vote = Vote.objects.create(target=new_comment, author=request.user, direction=1) # Vote in own comment
             new_vote.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -277,20 +279,9 @@ class TrendingDetail(APIView):
         #todo: size of trending parameter
 
         if trending_type:
-            if trending_type == "entry":
-                #entries = Entry.objects.all().annotate(points=Count('votes__points')).order_by('points')
-                #votes = TrendingVote.objects.filter(is_deleted=False).aggregate(points=Sum('vote_type__value').order_by('-creation_date').values_list('points')
-
-                #round_trips = Trip.objects.aggregate(outward=Sum('outward_journey__distance'), inward=Sum('return_journey_distance'))
-                
-                votes = TrendingVote.objects.filter(is_deleted=False).values('target_id', 'target_content_type')
-                print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-                print votes
-
+            if trending_type == "entry":  
+                entries = Entry.objects.annotate(total_points=Sum('votes__points')).order_by('-total_points')
                 #entries = Entry.objects.all().order_by('-trending_points')[:size]
-                #Get trending votes
-                #organize by points, then by time
-                #return the number on the parameter
 
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
