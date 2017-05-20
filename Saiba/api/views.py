@@ -97,7 +97,7 @@ class CommentDetail(APIView):
             vote_type_model = SaibaSettings.objects.get(type='trending_weight_comment')
             if target_type == Entry:
                 entry = Entry.objects.get(id=data['id'])
-                trending_vote = TrendingVote.objects.create(author=request.user, target=entry,
+                trending_vote = TrendingVote.objects.create(author=request.user, entry=entry,
                                                             vote_type=vote_type_model)
             elif target_type == Image:
                 image = Image.objects.get(id=data['id'])
@@ -276,22 +276,24 @@ class TrendingDetail(APIView):
     def get(self, request, type = None):
         trending_type = request.GET.get('type') or type
         size = request.GET.get('size') or 20
-        #todo: size of trending parameter
+        size = int(size)
 
         if trending_type:
-            if trending_type == "entry":  
-                entries = Entry.objects.annotate(total_points=Sum('votes__points')).order_by('-total_points')
-                #entries = Entry.objects.all().order_by('-trending_points')[:size]
-
+            if trending_type == "entry":
+                entries = Entry.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[:size]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "gallery":
-                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[:20]
+                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[:size]
                 serializer = EntrySerializer(galleries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "image":
-                image = Image.objects.all().order_by('-trending_points')[:20]
-                serializer = ImageSerializer(image, many=True)
+                images = Image.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[:size]
+                serializer = ImageSerializer(images, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            elif trending_type == "video":
+                videos = Video.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[:size]
+                serializer = VideoSerializer(videos, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
