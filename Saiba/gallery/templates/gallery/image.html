@@ -40,4 +40,18 @@
     <h2>Comentários</h2>
     {% include "feedback/comment_section.html" %}
     </section>
+
+    <section id="trending-images" class="container col-md-12">
+        <hr/>
+        <h2>Imagens populares</h2>
+        <script>
+            var trending_url = "{% url 'home:api_trending_list' %}";
+            var api = new API();
+            
+            api.getPage(trending_url, function(data){
+                $("#trending-images").append(data);
+            });
+
+        </script>
+    </section>
 {% endblock %}

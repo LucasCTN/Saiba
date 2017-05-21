@@ -1,0 +1,8 @@
+﻿    {% for content in trending_list %}
+        <a href="{% url 'gallery:image_detail' content.id %}" class="col-md-2">
+            <span class="col-md-12" style="text-align: center;">
+                <img class="col-md-12 col-centered" src="{{content.file}}"/>
+                <span class="col-md-12">{{content.title}}</span>
+            </span>            
+        </a>
+    {% endfor %}

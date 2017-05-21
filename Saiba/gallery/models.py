@@ -43,11 +43,6 @@ class Image(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
-
-    def increase_trending_points(self, criteria=""):
-        trending_weight = int(SaibaSettings.objects.get(type=criteria).value)
-        self.trending_points += trending_weight
-        self.save()
     
     def save(self, *args, **kwargs):        
         if self.file_url and not self.file:
@@ -75,8 +70,3 @@ class Video(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
-
-    def increase_trending_points(self, criteria=""):
-        trending_weight = int(SaibaSettings.objects.get(type=criteria).value)
-        self.trending_points += trending_weight
-        self.save()

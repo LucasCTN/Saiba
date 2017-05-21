@@ -241,7 +241,6 @@ def trending_page(request):
 
     return render(request, 'home/trending.html', {'trending_entries': result})
 
-
 def popular_images(request):
     new_request = copy.copy(request)
     new_request.method = "GET" #This is horrible
@@ -249,3 +248,17 @@ def popular_images(request):
     trending_galleries = TrendingDetail.as_view()(new_request, "gallery").data
     result = trending_galleries[:5]
     return render(request, 'home/popular_galleries.html', {'galleries': result})
+
+def trending_list(request):
+    new_request = copy.copy(request)
+
+    trending_type = request.GET.get('type') or "image"
+    size = request.GET.get('size') or 20
+    size = int(size)
+
+    trending_list = None
+    trending_list = TrendingDetail.as_view()(new_request, trending_type).data
+
+    result = trending_list[:size]
+
+    return render(request, 'home/trending_list.html', {'trending_list': trending_list})
