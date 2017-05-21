@@ -1,22 +1,26 @@
-from django.db.models import Sum
-from django.shortcuts import render, get_object_or_404
-from django.views import generic
-from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from profile.models import Profile
-from home.models import SaibaSettings
-from entry.models import Entry, Revision
-from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment, Vote
-from feedback.serializers import CommentSerializer, VoteSerializer, PointsSerializer
-from gallery.models import Image, Video
+
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from django.db import connection
+from django.db.models import F, Sum, Count
+from django.shortcuts import get_object_or_404, render
+from django.views import generic
+from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
-import Saiba.utils
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 import Saiba.parser
+import Saiba.utils
+from entry.models import Entry, Revision
+from entry.serializers import EntrySerializer, RevisionSerializer
+from feedback.models import Comment, TrendingVote, Vote
+from feedback.serializers import (CommentSerializer, PointsSerializer,
+                                  VoteSerializer)
+from gallery.models import Image, Video
+from home.models import SaibaSettings
+
 
 class EntryDetail(APIView):
     def get(self, request):
@@ -39,7 +43,7 @@ class EntryDetail(APIView):
         data['author'] = request.user.id
 
         serializer = EntrySerializer(data=data)
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -82,26 +86,29 @@ class CommentDetail(APIView):
         data["target_id"]           = data['id']
 
         serializer = CommentSerializer(data=data)
-        
+
         if serializer.is_valid():
             new_comment = serializer.save()
             if new_comment.reply_to:
                 new_comment.create_action("2")
             else:
                 new_comment.create_action("1")
-                
+
+            vote_type_model = SaibaSettings.objects.get(type='trending_weight_comment')
             if target_type == Entry:
-                trending_weight = int(SaibaSettings.objects.get(type="trending_weight_comment").value)
                 entry = Entry.objects.get(id=data['id'])
-                entry.trending_points += trending_weight # Someone commented, so the entry should get trend points
-                entry.save(update_fields=['trending_points'])
+                trending_vote = TrendingVote.objects.create(author=request.user, entry=entry,
+                                                            vote_type=vote_type_model)
             elif target_type == Image:
                 image = Image.objects.get(id=data['id'])
-                image.increase_trending_points("trending_weight_comment")
+                trending_vote = TrendingVote.objects.create(author=request.user, image=image,
+                                                            vote_type=vote_type_model)
             elif target_type == Video:
                 video = Video.objects.get(id=data['id'])
-                video.increase_trending_points("trending_weight_comment")
-            new_vote = Vote.objects.create(target=new_comment, author=request.user, direction=1) # Vote in own comment
+                trending_vote = TrendingVote.objects.create(author=request.user, video=video,
+                                                            vote_type=vote_type_model)
+            new_vote = Vote.objects.create(target=new_comment, author=request.user,
+                                           direction=1) # Vote in own comment
             new_vote.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -152,7 +159,6 @@ class VoteDetail(APIView):
                 votes           = Vote.objects.filter(target_id=video.id, target_content_type=video_type_id)
                 serializer      = VoteSerializer(votes, many=True)
                 return Response(serializer.data)
-        
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
@@ -239,7 +245,6 @@ class CommentPageDetail(APIView):
 
         serializer = CommentSerializer(result_page, many=True, context={"reply_limit":reply_limit})
         return paginator.get_paginated_response(serializer.data)        
-        #return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class PointsDetail(APIView):
     def get(self, request):
@@ -269,19 +274,25 @@ class PointsDetail(APIView):
 class TrendingDetail(APIView):
     def get(self, request, type = None):
         trending_type = request.GET.get('type') or type
+        size = request.GET.get('size') or 20
+        size = int(size)
 
         if trending_type:
             if trending_type == "entry":
-                entries = Entry.objects.all().order_by('-trending_points')[:20]
+                entries = Entry.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[:size]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "gallery":
-                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[:20]
+                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[:size]
                 serializer = EntrySerializer(galleries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "image":
-                image = Image.objects.all().order_by('-trending_points')[:20]
-                serializer = ImageSerializer(image, many=True)
+                images = Image.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[:size]
+                serializer = ImageSerializer(images, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            elif trending_type == "video":
+                videos = Video.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[:size]
+                serializer = VideoSerializer(videos, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

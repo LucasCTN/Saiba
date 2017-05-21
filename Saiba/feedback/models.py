@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
-from django.db.models import Sum
+import datetime
+import time
+
 from django.contrib.auth.models import Permission, User
-from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.sessions.models import Session
+
+from home.models import SaibaSettings
 
 class Vote(models.Model):
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
@@ -90,7 +95,7 @@ class Action(models.Model):
     date                = models.DateTimeField(auto_now_add=True, blank=True)
     is_public           = models.BooleanField(default=True)
     is_staff_only       = models.BooleanField(default=False)
-    
+
     def __unicode__(self):
         text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
         return text
@@ -113,3 +118,28 @@ class View(models.Model):
 
         text = "#{} - [{}] {} por {}".format(self.id, self.target_content_type, self.target.title, name)
         return text
+
+class TrendingVote(models.Model):
+    author              = models.ForeignKey(User)
+    vote_type           = models.ForeignKey(SaibaSettings)
+    creation_date       = models.DateTimeField(auto_now_add=True, blank=True)
+    is_deleted          = models.BooleanField(default=False)
+    points              = models.FloatField(default=0)
+    entry               = models.ForeignKey('entry.Entry', related_name="trending_votes", blank=True, null=True)
+    image               = models.ForeignKey('gallery.Image', related_name="trending_votes", blank=True, null=True)
+    video               = models.ForeignKey('gallery.Video', related_name="trending_votes", blank=True, null=True)
+
+    def __unicode__(self):
+        text = "#{} by {}".format(self.id, self.author.username)        
+        return text
+    
+    def set_points(self):
+        vote_value = self.vote_type.value
+        time_weight = SaibaSettings.objects.get(type="trending_weight_time").value
+        seconds = time.mktime(datetime.datetime.now().timetuple())
+
+        self.points = vote_value + (time_weight * seconds)
+
+    def save(self, *args, **kwargs):
+        self.set_points()
+        super(TrendingVote, self).save(*args, **kwargs)

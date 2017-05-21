@@ -38,7 +38,7 @@ class Tag(models.Model):
         return self.label
 
 class SaibaSettings(models.Model):
-    value = models.IntegerField()
+    value = models.FloatField()
     type  = models.CharField(unique=True, max_length=300)
 
     def __unicode__(self):
