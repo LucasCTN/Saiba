@@ -267,30 +267,30 @@ class TrendingDetail(APIView):
     def get(self, request, tg_type = None):
         trending_type = request.GET.get('type') or tg_type
         gallery = request.GET.get('gallery') or None # ID of the entry whose the gallery will be queried
-        size = request.GET.get('size') or 20
         offset = request.GET.get('offset') or 0
+        step = request.GET.get('step') or 20
 
-        size = int(size)
+        step = int(step)
         offset = int(offset)
 
         if trending_type:
             if trending_type == "entry":
-                entries = Entry.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+size]
+                entries = Entry.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "gallery":
-                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[offset:offset+size]
+                galleries = Entry.objects.filter(hidden=False).annotate(gallery_points=Sum('images__trending_points')).order_by('-gallery_points')[offset:offset+step]
                 serializer = EntrySerializer(galleries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "image":
                 if gallery:
-                    images = Image.objects.filter(entry=int(gallery)).annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+size]
+                    images = Image.objects.filter(entry=int(gallery)).annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 else:
-                    images = Image.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')
+                    images = Image.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 serializer = ImageSerializer(images, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "video":
-                videos = Video.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+size]
+                videos = Video.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 serializer = VideoSerializer(videos, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
