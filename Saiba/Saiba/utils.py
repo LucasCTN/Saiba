@@ -140,25 +140,36 @@ def date_is_before_datetime( day, month, year, datetime ):
         return False
 
 def register_view(request, target):
-    content_type = ContentType.objects.get_for_model(target)
+    bot_terms = ["bot", "crawl", "crawler", "slurp", "spider", "link", "checker", "script", "robot", "discovery", "preview"]
+    bot_names = ['Googlebot','Slurp','Twiceler','msnbot','KaloogaBot','YodaoBot','Baiduspider','googlebot','Speedy Spider','DotBot']
 
-    if request.user.is_authenticated():
-        user = request.user
-    else:
-        user = None
+    is_a_bot = False
 
-    current_ip = get_ip(request)
+    for bot_term in (bot_terms + bot_names):
+        is_a_bot = bot_term in request.META['HTTP_USER_AGENT']
 
-    # here the waiting time before another view is set.
-    time_threshold = datetime.now() - timedelta(hours=3)
+        if is_a_bot:
+            break    
 
-    already_viewed = View.objects.filter(target_id=target.id, target_content_type=content_type, ip=current_ip, date__gt=time_threshold) or None
+    # if none of these terms or names are on the HTTP_USER_AGENT so it's not a bot.
+    if not is_a_bot:
+        content_type = ContentType.objects.get_for_model(target)
 
-    session = request.session.session_key or None
+        current_ip = get_ip(request)
 
-    if not already_viewed:
-        new_view = View.objects.create( author      = user,
-                                        target      = target, 
-                                        ip          = current_ip, 
-                                        user_agent  = request.META['HTTP_USER_AGENT'],
-                                        session     = session)
+        # here the waiting time before another view is set.
+        time_threshold = datetime.now() - timedelta(hours=3)
+
+        already_viewed = View.objects.filter(target_id=target.id, target_content_type=content_type, ip=current_ip, date__gt=time_threshold) or None
+
+        if not already_viewed:
+            if request.user.is_authenticated():
+                user = request.user
+            else:
+                user = None
+
+            new_view = View.objects.create( author      = user,
+                                            target      = target, 
+                                            ip          = current_ip, 
+                                            user_agent  = request.META['HTTP_USER_AGENT'],
+                                            session     = request.session.session_key or None)

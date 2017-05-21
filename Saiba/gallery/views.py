@@ -19,6 +19,8 @@ def index(request):
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
 
+    utils.register_view(request, image)
+
     related_images = Image.objects.filter(hidden=False, tags__in=image.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
 
@@ -34,6 +36,9 @@ def image_detail(request, image_id):
 
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
+
+    utils.register_view(request, video)
+
     related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=video.pk)[:5]
     
