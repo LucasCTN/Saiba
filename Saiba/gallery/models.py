@@ -36,7 +36,6 @@ class Image(models.Model):
     state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
     views           = GenericRelation('feedback.View')
-    votes = GenericRelation('feedback.TrendingVote', related_query_name='images')
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
@@ -69,7 +68,6 @@ class Video(models.Model):
     state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
     views           = GenericRelation('feedback.View')
-    votes = GenericRelation('feedback.TrendingVote', related_query_name='videos')
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
