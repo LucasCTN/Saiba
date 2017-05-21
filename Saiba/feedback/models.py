@@ -111,5 +111,5 @@ class View(models.Model):
         else:
             name = "Anonymous"
 
-        text = "#{} - {}: {}".format(self.id, self.target_content_type, name)
+        text = "#{} - [{}] {} por {}".format(self.id, self.target_content_type, self.target.title, name)
         return text
