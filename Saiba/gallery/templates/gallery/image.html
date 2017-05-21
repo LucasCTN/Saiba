@@ -45,13 +45,23 @@
         <hr/>
         <h2>Imagens populares</h2>
         <script>
-            var trending_url = "{% url 'home:api_trending_list' %}";
-            var api = new API();
-            
-            api.getPage(trending_url, function(data){
-                $("#trending-images").append(data);
-            });
+            $(document).ready(function(){                
+                var trending_url = "{% url 'home:api_trending_list' %}?type=image";
+                var api = new API();
+                var offset = 0;
+                var step = 5;
 
+                $(window).scroll(function() {
+                    if($(window).scrollTop() + window.innerHeight == $(document).height()) {
+                        url = trending_url + "&offset=" + offset + "&step=" + step;
+                        offset += step;
+
+                        api.getPage(url, function(data){
+                            $("#trending-images").append(data);
+                        });
+                    }
+                });
+            });
         </script>
     </section>
 {% endblock %}
