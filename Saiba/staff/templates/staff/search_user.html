@@ -39,16 +39,23 @@
                         <td><span class="glyphicon glyphicon-remove" style="color:red"/></td>
                     {% endif %}
                     {% if searched_user.is_active and not searched_user.is_staff and ban_normal_user or searched_user.is_staff and ban_staff_user %}
-                        <td><button class="btn btn-default" name="banned_user" value="{{searched_user.id}}" type="submit">Banir</button></td>
+                        <td><button class="btn btn-danger" name="banned_user" value="{{searched_user.id}}" type="submit"><span class="glyphicon glyphicon-ban-circle"></span> Banir</button></td>
                     {% endif %}
                     {% if searched_user.is_active == False and not searched_user.is_staff and ban_normal_user or searched_user.is_staff and ban_staff_user %}
-                        <td><button class="btn btn-default" name="unbanned_user" value="{{searched_user.id}}" type="submit">Desbanir</button></td>
+                        <td><button class="btn btn-success" name="unbanned_user" value="{{searched_user.id}}" type="submit"><span class="glyphicon glyphicon-ok-circle"></span> Desbanir</button></td>
                     {% endif %}
                     {% if can_promote_users == True %}
-                        <td><button class="btn btn-default" name="promoted_user_mod" value="{{searched_user.id}}" type="submit">Promover a moderador</button></td>
-                        <td><button class="btn btn-default" name="demoted_user_mod" value="{{searched_user.id}}" type="submit">Rebaixar de moderador</button></td>
-                        <td><button class="btn btn-default" name="promoted_user_admin" value="{{searched_user.id}}" type="submit">Promover a administrador</button></td>
-                        <td><button class="btn btn-default" name="demoted_user_admin" value="{{searched_user.id}}" type="submit">Rebaixar de administrador</button></td>
+                        <td><div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Cargo <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><button class="btn btn-default col-md-12" name="promoted_user_mod" value="{{searched_user.id}}" type="submit"><span class="glyphicon glyphicon-star"></span> Promover a moderador</button></li>
+                                <li><button class="btn btn-default col-md-12" name="demoted_user_mod" value="{{searched_user.id}}" type="submit"><span class="glyphicon glyphicon-star-empty"></span> Rebaixar de moderador</button></li>
+                                <li><button class="btn btn-default col-md-12" name="promoted_user_admin" value="{{searched_user.id}}" type="submit"><span class="glyphicon glyphicon-star"></span> Promover a administrador</button></li>
+                                <li><button class="btn btn-default col-md-12" name="demoted_user_admin" value="{{searched_user.id}}" type="submit"><span class="glyphicon glyphicon-star-empty"></span> Rebaixar de administrador</button></li>
+                            </ul>
+                        </div></td>                        
                     {% endif %}
                 <tr>
             {% endfor %}
