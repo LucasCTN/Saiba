@@ -4,21 +4,24 @@ from django.db import models
 from staff.models import UserGroup, UserPermission
 
 class Profile(models.Model):
-    user        = models.OneToOneField(User, on_delete=models.CASCADE)
+    user        = models.OneToOneField(User, blank=True, null=True, default=None, on_delete=models.CASCADE)
     title       = models.CharField(max_length = 500, blank=True)
     slug        = models.SlugField(max_length=250, default="", blank=True)
     avatar      = models.ImageField(blank=True, upload_to='icon/', default='icon/perfil.png')
     gender      = models.CharField(max_length = 500, blank=True)
-    location    = models.CharField(max_length = 500)
-    about       = models.TextField(max_length = 1500)
-    groups      = models.ManyToManyField(UserGroup)
+    location    = models.CharField(max_length = 500, blank=True)
+    about       = models.TextField(max_length = 1500, blank=True)
+    groups      = models.ManyToManyField(UserGroup, blank=True)
 
     def save(self, *args, **kwargs):
+        new_user = False
         if not self.id:
+            new_user = True
             self.slug = slugify(self.user.username)
-            self.groups.add(UserGroup.objects.get(id=3))
-
         super(Profile, self).save(*args, **kwargs)
+
+        if new_user:
+            self.groups.add(UserGroup.objects.get(id=3))
 
     def __unicode__(self):
         return self.user.username
