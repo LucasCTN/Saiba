@@ -7,3 +7,4 @@ six==1.10.0
 textile==2.3.5
 beautifulsoup4==4.6.0
 django-ipware==1.1.6
+psycopg2
