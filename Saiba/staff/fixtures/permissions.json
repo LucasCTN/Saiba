@@ -54,5 +54,13 @@
       "code_name": "promote_user",
       "label": "Promote user"
     }
+  },
+  {
+    "model": "staff.UserPermission",
+    "pk": 8,
+    "fields": {
+      "code_name": "lock_comments",
+      "label": "Lock comments"
+    }
   }
 ]

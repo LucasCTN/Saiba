@@ -68,7 +68,8 @@ def detail(request, entry_slug):
             'related_entries'   : related_entries,
             'trending_galleries': trending_galleries,
             'can_see_editorship': can_see_editorship,
-            'can_lock_gallery'  : can_lock_gallery }
+            'can_lock_gallery'  : can_lock_gallery,
+            'target'            : entry}
 
     return render(request, 'entry/detail.html', args)
 
@@ -118,7 +119,7 @@ def edit(request, entry_slug):
             entry.save()
 
             vote_type_model = SaibaSettings.objects.get(type='trending_weight_entry_edit')
-            trending_vote = TrendingVote.objects.create(author=request.user, target=entry,
+            trending_vote = TrendingVote.objects.create(author=request.user, entry=entry,
                                                         vote_type=vote_type_model)
 
             revision = revision_form.save(commit=False)

@@ -52,7 +52,8 @@ class StaffEntryForm(forms.ModelForm):
 
     class Meta:
         model = Entry
-        fields = [ "title", "category", "origin", "date_origin", "icon", "icon_url", "tags", "images_locked", "videos_locked" ]
+        fields = ["title", "category", "origin", "date_origin", "icon", "icon_url", "tags", 
+                  "images_locked", "videos_locked", "comments_locked"]
 
         labels = {
             'title': ('Título'),
@@ -64,6 +65,7 @@ class StaffEntryForm(forms.ModelForm):
             'tags': ('Marcações'),
             'images_locked': ('Imagens trancadas'),
             'videos_locked': ('Vídeos trancados'),
+            'comments_locked': ('Comentários trancados'),
         }
 
         error_messages = custom_messages.get_all_error_messages(fields, labels)

@@ -78,34 +78,52 @@ class CommentDetail(APIView):
         data["target_id"]           = data['id']
 
         serializer = CommentSerializer(data=data)
+        target_id = data['id']
 
         if serializer.is_valid():
+            target = None
+            vote_type_model = SaibaSettings.objects.get(type='trending_weight_comment')
+
+            if target_type == Entry:
+                target = Entry.objects.get(id=target_id)
+
+                if target.comments_locked:
+                    return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
+                trending_vote = TrendingVote.objects.create(author=request.user, entry=target,
+                                                            vote_type=vote_type_model)
+
+            elif target_type == Image:
+                target = Image.objects.get(id=target_id)
+
+                if target.comments_locked:
+                    return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
+                trending_vote = TrendingVote.objects.create(author=request.user, image=target,
+                                                            vote_type=vote_type_model)
+            elif target_type == Video:
+                target = Video.objects.get(id=target_id)
+
+                if target.comments_locked:
+                    return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
+                trending_vote = TrendingVote.objects.create(author=request.user, video=target,
+                                                            vote_type=vote_type_model)
+
             new_comment = serializer.save()
+
             if new_comment.reply_to:
                 new_comment.create_action("2")
             else:
                 new_comment.create_action("1")
 
-            vote_type_model = SaibaSettings.objects.get(type='trending_weight_comment')
-            if target_type == Entry:
-                entry = Entry.objects.get(id=data['id'])
-                trending_vote = TrendingVote.objects.create(author=request.user, entry=entry,
-                                                            vote_type=vote_type_model)
-            elif target_type == Image:
-                image = Image.objects.get(id=data['id'])
-                trending_vote = TrendingVote.objects.create(author=request.user, image=image,
-                                                            vote_type=vote_type_model)
-            elif target_type == Video:
-                video = Video.objects.get(id=data['id'])
-                trending_vote = TrendingVote.objects.create(author=request.user, video=video,
-                                                            vote_type=vote_type_model)
             new_vote = Vote.objects.create(target=new_comment, author=request.user,
                                            direction=1) # Vote in own comment
             new_vote.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
     def patch(self, request):
         """Parameters: id and is_deleted"""
         data = request.data.copy()
@@ -212,11 +230,11 @@ class CommentPageDetail(APIView):
                 image           = get_object_or_404(Image, id=comment_target_id)
                 target_type_id  = ContentType.objects.get_for_model(Image).id
                 target_id = image.id
-            elif comment_target_type == "video" and comment_target_id:                
+            elif comment_target_type == "video" and comment_target_id:
                 video           = get_object_or_404(Video, id=comment_target_id)
                 target_type_id  = ContentType.objects.get_for_model(Video).id
                 target_id = video.id
-            elif comment_target_type == "profile" and comment_target_id:                
+            elif comment_target_type == "profile" and comment_target_id:
                 profile         = get_object_or_404(Profile, id=comment_target_id)
                 target_type_id  = ContentType.objects.get_for_model(Profile).id
                 target_id = profile.user.id

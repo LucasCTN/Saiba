@@ -27,7 +27,7 @@
                     <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
                     <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                     | 
-                    <button class="comment-reply btn btn-default btn-xs">Responder</button>
+                    {% if comments_locked == False %}<button class="comment-reply btn btn-default btn-xs">Responder</button>{% endif %}
                     {% if top_comment.author == request.user or user_can_delete == True %}
                     <button class="comment-delete btn btn-default btn-xs">Apagar</button>
                     {% endif %}
@@ -70,8 +70,8 @@
                     {% if not comment.is_deleted %}
                     <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
                     <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
-                    | 
-                    <button class="comment-reply btn btn-default btn-xs">Responder</button>
+                    |
+                    {% if comments_locked == False %}<button class="comment-reply btn btn-default btn-xs">Responder</button>{% endif %}
                     {% if comment.author == request.user or user_can_delete == True %}
                     <button class="comment-delete btn btn-default btn-xs">Apagar</button>
                     {% endif %}
@@ -115,7 +115,7 @@
                         <button class="upvote btn btn-default btn-xs glyphicon glyphicon-chevron-up"></button>
                         <button class="downvote btn btn-default btn-xs glyphicon glyphicon-chevron-down"></button>
                         |
-                        <button class="comment-reply btn btn-default btn-xs">Responder</button>
+                        {% if comments_locked == False %}<button class="comment-reply btn btn-default btn-xs">Responder</button>{% endif %}
                         {% if child.author == request.user or user_can_delete == True %}
                         <button class="comment-delete btn btn-default btn-xs">Apagar</button>
                         {% endif %}

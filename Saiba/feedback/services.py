@@ -74,6 +74,10 @@ def find_target(id = None, type = None):
 def get_page(full_list, page, page_length):
     return full_list[(page-1)*page_length:][:page_length]
 
+def are_comments_locked(id = None, target_type = None):
+    target = find_target(id, target_type)
+    return target.comments_locked
+
 def convert_type(type_name):
     type_map = {"comment":Comment, "entry":Entry, "image":Image, "profile":Profile}
     target_type = ContentType.objects.get_for_model(type_map[type_name])

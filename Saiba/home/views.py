@@ -36,13 +36,13 @@ def user_login(request):
         return redirect('home:index')
     else:
         username = password = ''
-        
+
         profile_form = LoginForm(request.POST or None)
 
         if profile_form.is_valid():
             if initialize_authentification(request):
                 return redirect('home:index')
-            else:                
+            else:
                 if len(User.objects.filter(username=request.POST['username'])) <= 0:
                     errors_list.append("Este nome de usuario nao esta registrado no sistema.")
                 else:
