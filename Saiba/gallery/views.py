@@ -19,6 +19,9 @@ def index(request):
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
 
+    if image.hidden and not request.user.is_staff:
+        return redirect('home:index')
+
     utils.register_view(request, image)
 
     related_images = Image.objects.filter(hidden=False, tags__in=image.tags.all()).\
@@ -38,11 +41,14 @@ def image_detail(request, image_id):
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
 
+    if video.hidden and not request.user.is_staff:
+        return redirect('home:index')
+    
     utils.register_view(request, video)
 
     related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=video.pk)[:5]
-    
+
     trending_galleries = utils.get_popular_galleries(request)
 
     context = { 'video'             : video,

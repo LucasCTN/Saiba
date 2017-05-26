@@ -184,7 +184,8 @@ class VoteDetail(APIView):
                                 "video": ContentType.objects.get_for_model(Video).id}
 
         if type and id and Saiba.utils.is_valid_direction(direction):
-            past_vote = Vote.objects.filter(target_id=id, target_content_type=content_type_mapping[type], author=request.user).first()
+            past_vote = Vote.objects.filter(target_id=id, target_content_type=content_type_mapping[type],
+                                            author=request.user).first()
 
             if past_vote:
                 if int(past_vote.direction) != int(direction):
@@ -293,7 +294,7 @@ class TrendingDetail(APIView):
 
         if trending_type:
             if trending_type == "entry":
-                entries = Entry.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
+                entries = Entry.objects.filter(hidden=False).annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "gallery":
@@ -302,13 +303,13 @@ class TrendingDetail(APIView):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "image":
                 if gallery:
-                    images = Image.objects.filter(entry=int(gallery)).annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
+                    images = Image.objects.filter(hidden=False).filter(entry=int(gallery)).annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 else:
                     images = Image.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 serializer = ImageSerializer(images, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             elif trending_type == "video":
-                videos = Video.objects.annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
+                videos = Video.objects.filter(hidden=False).annotate(total_points=Sum('trending_votes__points')).order_by('-total_points')[offset:offset+step]
                 serializer = VideoSerializer(videos, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -320,7 +321,13 @@ class SearchDetail(APIView):
 
         if search_text and search_type:
             if search_type == "entry":
-                entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:20]
+                entries = None
+
+                if request.user.is_staff:
+                    entries = Entry.objects.filter(title__contains=search_text)[:20]
+                else:
+                    entries = Entry.objects.filter(title__contains=search_text, hidden=False)[:20]
+                    
                 serializer = EntrySerializer(entries, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
 

@@ -28,6 +28,7 @@ def get_custom_error_message( message_type ):
                         'invalid_entry' : "A entrada inserida não existe.",
                         'locked_images' : "As imagens da galeria da entrada escolhida estão trancados.",
                         'locked_videos' : "Os vídeos da galeria da entrada escolhida estão trancados.",
-                        'invalid_date' : "A data inserida é inválida." }
+                        'hidden'        : "Esse conteúdo está escondido.",
+                        'invalid_date'  : "A data inserida é inválida." }
 
     return custom_messages[message_type]

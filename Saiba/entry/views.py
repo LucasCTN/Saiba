@@ -32,6 +32,10 @@ def index(request):
 
 def detail(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)
+
+    if entry.hidden and not request.user.is_staff:
+        return redirect('home:index')
+
     last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
     last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]

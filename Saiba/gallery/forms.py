@@ -82,7 +82,7 @@ class StaffImageForm(ModelForm):
 
     class Meta:
         model = Image
-        fields = [ "title", "source", "date_origin", "description", "file", "file_url", "state", "comments_locked" ]
+        fields = [ "title", "source", "date_origin", "description", "file", "file_url", "state", "comments_locked", "hidden" ]
 
 class VideoForm(ModelForm):
     class Meta:
@@ -92,4 +92,4 @@ class VideoForm(ModelForm):
 class StaffVideoForm(ModelForm):
     class Meta:
         model = Video
-        fields = [ "title", "date_origin", "description", "link", "state", "link", "comments_locked" ]
+        fields = [ "title", "date_origin", "description", "link", "state", "link", "comments_locked", "hidden" ]

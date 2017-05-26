@@ -21,7 +21,8 @@ def comment_page(request):
     comments_locked = feedback.services.are_comments_locked(model_id, model_type)
 
     model_type = feedback.services.convert_type(model_type)
-    top_comments = Comment.objects.filter(target_content_type=model_type, target_id=model_id, is_deleted=False)
+    top_comments = Comment.objects.filter(target_content_type=model_type, target_id=model_id, 
+                                          is_deleted=False)
     top_comments = top_comments.order_by('-points')[:2]
 
     args = {'comments' : comments,
