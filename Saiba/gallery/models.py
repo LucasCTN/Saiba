@@ -15,7 +15,8 @@ from home.models import SaibaSettings
 
 
 class State(models.Model):
-    label       = models.CharField(max_length=250)
+    label = models.CharField(max_length=250)
+    code_name = models.CharField(max_length=250, default="")
     description = models.CharField(max_length=250)
 
     def __unicode__(self):
@@ -36,6 +37,7 @@ class Image(models.Model):
     state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
     views           = GenericRelation('feedback.View')
+    comments_locked = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title
@@ -63,6 +65,7 @@ class Video(models.Model):
     state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
     views           = GenericRelation('feedback.View')
+    comments_locked = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.entry.title + ' - ' + self.title

@@ -38,14 +38,20 @@
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
+                        {% csrf_token %}                        
                         <div class="form-group">
-                            <span class="col-md-offset-8">
+                            <span class="col-md-8">
                                 <strong>Trancar imagens: </strong>
-                                {{ entry_form.images_locked }}
+                                    {{ entry_form.images_locked }}
 
-                                <strong>Trancar videos:</strong>
-                                {{ entry_form.videos_locked }}
+                                    <strong>Trancar videos:</strong>
+                                    {{ entry_form.videos_locked }}
+
+                                    <strong>Trancar comentários:</strong>
+                                    {{ entry_form.comments_locked }}
+
+                                    <strong>Esconder entrada:</strong>
+                                    {{ entry_form.hidden }}
                             </span>
                         </div>
 

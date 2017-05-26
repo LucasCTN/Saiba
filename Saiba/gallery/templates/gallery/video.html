@@ -5,6 +5,13 @@
         <iframe id="vídeo" class='media-object' width="560" height="315" src="https://www.youtube.com/embed/{{ video.link }}" frameborder="0" allowfullscreen></iframe>
     </section>
 
+    {% if video.hidden %}
+    <section id="entry-status-rejeitado" class="entry-status panel panel-default col-md-12">
+        <div id="entry-status-rejeitado" class="entry-status-label panel-body col-md-12">Este vídeo está escondido</div>
+        <div id="entry-status-rejeitado" class="entry-status-description panel-body col-md-12">Este vídeo foi escondido por um membro da equipe e não pode ser visto por outros usuários.</div>
+    </section>
+    {% endif %}
+
     <section id="informacao" class="container media col-md-12">
         <div class="col-md-9">
             <h3>

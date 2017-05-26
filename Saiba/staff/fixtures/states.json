@@ -1,0 +1,29 @@
+[
+  {
+    "model": "gallery.State",
+    "pk": 1,
+    "fields": {
+      "label": "Livre",
+      "code_name": "livre",
+      "description": "O conteúdo é livre."
+    }
+  },
+  {
+    "model": "gallery.State",
+    "pk": 2,
+    "fields": {
+      "label": "NSPT",
+      "code_name": "nspt",
+      "description": "O conteúdo não é seguro para o trabalho."
+    }
+  },
+  {
+    "model": "gallery.State",
+    "pk": 3,
+    "fields": {
+      "label": "Violento",
+      "code_name": "violento",
+      "description": "O conteúdo contém violência forte."
+    }
+  }
+]

@@ -1,10 +1,17 @@
 ﻿{% extends 'home/base.html' %}
 {% block title %}{{ image.title }} - Saiba{% endblock %}
-{% block body %}  
+{% block body %}
     <section id="conteudo" class="container col-md-9">
         <img id="imagem" class='media-object img-thumbnail' src='{{ image.file.url }}' style="max-height: 100%; max-width: 100%;">
-    </section>   
+    </section>
 
+    {% if image.hidden %}
+    <section id="entry-status-rejeitado" class="entry-status panel panel-default col-md-12">
+        <div id="entry-status-rejeitado" class="entry-status-label panel-body col-md-12">Esta imagem está escondida</div>
+        <div id="entry-status-rejeitado" class="entry-status-description panel-body col-md-12">Essa imagem foi escondida por um membro da equipe e não pode ser vista por outros usuários.</div>
+    </section>
+    {% endif %}
+    
     <section id="informacao" class="container media col-md-12">
         <div class="col-md-9">
             <h3>

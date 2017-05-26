@@ -8,7 +8,7 @@ from django.utils.html import escape
 from django.forms.models import model_to_dict
 from django.core.urlresolvers import reverse
 from .models import Image, Video
-from .forms import ImageForm, VideoForm
+from .forms import ImageForm, VideoForm, StaffImageForm, StaffVideoForm
 from home.models import Tag
 from entry.models import Entry
 from Saiba import utils, custom_messages
@@ -19,6 +19,9 @@ def index(request):
 
 def image_detail(request, image_id):
     image = get_object_or_404(Image, pk=image_id)
+
+    if image.hidden and not request.user.is_staff:
+        return redirect('home:index')
 
     utils.register_view(request, image)
 
@@ -35,6 +38,7 @@ def image_detail(request, image_id):
                 'id'                : image.pk,
                 'related_images'    : related_images,
                 'trending_galleries': trending_galleries,
+                'target'            : image,
                 'views'             : views }
 
     return render(request, 'gallery/image.html', context)
@@ -42,11 +46,14 @@ def image_detail(request, image_id):
 def video_detail(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
 
+    if video.hidden and not request.user.is_staff:
+        return redirect('home:index')
+    
     utils.register_view(request, video)
 
     related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=video.pk)[:5]
-    
+
     trending_galleries = utils.get_popular_galleries(request)
 
     type = ContentType.objects.get_for_model(Video)
@@ -57,6 +64,7 @@ def video_detail(request, video_id):
                 'id'                : video.pk,
                 'related_videos'    : related_videos,
                 'trending_galleries': trending_galleries,
+                'target'            : video,
                 'views'             : views }
 
     return render(request, 'gallery/video.html', context)
@@ -88,6 +96,10 @@ def upload_image(request):
         elif not image_entry:
             valid_form = False
             error_messages.append(custom_messages.get_custom_error_message("invalid_entry"))
+
+        if image_entry and image_entry.images_locked:
+            valid_form = False
+            error_messages.append(custom_messages.get_custom_error_message("locked_images"))
 
         if not image_form.is_valid():
             error_messages = None
@@ -122,16 +134,23 @@ def upload_video(request):
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:
+        error_messages = []
         entry_name = request.POST.get('entry-selected')
         video_form = VideoForm(request.POST or None)
+        video_entry = Entry.objects.filter(title=entry_name, hidden=False).first()
 
-        if video_form.is_valid():
+        valid_form = True
+        if video_entry and video_entry.videos_locked:
+            valid_form = False
+            error_messages.append(custom_messages.get_custom_error_message("locked_videos"))
+
+        if video_form.is_valid() and valid_form:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
             video = video_form.save(commit=False)
             video.author = request.user
-            video.entry = Entry.objects.filter(title=entry_name, hidden=False).first()
+            video.entry = video_entry
             video.save()
             video_form.save_m2m()
             video.tags = Tag.objects.filter(label__in=set_tags)
@@ -146,7 +165,7 @@ def upload_video(request):
     video_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
     video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
-    return render(request, 'gallery/upload-video.html', {"form": video_form})
+    return render(request, 'gallery/upload-video.html', {"form": video_form, "errors": error_messages})
 
 def image_edit(request, image_id):
     if not request.user.is_authenticated():
@@ -160,11 +179,18 @@ def image_edit(request, image_id):
         image_dict = model_to_dict(image)
         image_form = ImageForm(request.POST or None, initial=image_dict)
 
+        if user.is_staff:
+            image_form = StaffImageForm(request.POST or None, initial=image_dict)
+
         if image_form.is_valid() and is_editor:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
             image_form = ImageForm(request.POST, instance = image)
+            
+            if user.is_staff:
+                image_form = StaffImageForm(request.POST, instance = image)
+
             image = image_form.save(commit=False)
             image.entry = Entry.objects.filter(title=entry_name, hidden=False).first()
             image.tags = Tag.objects.filter(label__in=set_tags)
@@ -198,11 +224,18 @@ def video_edit(request, video_id):
 
         video_form = VideoForm(request_post or None, initial=video_dict)
 
+        if user.is_staff:
+            video_form = StaffVideoForm(request_post or None, initial=video_dict)
+
         if video_form.is_valid() and is_editor:
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
             video_form = VideoForm(request_post, instance = video)
+
+            if user.is_staff:
+                video_form = StaffVideoForm(request_post, instance = video)
+
             video = video_form.save(commit=False)
             video.entry = Entry.objects.filter(title=entry_name, hidden=False).first()
             video.tags = Tag.objects.filter(label__in=set_tags)

@@ -18,9 +18,11 @@ def comment_page(request):
     pages_total = int(pages_total)
 
     user_can_delete = request.user.profile.HasPermission('delete_comment')
+    comments_locked = feedback.services.are_comments_locked(model_id, model_type)
 
     model_type = feedback.services.convert_type(model_type)
-    top_comments = Comment.objects.filter(target_content_type=model_type, target_id=model_id, is_deleted=False)
+    top_comments = Comment.objects.filter(target_content_type=model_type, target_id=model_id, 
+                                          is_deleted=False)
     top_comments = top_comments.order_by('-points')[:2]
 
     args = {'comments' : comments,
@@ -29,7 +31,8 @@ def comment_page(request):
             'chain': chain,
             'child_limit': child_limit,
             'user_can_delete': user_can_delete,
-            'top_comments':top_comments,
-            'hide_top_comments':hide_top_comments}
+            'top_comments': top_comments,
+            'hide_top_comments':hide_top_comments,
+            'comments_locked': comments_locked}
 
     return render(request, 'feedback/comment_page.html', args)

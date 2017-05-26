@@ -32,6 +32,10 @@ def index(request):
 
 def detail(request, entry_slug):
     entry = get_object_or_404(Entry, slug=entry_slug)
+
+    if entry.hidden and not request.user.is_staff:
+        return redirect('home:index')
+
     last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
     first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
     last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
@@ -72,6 +76,7 @@ def detail(request, entry_slug):
             'trending_galleries': trending_galleries,
             'can_see_editorship': can_see_editorship,
             'can_lock_gallery'  : can_lock_gallery,
+            'target'            : entry,
             'views'             : views }
 
     return render(request, 'entry/detail.html', args)
@@ -122,7 +127,7 @@ def edit(request, entry_slug):
             entry.save()
 
             vote_type_model = SaibaSettings.objects.get(type='trending_weight_entry_edit')
-            trending_vote = TrendingVote.objects.create(author=request.user, target=entry,
+            trending_vote = TrendingVote.objects.create(author=request.user, entry=entry,
                                                         vote_type=vote_type_model)
 
             revision = revision_form.save(commit=False)

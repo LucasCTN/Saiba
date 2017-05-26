@@ -28,7 +28,7 @@
                 <a class="col-md-2" href="{{result.href}}">
                     <span class="col-md-12" style="text-align: center">
                         <img id="search-image" class="media-object" src={{result.src}} alt="{{result.title}}">
-                        {{result.title}}
+                        {{result.title}} {% if result.hidden %} (Escondido) {% endif %}
                     </span>                        
                 </a>
             {% endfor %}

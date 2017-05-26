@@ -23,6 +23,16 @@
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-group">
+                            <span class="col-md-8">
+                                    <strong>Trancar comentários:</strong>
+                                    {{ image_form.comments_locked }}
+
+                                    <strong>Esconder imagem:</strong>
+                                    {{ image_form.hidden }}
+                            </span>
+                        </div>
+                        
+                        <div class="form-group">
                             <label class="control-label col-sm-2" for="field">Título:</label>
                             <div class="col-sm-8">{{ image_form.title }}</div>
                         </div>

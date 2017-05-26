@@ -36,7 +36,14 @@
         </nav>
     </div>
     
-    {% if entry.status.label != "Confirmado"  %}
+    {% if entry.hidden %}
+    <section id="entry-status-rejeitado" class="entry-status panel panel-default col-md-12">
+        <div id="entry-status-rejeitado" class="entry-status-label panel-body col-md-12">Esta entrada está escondida</div>
+        <div id="entry-status-rejeitado" class="entry-status-description panel-body col-md-12">Essa entrada foi escondida por um membro da equipe e não pode ser vista por outros usuários.</div>
+    </section>
+    {% endif %}
+
+    {% if entry.status.label != "Confirmado" and entry.hidden == False  %}
     <section id="entry-status-{{entry.status.code_name}}" class="entry-status panel panel-default col-md-12">
         <div id="entry-status-{{entry.status.code_name}}" class="entry-status-label panel-body col-md-12">{{entry.status.label}}</div>
         <div id="entry-status-{{entry.status.code_name}}" class="entry-status-description panel-body col-md-12">{{entry.status.description}}</div>

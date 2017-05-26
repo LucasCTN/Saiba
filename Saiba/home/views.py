@@ -36,13 +36,13 @@ def user_login(request):
         return redirect('home:index')
     else:
         username = password = ''
-        
+
         profile_form = LoginForm(request.POST or None)
 
         if profile_form.is_valid():
             if initialize_authentification(request):
                 return redirect('home:index')
-            else:                
+            else:
                 if len(User.objects.filter(username=request.POST['username'])) <= 0:
                     errors_list.append("Este nome de usuario nao esta registrado no sistema.")
                 else:
@@ -115,11 +115,11 @@ def user_register(request):
         register_user_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
         register_user_form.fields['email'].widget.attrs['class'] = 'form-control form-email'
         register_profile_form.fields['gender'].widget.attrs['class'] = 'form-control form-gender'
-    
+
         args = {'user_form': register_user_form,
                 'profile_form': register_profile_form,
                 'custom_error': custom_error}
-    
+
         return render(request, 'home/register.html', args)
 
 def page_search(request):
@@ -144,11 +144,20 @@ def page_search(request):
         search_result = None
     else:
         if(type == 'entrada'):
-            search_result = Entry.objects.filter(hidden=False)
+            if request.user.is_staff:
+                search_result = Entry.objects.filter()
+            else:
+                search_result = Entry.objects.filter(hidden=False)
         elif(type == 'imagem'):
-            search_result = Image.objects.filter(hidden=False)
+            if request.user.is_staff:
+                search_result = Image.objects.filter()
+            else:
+                search_result = Image.objects.filter(hidden=False)
         else:
-            search_result = Video.objects.filter(hidden=False)
+            if request.user.is_staff:
+                search_result = Video.objects.filter()
+            else:
+                search_result = Video.objects.filter(hidden=False)
 
         if(query != ''):
             search_result = search_result.filter(Q(title__contains=query) | Q(tags__label__contains=query)).distinct()
@@ -172,7 +181,7 @@ def page_search(request):
             else:
                 result.href = "/galeria/video/" + str(result.id)
                 result.src = "https://img.youtube.com/vi/" + result.link + "/mqdefault.jpg"
-    
+
     args = {'search_result' : search_result,
             'query' : query,
             'type' : type,
@@ -208,7 +217,12 @@ def search_entry(request):
     entries = Entry.objects.all()
 
     if search_text != '':
-        search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
+        search_result = None
+
+        if request.user.is_staff:
+            search_result = Entry.objects.filter(title__contains=search_text)[:5]
+        else:
+            search_result = Entry.objects.filter(title__contains=search_text, hidden=False)[:5]
     else:
         search_result = None
 
