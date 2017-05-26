@@ -6,13 +6,18 @@
     </section>
 
     <section id="informacao" class="container media col-md-12">
-        <h3>
-            {{ video.title }} - <a href="{% url 'entry:detail' video.entry.slug %}">{{video.entry.title}}</a><br/>
-            <small>Enviado por <a href="{% url 'profile:detail' video.author.profile.slug %}">{{ video.author.username }}</a> a <span class="saiba-date" title="{{video.date}}">{{video.date|date:"c"}}</span></small>
-        </h3>
-        {% if video.source %}<p>Fonte: {{ video.source }}</p>{% endif %}
-        <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
-        {% if video.description %}<p>Descrição: {{ video.description }}</p>{% endif %}
+        <div class="col-md-9">
+            <h3>
+                {{ video.title }} - <a href="{% url 'entry:detail' video.entry.slug %}">{{video.entry.title}}</a><br/>
+                <small>Enviado por <a href="{% url 'profile:detail' video.author.profile.slug %}">{{ video.author.username }}</a> a <span class="saiba-date" title="{{video.date}}">{{video.date|date:"c"}}</span></small>
+            </h3>
+            {% if video.source %}<p>Fonte: {{ video.source }}</p>{% endif %}
+            <p><small>Marcações: {% for tag in video.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=video">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+            {% if video.description %}<p>Descrição: {{ video.description }}</p>{% endif %}
+        </div>
+        <div class="col-md-3">
+            <span><strong>Visualizações:</strong> {{views}}</span>
+        </div>
     </section>
 
     <div class="media-right media-middle col-md-12">

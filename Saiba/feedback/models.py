@@ -116,8 +116,7 @@ class View(models.Model):
         else:
             name = "Anonymous"
 
-        text = "#{} - [{}] {} por {}".format(self.id, self.target_content_type, self.target.title, name)
-        return text
+        return "#" + str(self.id) + " - [" + str(self.target_content_type) + "] " + self.target.title + " por " + name
 
 class TrendingVote(models.Model):
     author              = models.ForeignKey(User)

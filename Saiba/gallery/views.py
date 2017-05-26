@@ -1,5 +1,6 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, Count, Max
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -11,7 +12,7 @@ from .forms import ImageForm, VideoForm
 from home.models import Tag
 from entry.models import Entry
 from Saiba import utils, custom_messages
-from feedback.models import Action
+from feedback.models import Action, View
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -26,11 +27,15 @@ def image_detail(request, image_id):
 
     trending_galleries = utils.get_popular_galleries(request)
 
+    type = ContentType.objects.get_for_model(Image)
+    views = View.objects.filter(target_content_type=type, target_id=image_id).count()
+
     context = { 'image'             : image,
                 'type'              : 'image',
                 'id'                : image.pk,
                 'related_images'    : related_images,
-                'trending_galleries': trending_galleries }
+                'trending_galleries': trending_galleries,
+                'views'             : views }
 
     return render(request, 'gallery/image.html', context)
 
@@ -44,11 +49,15 @@ def video_detail(request, video_id):
     
     trending_galleries = utils.get_popular_galleries(request)
 
+    type = ContentType.objects.get_for_model(Video)
+    views = View.objects.filter(target_content_type=type, target_id=video_id).count()
+
     context = { 'video'             : video,
                 'type'              : 'video',
                 'id'                : video.pk,
                 'related_videos'    : related_videos,
-                'trending_galleries': trending_galleries }
+                'trending_galleries': trending_galleries,
+                'views'             : views }
 
     return render(request, 'gallery/video.html', context)
 

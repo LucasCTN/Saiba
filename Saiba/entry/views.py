@@ -17,7 +17,7 @@ from django.utils.html import escape
 import Saiba.parser
 import Saiba.utils as utils
 from entry.serializers import EntrySerializer, RevisionSerializer
-from feedback.models import Comment, TrendingVote
+from feedback.models import Comment, TrendingVote, View
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings, Tag
@@ -58,6 +58,9 @@ def detail(request, entry_slug):
     if request.user.is_authenticated():
         can_lock_gallery = request.user.profile.HasPermission('lock_gallery')
 
+    type = ContentType.objects.get_for_model(Entry)
+    views = View.objects.filter(target_content_type=type, target_id=entry.id).count()
+
     args = {'entry'             : entry,
             'id'                : entry.id,
             'type'              : 'entry',
@@ -68,7 +71,8 @@ def detail(request, entry_slug):
             'related_entries'   : related_entries,
             'trending_galleries': trending_galleries,
             'can_see_editorship': can_see_editorship,
-            'can_lock_gallery'  : can_lock_gallery }
+            'can_lock_gallery'  : can_lock_gallery,
+            'views'             : views }
 
     return render(request, 'entry/detail.html', args)
 
