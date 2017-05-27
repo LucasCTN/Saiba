@@ -1,8 +1,13 @@
-from django.shortcuts import render, redirect
-from home.forms import PostForm
-from entry.models import Entry
 from profile.models import Profile
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, redirect, render
+
+from entry.models import Entry, EntryRedirect
+from home.forms import PostForm
+
 
 # Create your views here.
 def index(request):
@@ -97,7 +102,7 @@ def search_user(request):
         promoted_user = User.objects.filter(id=promoted_user_admin_id).first()
         if can_promote_users:
             promoted_user.profile.AddGroup('admin')
-    
+
     ban_normal_user = request.user.profile.HasPermission('ban_normal_user') or False
     ban_staff_user = request.user.profile.HasPermission('ban_staff_user') or False
 
@@ -105,3 +110,17 @@ def search_user(request):
             'ban_staff_user': ban_staff_user, 'current_page': 'usuarios', 'can_promote_users':True}
 
     return render(request, 'staff/search_user.html', args)
+
+@staff_member_required
+def entry_redirect(request):
+    redirect_slug = request.POST.get("redirect_slug")
+    entry_slug = request.POST.get("entry_slug")
+
+    redirect = None
+
+    if redirect_slug and entry_slug:
+        entry = get_object_or_404(Entry, slug=entry_slug)
+        redirect = EntryRedirect.objects.create(entry=entry, slug=redirect_slug)
+
+    context = {'redirect': redirect, 'current_page': 'redirecionar'}
+    return render(request, 'staff/entry_redirect.html', context)

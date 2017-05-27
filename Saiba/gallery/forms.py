@@ -62,7 +62,6 @@ class StaffImageForm(ModelForm):
             )
 
         if file_url and not self.image_validity(file_url):
-            print "estou aqui"
             raise forms.ValidationError(
                 "A imagem inserida é inválida."
             )

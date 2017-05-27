@@ -24,13 +24,19 @@ from home.models import SaibaSettings, Tag
 from Saiba import custom_messages
 
 from .forms import EntryForm, RevisionForm, StaffEntryForm
-from .models import Category, Entry, Revision
+from .models import Category, Entry, Revision, EntryRedirect
 
 
 def index(request):
     return render(request, 'entry/index.html')
 
 def detail(request, entry_slug):
+    entry_redirect = EntryRedirect.objects.filter(slug=entry_slug).first()
+
+    if entry_redirect:
+        redirect_slug = str(entry_redirect.entry.slug)
+        return redirect('entry:detail', entry_slug=redirect_slug)
+
     entry = get_object_or_404(Entry, slug=entry_slug)
 
     if entry.hidden and not request.user.is_staff:
@@ -97,6 +103,8 @@ def edit(request, entry_slug):
     else:
         user = request.user
         entry = Entry.objects.get(slug=entry_slug)
+        redirects = EntryRedirect.objects.filter(entry=entry)
+
         last_revision = Revision.objects.filter(entry=entry, hidden=False).latest('pk')
         first_revision = Revision.objects.filter(entry=entry, hidden=False).earliest('pk')
 
@@ -140,7 +148,8 @@ def edit(request, entry_slug):
         context = { "entry_form"        : entry_form,
                     "revision_form"     : revision_form,
                     "entry"             : entry,
-                    "user"              : user}
+                    "user"              : user,
+                    "redirects"         : redirects}
 
     entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'

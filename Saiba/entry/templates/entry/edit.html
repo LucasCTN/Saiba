@@ -37,6 +37,7 @@
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
+
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}                        
                         <div class="form-group">
@@ -115,10 +116,19 @@
                         </div>
                     </form>
 
-                    <div id="preview" hidden>
-                        <hr/>
-                        <h3>Pré-visualização</h3>
-                        <span id="preview-content">
+                    <div id="preview" class="panel panel-default" hidden>
+                        <div class="panel-heading">Pré-visualização</div>
+                        <div class="panel-body" id="preview-content">
+                        </div>
+                    </div>
+
+                    <div class="list-group col-md-3 col-md-offset-2">
+                        <span class="list-group-item">
+                            <h4 class="list-group-item-heading"><strong>Redirecionamentos</strong></h4>
+                            <hr/>
+                            {% for redirect in redirects %}
+                            <p class="list-group-item-text">{{redirect.slug}}</p>
+                            {% endfor %}
                         </span>
                     </div>
                 </div>

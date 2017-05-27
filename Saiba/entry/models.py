@@ -79,3 +79,10 @@ class Revision(models.Model):
 
     def __unicode__(self):
         return "#{} - {}".format(str(self.pk), self.entry.title)
+
+class EntryRedirect(models.Model):
+    entry = models.ForeignKey(Entry, default=1)
+    slug = models.SlugField(max_length=250, default="", blank=True, unique=True)
+
+    def __unicode__(self):
+        return self.slug + " (" + self.entry.title + ")"

@@ -22,6 +22,12 @@
             {% else %}
                 <a class="sub-menu-navbar-item navbar-brand" href="{% url 'staff:search_user' %}">Usuários</a>
             {% endif %}
+
+            {% if current_page == "redirecionar" %}
+                <a class="sub-menu-navbar-selected-item navbar-brand" href="{% url 'staff:entry_redirect' %}">Redirecionar</a>
+            {% else %}
+                <a class="sub-menu-navbar-item navbar-brand" href="{% url 'staff:entry_redirect' %}">Redirecionar</a>
+            {% endif %}
         </nav>
     </section>
 
