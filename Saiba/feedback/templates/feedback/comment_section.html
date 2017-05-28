@@ -1,5 +1,4 @@
 ﻿    <iframe hidden width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
-
     {% if user.is_authenticated and target.comments_locked == False %}
     <form id="comment-form" method="post" class="form-horizontal col-md-10" role="form" target="dummyframe">
         {% csrf_token %}

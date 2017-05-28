@@ -149,7 +149,7 @@ def register_view(request, target):
         is_a_bot = bot_term in request.META['HTTP_USER_AGENT']
 
         if is_a_bot:
-            break    
+            break
 
     # if none of these terms or names are on the HTTP_USER_AGENT so it's not a bot.
     if not is_a_bot:
