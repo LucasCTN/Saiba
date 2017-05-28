@@ -1,6 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
+import urllib
+
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 
@@ -10,13 +14,17 @@ from Saiba import utils, parser
 from .forms import BPostForm
 from .models import BPost
 
+def bpost_index(request):
+    '''Page to redirect the user to search for blog posts.'''   
+    return HttpResponseRedirect("%s?%s" % (reverse('home:page_search'),
+                                           urllib.urlencode({"tipo": "bpost"})))
 
 def bpost_detail(request, bpost_slug):
     '''Page for detailing a BPost.'''
     bpost = get_object_or_404(BPost.objects.active(), slug=bpost_slug)
     bpost.content = parser.parse(bpost.content)
 
-    context = {'content': bpost, 'content_type': 'bpost'} # For compatilibity with comment sections
+    context = {'content': bpost, 'content_type': 'bpost'}
     return render(request, 'content/content_detail.html', context)
 
 

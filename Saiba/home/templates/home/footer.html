@@ -2,23 +2,23 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-3">
-                <h2 class="logo"><a href="#"> Saiba </a> <span class="saiba-version">beta</span></h2>
+                <h2 class="logo"><a href="{% url 'home:index' %}"> Saiba </a> <span class="saiba-version">beta</span></h2>
             </div>
             <div class="col-sm-2">
                 <h5>Começando</h5>
                 <ul>
-                    <li><a href="#">Regras</a></li>
-                    <li><a href="#">Guia de estilo</a></li>
-                    <li><a href="#">Blog</a></li>
+                    <li><a href="{% url 'content:bpost_detail' 'regras'%}">Regras</a></li>
+                    <li><a href="{% url 'content:bpost_detail' 'guia-de-estilo'%}">Guia de estilo</a></li>
+                    <li><a href="{% url 'content:bpost_index' %}">Blog</a></li>
                 </ul>
             </div>
             <div class="col-sm-2">
                 <h5>Sobre Saiba</h5>
                 <ul>
-                    <li><a href="#">Sobre nós</a></li>
-                    <li><a href="#">Contate-nos</a></li>
-                    <li><a href="#">Termos</a></li>
-                    <li><a href="#">Privacidade</a></li>
+                    <li><a href="{% url 'content:bpost_detail' 'sobre'%}">Sobre nós</a></li>
+                    <li><a href="{% url 'content:bpost_detail' 'contate' %}">Contate-nos</a></li>
+                    <li><a href="{% url 'content:bpost_detail' 'termos' %}">Termos</a></li>
+                    <li><a href="{% url 'content:bpost_detail' 'privacidade' %}">Privacidade</a></li>
                 </ul>
             </div>
             <div class="col-sm-2">
@@ -35,7 +35,6 @@
                     <a href="#" class="google"><i class="fa fa-google-plus"></i></a>
                     <a href="#" class="chat"><i class="fa fa-comments "></i></a>
                 </div>
-                <button type="button" class="btn btn-default">Contate-nos</button>
             </div>
         </div>
     </div>
