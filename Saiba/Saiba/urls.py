@@ -16,6 +16,7 @@ admin.autodiscover()
 urlpatterns = [
     # Entry database
     url(r'^', include('home.urls')),
+    url(r'^', include('content.urls')),
     url(r'^entrada/', include('entry.urls')),
     url(r'^galeria/', include('gallery.urls')),
     url(r'^api/', include('api.urls')),

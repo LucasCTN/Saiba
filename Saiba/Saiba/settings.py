@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Saiba apps
     'home.apps.homeConfig',
     'entry.apps.entryConfig',
     'gallery.apps.galleryConfig',
@@ -40,8 +41,10 @@ INSTALLED_APPS = [
     'feedback.apps.feedbackConfig',
     'profile.apps.profileConfig',
     'staff.apps.staffConfig',
+    'content.apps.contentConfig',
+    # Dependency apps
     'rest_framework',
-    # Add your apps here to enable them
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
