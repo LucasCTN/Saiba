@@ -21,7 +21,7 @@ from feedback.serializers import (CommentSerializer, PointsSerializer,
 from gallery.models import Image, Video
 from gallery.serializers import ImageSerializer
 from home.models import SaibaSettings
-
+from content.models import BPost
 
 class EntryDetail(APIView):
     def get(self, request):
@@ -71,7 +71,7 @@ class CommentDetail(APIView):
         data['points'] = 0
         data['author'] = request.user.id
 
-        types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile }
+        types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile, "bpost": BPost }
         target_type = types_map[data["type"]]
 
         data["target_content_type"] = ContentType.objects.get_for_model(target_type).id

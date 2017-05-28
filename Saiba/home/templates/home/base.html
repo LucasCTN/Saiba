@@ -44,6 +44,9 @@
                                 <li><a href="{% url 'entry:create_entry' %}">Criar entrada</a></li>
                                 <li><a href="{% url 'gallery:upload_image' %}">Enviar imagem</a></li>
                                 <li><a href="{% url 'gallery:upload_video' %}">Enviar vídeo</a></li>
+                                {% if user.is_staff %}
+                                <li><a href="{% url 'content:bpost_create' %}">Criar postagem</a></li>
+                                {% endif %}
                             </ul>
                         </li>
                         {% if user.is_staff %}

@@ -16,7 +16,7 @@ class EntryForm(forms.ModelForm):
 
         if bool(icon) == bool(icon_url):
             raise forms.ValidationError(
-                "A entrada precisa de um ícone (não envie duas imagem)."
+                "A entrada precisa de um ícone (não envie duas imagens)."
             )
 
     class Meta:

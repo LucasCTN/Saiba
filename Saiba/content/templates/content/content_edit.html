@@ -1,0 +1,118 @@
+﻿{% extends 'home/base.html' %}
+{% block title %}Editar entrada - {{ entry.title }} {% endblock %}
+
+{% load staticfiles %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/search-style.css' %}"/>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'home/search-scripts.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<script>
+    $(document).ready(function () {
+        $("#preview-entry").click(function () {
+            var content = $("#id_content").val();
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'api:api_preview' %}",
+                data: { content: content },
+                success: function (data) {
+                    $("#preview").show();
+                    $("#preview-content").html(data);
+                }
+            });
+        });
+    });    
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h2>Modificar postagem - <a href="{% url 'content:bpost_detail' content.slug %}">{{content.title}}</a></h2>
+                    
+                    {{ form.non_field_errors }}
+
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}                        
+                        <div class="form-group">
+                            <span class="col-md-8">
+                                {{form.comments_locked.errors}}
+                                <strong>Trancar comentários:</strong>
+                                {{ form.comments_locked }}
+
+                                <strong>Esconder postagem:</strong>
+                                {{ form.hidden }}
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            {{form.title.errors}}
+                            <label class="control-label col-sm-2" for="field">Título:</label>
+                            <div class="col-sm-8">{{ form.title }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            {{form.category.errors}}
+                            <label class="control-label col-sm-2" for="field">Categoria:</label>
+                            <div class="col-sm-8">{{ form.category }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            {{form.icon.errors}}
+                            <label class="control-label col-sm-2" for="field">Ícone:</label>
+                            <div class="col-sm-8">{{ form.icon }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field">Marcações:</label>
+                            <div class="col-md-2"><input id="search-tags" type="text" class="form-control" placeholder="Procurar" autocomplete="off"></div>
+                            <div class="col-md-offset-2 search-box">
+                                <ul id="search-tag-results" class="search-results">
+                                    <li id="tags-no-results" class="no-results">Sem resultados.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="field"></label>
+                            <div class="col-md-4 search-tag-display">
+                                <ul>
+                                    Adicionadas:
+                                    {% for tag in entry.tags.all %}<li tag-data="{{tag}}">{{tag}} <span tag-data="{{tag}}" class="glyphicon glyphicon-remove remove-tag"></span></li>{% endfor %}
+                                </ul>
+                            </div>
+
+                            <input type="text" id="tags-selected" name="tags-selected" hidden/>
+                        </div> 
+
+                        <div class="form-group">
+                            {{form.content.errors}}
+                            <label class="control-label col-sm-2" for="field">Conteúdo:</label>
+                            <div class="col-sm-10" rows="50">{{ form.content }}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" id="preview-entry" class="btn btn-secondary">Pré-visualizar</button>
+                                <button type="submit" id="send" class="btn btn-primary submit-media">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="preview" class="panel panel-default" hidden>
+                        <div class="panel-heading">Pré-visualização</div>
+                        <div class="panel-body" id="preview-content">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

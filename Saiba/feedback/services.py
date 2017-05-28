@@ -1,9 +1,14 @@
 import math
-from .models import Comment, Vote
+from profile.models import Profile
+
+from django.contrib.contenttypes.models import ContentType
+
+from content.models import BPost
 from entry.models import Entry
 from gallery.models import Image, Video
-from profile.models import Profile
-from django.contrib.contenttypes.models import ContentType
+
+from .models import Comment, Vote
+
 
 def create_comment(id = None, type = None, user = None, content = None):
     """Creates a comment for a target."""
@@ -64,7 +69,7 @@ def get_votes_from_target(id = None, type = None):
 
 def find_target(id = None, type = None):
     """Returns a target based on the type."""
-    types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile }
+    types_map = { "comment": Comment, "image": Image, "video": Video, "entry": Entry, "profile": Profile, "bpost": BPost }
     type = types_map[type]
 
     target = type.objects.get(id = id)
@@ -79,6 +84,6 @@ def are_comments_locked(id = None, target_type = None):
     return target.comments_locked
 
 def convert_type(type_name):
-    type_map = {"comment":Comment, "entry":Entry, "image":Image, "profile":Profile}
+    type_map = {"comment":Comment, "entry":Entry, "image":Image, "profile":Profile, "bpost": BPost}
     target_type = ContentType.objects.get_for_model(type_map[type_name])
     return target_type

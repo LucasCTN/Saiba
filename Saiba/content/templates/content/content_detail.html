@@ -1,0 +1,76 @@
+﻿{% extends 'home/base.html' %}
+
+{% load staticfiles %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'content/content_detail.css' %}"/>
+{% endblock %}
+
+{% block title %}{{ content.title }} - Saiba{% endblock %}
+
+{% block body %}
+    <section id="infocard" class="container media col-md-12" style="border-bottom:none;">
+        <div class="col-md-2" style="width:120px;">
+            {% if content.icon %}
+                <img style="border-style:solid; border-width:1px; border-color:lightgrey;" class='media-object' src='{{content.icon.url}}' width='100' height='100'>
+            {% endif %}
+        </div>
+        <div class="col-md-7">
+            <h3 class="media-heading"><a href="{% url 'content:bpost_detail' content.slug %}">{{ content.title }}</a></h3>
+            <span class="saiba-data">Criado em {{ content.creation_date }} por <a href="{% url 'profile:detail' content.author.profile.slug %}">{{ content.author.username }}</a></span><br/>
+            {% if content.tags.all|length > 0 %}            
+            <p><small>Tags: {% if entry.tags.all|length > 0 %}{% for tag in content.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=entry">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}<em style="color: grey;">Nenhuma</em>{% endif %}</small></p>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            <span><strong>Visualizações:</strong> {{views}}</span>
+        </div>
+    </section>    
+
+    <div class="media-right media-middle col-md-12" style="padding: initial;">
+        <nav id="sub-menu-navbar" class="navbar col-md-12">
+            <a class="sub-menu-navbar-item navbar-brand col-md-offset-1" href="{% url 'content:bpost_edit' content.slug %}">Editar</a>
+        </nav>
+    </div>
+    
+    {% if content.hidden %}
+    <section id="entry-status-rejeitado" class="entry-status panel panel-default col-md-12">
+        <div id="entry-status-rejeitado" class="entry-status-label panel-body col-md-12">Este conteúdo está escondido</div>
+        <div id="entry-status-rejeitado" class="entry-status-description panel-body col-md-12">Este conteúdo foi escondido por um membro da equipe e não pode ser visto por outros usuários.</div>
+    </section>
+    {% endif %}
+
+    <section id="conteudo-artigo" class="container col-md-12">        
+        <div id="conteudo">
+            {{ content.content|safe }}
+        </div>
+    </section>
+
+    {% if related_entries %}
+    <section id="relacionados" class="container media col-md-12"><hr/>
+        <h1 class="section-title">Entradas relacionadas <small>({{ related_entries|length }})</small></h1>
+        {% for related_entry in related_entries %}
+            <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}" style="width:12%;">
+                <span class="col-md-12" style="text-align: center;">
+                    {% if related_entry.icon %}<img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:110%; padding: 0 10% 0 10%;"/>{% endif %}
+                    <span class="col-md-12">{{ related_entry.title }}</span>
+                </span>                
+            </a>
+        {% endfor %}
+        {% if related_entries|length == 0 %}
+        <span class="col-md-12" style="text-align:center;">Não há entradas disponíveis</span>
+        {% else %}
+        <span class="col-md-12" style="text-align:center;">
+            <a href="#" class="btn btn-success">Ver todas</a>
+        </span>
+        {% endif %}        
+    </section>
+    {% endif %}
+
+    {% with type=content_type id=content.id hide_top_comments=True target=content %}
+    <section id="comentarios" class="container col-md-12">
+    <hr/>
+    <h3>Seção de comentários</h3>
+    {% include "feedback/comment_section.html" %}
+    </section>
+    {% endwith %}
+{% endblock %}
