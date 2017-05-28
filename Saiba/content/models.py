@@ -43,7 +43,7 @@ class BPostCategory(models.Model):
 class BPost(Content):
     '''Blog Post model, for staff-made posts that aren't in frontpage.'''
     category = models.ForeignKey(BPostCategory, blank=True, null=True)
-    content = models.CharField(max_length=2500, blank=True) # The post's textual content
+    content = models.TextField(max_length=2500, blank=True) # The post's textual content
 
     objects = BPostManager()
 

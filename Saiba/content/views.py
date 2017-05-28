@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 
 from home.models import Tag
-from Saiba import utils
+from Saiba import utils, parser
 
 from .forms import BPostForm
 from .models import BPost
@@ -14,6 +14,7 @@ from .models import BPost
 def bpost_detail(request, bpost_slug):
     '''Page for detailing a BPost.'''
     bpost = get_object_or_404(BPost.objects.active(), slug=bpost_slug)
+    bpost.content = parser.parse(bpost.content)
 
     context = {'content': bpost, 'content_type': 'bpost'} # For compatilibity with comment sections
     return render(request, 'content/content_detail.html', context)
