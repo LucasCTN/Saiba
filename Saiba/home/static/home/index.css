@@ -5,7 +5,9 @@
 
 #fixed-posts
 {
-    background-color: #cbcbdd;
+    background-color: #e9e9ea;
+    padding: 1%;
+    border-radius: 3px;
 }
 
 #normal-posts

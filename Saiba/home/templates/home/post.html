@@ -1,5 +1,4 @@
 ﻿<div id="post-{{ post.pk }}" class='post' style="border-left-color:{{ post.label.color }};">
-    
     {% if post.entry != None %}
         <h3><a href="{% url 'entry:detail' post.entry.slug %}">{{ post.title }}</a></h3>
         {% include "home/post_content.html" %}

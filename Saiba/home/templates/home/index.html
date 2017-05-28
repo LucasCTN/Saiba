@@ -11,14 +11,13 @@
             <div id="fixed-posts">
                 {% for post in fixed_posts %}
                     {% include 'home/post.html' %}
-                    {% if forloop.counter != fixed_posts|length %} <hr> {% endif %}
+                    {% if forloop.counter != fixed_posts|length %}{% endif %}
                 {% endfor %}
             </div>
 
             <div id="normal-posts">
                 {% for post in normal_posts %}
                     {% include 'home/post.html' %}
-                    <hr>
                 {% endfor %}
             </div>
         </div>
