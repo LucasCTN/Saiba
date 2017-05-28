@@ -10,9 +10,11 @@
 
         {% load staticfiles %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'home/navbar.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'home/base.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'home/css/footer.css' %}"/>
         <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
         {% block css %}
@@ -110,5 +112,7 @@
             </div>
             <div id="sidebar" class="col-md-3">{% include "home/sidebar.html" %}</div>
         </div>
+
+        {% include 'home/footer.html' %}
     </body>
 </html>
