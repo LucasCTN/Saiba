@@ -45,6 +45,11 @@
 .navbar-default .navbar-brand {
     color: white;
 }
+
+.navbar-version{
+    font-size: 13px;
+}
+
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
     color: white;
