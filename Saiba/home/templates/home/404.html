@@ -1,0 +1,20 @@
+﻿{% extends 'home/base.html' %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    <section id="message" class="container col-md-12">
+        <div class="col-md-12" style="background-color:#f3f3f3; padding-bottom: 3%;">
+            <h1>Erro 404: Página não encontrada.</h1>
+
+            <span>Aparentemente você tentou acessar uma página que não existe clicando num link inválido ou digitando incorretamente a url.
+            <br><br>
+            <span>Você pode tentar retornar à página anterior ou <a href="{% url 'home:index' %}">clicar aqui</a> para ir à página inicial.</span>
+            <br><br>
+            </span>Se você acredita que nós cometemos algum erro, por favor nos comunique.</span>
+        </div>
+    </section>
+{% endblock %}

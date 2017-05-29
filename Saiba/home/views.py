@@ -1,19 +1,28 @@
 import urllib2, urllib, json
+from Saiba import utils
+from api.views import TrendingDetail
+
 from rest_framework.reverse import reverse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.utils.html import escape
 from django.contrib.auth.models import Permission, User
 from .models import Post, Label, Tag
 from .forms import PostForm
+
 from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
 from entry.models import Entry, Revision
 from gallery.models import Image, Video
 from profile.models import Profile
+
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
-from Saiba import utils
+
+from django.template import RequestContext
+
 import copy
-from api.views import TrendingDetail
+
+def custom_404(request):
+    return render_to_response('home/404.html')
 
 def index(request):
     entries = Entry.objects.all()

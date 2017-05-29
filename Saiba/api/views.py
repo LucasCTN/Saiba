@@ -10,8 +10,6 @@ from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-import Saiba.parser
 import Saiba.utils
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer

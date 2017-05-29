@@ -199,6 +199,7 @@
     <Content Include="home\static\home\search.css">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="home\templates\home\404.html" />
     <Content Include="home\templates\home\form_template.html" />
     <Content Include="home\templates\home\search_entry.html" />
     <Content Include="home\templates\home\search_tag.html" />

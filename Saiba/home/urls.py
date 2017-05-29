@@ -15,4 +15,7 @@ urlpatterns = [
     url(r'^trending/$', views.trending_page, name='trending_page'),
     url(r'^trending_list/$', views.trending_list, name='api_trending_list'),
     url(r'^imagens-populares/$', views.popular_images, name='popular_images'),
+    url(r'^teste-404/$', views.custom_404, name='custom_404'),
 ]
+
+# REMEMBER TO REMOVE THE views.custom_404 ENTIRE LINE IN RELEASE
