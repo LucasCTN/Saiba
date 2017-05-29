@@ -13,6 +13,8 @@ from django.conf.urls import include
 from django.contrib import admin
 admin.autodiscover()
 
+handler404 = 'home.views.custom_404'
+
 urlpatterns = [
     # Entry database
     url(r'^', include('home.urls')),

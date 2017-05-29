@@ -42,6 +42,21 @@
     </Compile>
     <Compile Include="api\views.py" />
     <Compile Include="api\__init__.py" />
+    <Compile Include="content\admin.py" />
+    <Compile Include="content\apps.py" />
+    <Compile Include="content\forms.py" />
+    <Compile Include="content\managers.py" />
+    <Compile Include="content\migrations\0001_initial.py" />
+    <Compile Include="content\migrations\0002_auto_20170527_1956.py" />
+    <Compile Include="content\migrations\0003_auto_20170527_2004.py" />
+    <Compile Include="content\migrations\0004_auto_20170527_2139.py" />
+    <Compile Include="content\migrations\__init__.py" />
+    <Compile Include="content\models.py" />
+    <Compile Include="content\serializers.py" />
+    <Compile Include="content\tests.py" />
+    <Compile Include="content\urls.py" />
+    <Compile Include="content\views.py" />
+    <Compile Include="content\__init__.py" />
     <Compile Include="entry\admin.py" />
     <Compile Include="entry\apps.py" />
     <Compile Include="entry\forms.py">
@@ -144,6 +159,12 @@
     <Folder Include="api\" />
     <Folder Include="api\migrations\" />
     <Folder Include="api\templates\" />
+    <Folder Include="content\" />
+    <Folder Include="content\migrations\" />
+    <Folder Include="content\static\" />
+    <Folder Include="content\static\content\" />
+    <Folder Include="content\templates\" />
+    <Folder Include="content\templates\content\" />
     <Folder Include="entry\" />
     <Folder Include="entry\migrations\" />
     <Folder Include="entry\templates\" />
@@ -184,6 +205,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="api\templates\index.html" />
+    <Content Include="content\static\content\content_detail.css" />
+    <Content Include="content\templates\content\content_create.html" />
+    <Content Include="content\templates\content\content_detail.html" />
+    <Content Include="content\templates\content\content_edit.html" />
     <Content Include="entry\templates\entry\create_entry.html" />
     <Content Include="entry\templates\entry\detail.html" />
     <Content Include="entry\templates\entry\edit.html" />
@@ -200,7 +225,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="home\templates\home\404.html" />
+    <Content Include="home\templates\home\footer.html" />
     <Content Include="home\templates\home\form_template.html" />
+    <Content Include="home\templates\home\popular_galleries.html" />
     <Content Include="home\templates\home\search_entry.html" />
     <Content Include="home\templates\home\search_tag.html" />
     <Content Include="entry\templates\entry\trending.html" />
@@ -225,6 +252,7 @@
     <Content Include="home\templates\home\index.html" />
     <Content Include="home\templates\home\post_content.html" />
     <Content Include="entry\templates\entry\manage_editorship.html" />
+    <Content Include="home\templates\home\trending_list.html" />
     <Content Include="profile\templates\profile\profile_information.html" />
     <Content Include="profile\templates\profile\videos.html" />
     <Content Include="profile\templates\profile\images.html" />

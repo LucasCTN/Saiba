@@ -18,4 +18,4 @@ urlpatterns = [
     url(r'^teste-404/$', views.custom_404, name='custom_404'),
 ]
 
-# REMEMBER TO REMOVE THE views.custom_404 ENTIRE LINE IN RELEASE
+# REMEMBER TO REMOVE teste-404 ENTIRE LINE IN RELEASE

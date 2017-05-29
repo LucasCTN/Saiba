@@ -8,7 +8,6 @@ from django.template.defaultfilters import slugify
 
 from .managers import BPostManager
 
-
 class Content(models.Model):
     '''Basic model for the content app. It should be inherited from the other models.'''
     author = models.ForeignKey(User, default=1)
