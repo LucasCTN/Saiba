@@ -1,5 +1,5 @@
 ﻿{% extends 'home/base.html' %}
-{% block title %}{{ image.title }} - Saiba{% endblock %}
+{% block title %}{{ image.title }} | {{image.entry.title}} | Saiba{% endblock %}
 {% block body %}
     <section id="conteudo" class="container col-md-9">
         <img id="imagem" class='media-object img-thumbnail' src='{{ image.file.url }}' style="max-height: 100%; max-width: 100%;">

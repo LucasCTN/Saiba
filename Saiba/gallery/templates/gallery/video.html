@@ -1,5 +1,5 @@
 ﻿{% extends 'home/base.html' %}
-{% block title %}{{ video.title }} - Saiba{% endblock %}
+{% block title %}{{ video.title }} | {{ video.entry.title }} | Saiba{% endblock %}
 {% block body %}
     <section id="conteudo" class="container col-md-9">
         <iframe id="vídeo" class='media-object' width="560" height="315" src="https://www.youtube.com/embed/{{ video.link }}" frameborder="0" allowfullscreen></iframe>

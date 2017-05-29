@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'home/entry.css' %}"/>
 {% endblock %}
 
-{% block title %}{{ entry.title }} - Saiba{% endblock %}
+{% block title %}{{ entry.title }} | Saiba{% endblock %}
 
 {% block body %}
     <section id="infocard" class="container media col-md-12" style="border-bottom:none;">
@@ -14,15 +14,15 @@
                 <img style="border-style:solid; border-width:1px; border-color:lightgrey;" class='media-object' src='{{entry.icon.url}}' width='100' height='100'>
             {% endif %}
         </div>
-        <div class="col-md-7">
-            <h3 class="media-heading"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></h3>
-            <p class="saiba-data">{{entry.date_origin}}</p>
-            <span class="saiba-data">Criado em {{ first_revision.date }} por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
-            <span class="saiba-data">Atualizado {{ last_revision.date }} por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
-            <p><small>Tags: {% if entry.tags.all|length > 0 %}{% for tag in entry.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=entry">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}<em style="color: grey;">Nenhuma</em>{% endif %}</small></p>
+        <div class="col-md-8">
+            <span class="infocard-titulo col-md-12"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></span>
+            <span class="infocard-data col-md-12">{{entry.date_origin}}</span>
+            <span class="infocard-campo col-md-12">Criado <time class="saiba-date">{{ first_revision.date|date:"c" }}</time> por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
+            <span class="infocard-campo col-md-12">Atualizado <time class="saiba-date">{{ last_revision.date|date:"c" }}</time> por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
+            <p class="col-md-12"><small>Tags: {% if entry.tags.all|length > 0 %}{% for tag in entry.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=entry">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}<em style="color: grey;">Nenhuma</em>{% endif %}</small></p>
         </div>
-        <div class="col-md-3">
-            <span><strong>Visualizações:</strong> {{views}}</span>
+        <div class="col-md-2 infocard-visualizacoes">
+            <span><strong>Visualizações</strong>: {{views}}</span>
         </div>
     </section>    
 

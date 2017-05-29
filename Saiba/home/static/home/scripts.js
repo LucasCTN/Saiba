@@ -2,6 +2,7 @@
     $(".saiba-date").each(function(i, obj) {
         var value = $(this).text();
         $(this).text(GetDateText(value));
+        $(this).attr("datetime", value);
     });
 
     $("#custom-file-button").click(function() {

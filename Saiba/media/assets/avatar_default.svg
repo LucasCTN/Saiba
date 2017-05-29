@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="24px"
+   height="24px"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg2"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="avatar_default.svg">
+  <title
+     id="title4289">default_avatar</title>
+  <metadata
+     id="metadata21">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>default_avatar</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="987"
+     id="namedview19"
+     showgrid="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:object-nodes="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:zoom="11.313709"
+     inkscape:cx="31.414864"
+     inkscape:cy="2.9695836"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="User_default"
+     inkscape:snap-grids="true"
+     inkscape:snap-to-guides="true"
+     inkscape:snap-page="false"
+     showguides="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4243"
+       dotted="false"
+       enabled="false" />
+  </sodipodi:namedview>
+  <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+  <desc
+     id="desc6">Created with Sketch.</desc>
+  <defs
+     id="defs8">
+    <path
+       d="M4.67534232,17.8280102 C6.39024554,19.9804509 9.03401729,21.36 12,21.36 C14.9657894,21.36 17.6094099,19.9806307 19.3243224,17.8284311 C18.2780564,16.0651318 16.3535347,14.88 14.1525614,14.88 L9.84743858,14.88 C7.64890755,14.88 5.72243316,16.0633158 4.67534232,17.8280102 Z"
+       id="path-1" />
+    <mask
+       fill="white"
+       id="mask-2">
+      <use
+         id="use16"
+         xlink:href="#path-1" />
+    </mask>
+  </defs>
+  <g
+     id="User_default"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd">
+    <rect
+       style="fill:#939393;fill-opacity:1"
+       height="24"
+       width="24"
+       y="0"
+       x="0"
+       id="Rectangle-3-Copy-6" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;fill-opacity:1"
+       id="Path"
+       d="m 16,9 c 0,2.12096 -1.87904,4 -4,4 C 9.87904,13 8,11.12096 8,9 8,6.88032 9.87904,5 12,5 c 2.12096,0 4,1.88032 4,4 z"
+       sodipodi:nodetypes="sssss" />
+    <path
+       style="fill:#ffffff;fill-opacity:1"
+       d="m 20,24 c 0,-2 -2e-5,-2.668351 0,-3 C 19.95471,20 19.82127,19.053741 19.416389,18.208984 19.011508,17.364228 18.425392,16.615845 17.701545,15.992188 16.977698,15.36853 16.115619,14.869416 15.158576,14.527344 14.201534,14.185272 13.149763,14 12.045295,14 10.940828,14 9.8890555,14.185272 8.9320135,14.527344 7.9749705,14.869416 7.1128915,15.36853 6.3890445,15.992188 5.6651974,16.615845 5.0790818,17.364228 4.6742007,18.208984 4.2693197,19.053741 4.0454389,19.994631 4.0452945,21 4,22 4.0000563,22.868105 4,24 Z"
+       id="path4270"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccsssssssccc" />
+  </g>
+</svg>
