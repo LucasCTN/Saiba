@@ -18,7 +18,7 @@
             <h3 class="media-heading"><a href="{% url 'content:bpost_detail' content.slug %}">{{ content.title }}</a></h3>
             <span class="saiba-data">Criado em {{ content.creation_date }} por <a href="{% url 'profile:detail' content.author.profile.slug %}">{{ content.author.username }}</a></span><br/>
             {% if content.tags.all|length > 0 %}            
-            <p><small>Tags: {% if entry.tags.all|length > 0 %}{% for tag in content.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type=entry">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}<em style="color: grey;">Nenhuma</em>{% endif %}</small></p>
+            <p><small>Tags: {% if content.tags.all|length > 0 %}{% for tag in content.tags.all %}<a href="{% url 'home:page_search' %}?q={{ tag.label }}&type={{content_type}}">{{ tag.label }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}<em style="color: grey;">Nenhuma</em>{% endif %}</small></p>
             {% endif %}
         </div>
         <div class="col-md-3">

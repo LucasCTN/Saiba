@@ -46,6 +46,8 @@ def bpost_edit(request, bpost_slug):
         bpost.tags = Tag.objects.filter(label__in=set_tags)
         bpost.save()
 
+        return redirect('content:bpost_detail', bpost_slug=bpost.slug)
+
     context = {'content': bpost, 'content_type': 'bpost', 'form': bpost_form}
     return render(request, 'content/content_edit.html', context)
 

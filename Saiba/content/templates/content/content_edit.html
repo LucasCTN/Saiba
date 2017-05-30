@@ -1,5 +1,5 @@
 ﻿{% extends 'home/base.html' %}
-{% block title %}Editar entrada - {{ entry.title }} {% endblock %}
+{% block title %}Editar conteúdo - {{ content.title }} {% endblock %}
 
 {% load staticfiles %}
 {% block css %}
@@ -13,7 +13,7 @@
 {% block body %}
 <script>
     $(document).ready(function () {
-        $("#preview-entry").click(function () {
+        $("#preview-content").click(function () {
             var content = $("#id_content").val();
 
             $.ajax({
@@ -83,7 +83,7 @@
                             <div class="col-md-4 search-tag-display">
                                 <ul>
                                     Adicionadas:
-                                    {% for tag in entry.tags.all %}<li tag-data="{{tag}}">{{tag}} <span tag-data="{{tag}}" class="glyphicon glyphicon-remove remove-tag"></span></li>{% endfor %}
+                                    {% for tag in content.tags.all %}<li tag-data="{{tag}}">{{tag}} <span tag-data="{{tag}}" class="glyphicon glyphicon-remove remove-tag"></span></li>{% endfor %}
                                 </ul>
                             </div>
 
@@ -98,7 +98,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" id="preview-entry" class="btn btn-secondary">Pré-visualizar</button>
+                                <button type="button" id="preview-content" class="btn btn-secondary">Pré-visualizar</button>
                                 <button type="submit" id="send" class="btn btn-primary submit-media">Enviar</button>
                             </div>
                         </div>
