@@ -161,6 +161,7 @@
     <Folder Include="api\templates\" />
     <Folder Include="content\" />
     <Folder Include="content\migrations\" />
+    <Folder Include="content\fixtures\" />
     <Folder Include="content\static\" />
     <Folder Include="content\static\content\" />
     <Folder Include="content\templates\" />
@@ -205,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="api\templates\index.html" />
+    <Content Include="content\fixtures\bpost_categories.json" />
     <Content Include="content\static\content\content_detail.css" />
     <Content Include="content\templates\content\content_create.html" />
     <Content Include="content\templates\content\content_detail.html" />

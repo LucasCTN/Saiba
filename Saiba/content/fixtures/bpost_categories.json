@@ -1,0 +1,10 @@
+[
+  {
+    "model": "content.BPostCategory",
+    "pk": 1,
+    "fields": {
+      "label": "meta",
+      "description": "Postagens relacionadas ao site."
+    }
+  }
+]

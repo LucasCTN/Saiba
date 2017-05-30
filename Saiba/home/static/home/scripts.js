@@ -255,11 +255,6 @@ var GetDateText = function (raw_date) {
         }
     }
 
-    if (intervalType == "mês") {
-        if (interval > 1 || interval === 0 && intervalType != "mês")
-            intervalType += 's';
-    }
-
     if (interval > 1 || interval === 0) {
         if (intervalType == "mês")
             intervalType = 'meses';
