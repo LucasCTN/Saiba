@@ -11,7 +11,7 @@
 
         <div class="container media col-md-12">
             {% for image in images %}            
-            <a href="{% url 'gallery:image_detail' image.id %}" class="trending-entry col-md-4">
+            <a href="{% url 'gallery:image_detail' image.id '' %}" class="trending-entry col-md-4">
                 <span class="trending-container col-md-12" style="text-align: center;">
                     <img class="trending-image col-md-12 col-centered" src="{{image.file.url}}" 
                          style="height:80px; width:auto; border:1px;"/>

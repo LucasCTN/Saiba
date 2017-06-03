@@ -41,8 +41,8 @@
         <h2 class="section-title">Imagens relacionadas <small>({{ related_images|length }})</small></h2>
         {% for related_image in related_images %}
             <div class='inline-block col-md-4'>
-                <a href="{% url 'gallery:image_detail' related_image.id %}"><img class='media-object' src='{{ related_image.file.url }}' alt='image.title' height='100'/></a>
-                <a href="{% url 'gallery:image_detail' related_image.id %}">{{ related_image.title }}</a>
+                <a href="{% url 'gallery:image_detail' related_image.id '' %}"><img class='media-object' src='{{ related_image.file.url }}' alt='image.title' height='100'/></a>
+                <a href="{% url 'gallery:image_detail' related_image.id '' %}">{{ related_image.title }}</a>
             </div>
         {% endfor %}
     </section>

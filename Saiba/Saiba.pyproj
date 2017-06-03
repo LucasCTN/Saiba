@@ -272,7 +272,6 @@
     <Content Include="home\templates\home\search.html" />
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
-    <Content Include="requirements - old.txt" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="staff\templates\staff\index.html" />
