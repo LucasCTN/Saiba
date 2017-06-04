@@ -360,3 +360,5 @@ var/
 
 # Custom commands
 *.bat
+
+local_settings.py

@@ -1,0 +1,8 @@
+{
+  "name": "Saiba",
+  "description": "App do site de cultura da internet Saiba.",
+  "image": "heroku/python",
+  "repository": "https://github.com/heroku/python-getting-started",
+  "keywords": ["python", "django", "saiba", "meme", "cultura", "brasil" ],
+  "addons": [ "heroku-postgresql" ]
+}
