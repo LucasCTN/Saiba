@@ -19,7 +19,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8000/api/v1/preview/",
+                url: window.location.origin + "/api/v1/preview/",
                 data: { content: content },
                 success: function (data) {
                     $("#preview").show();
