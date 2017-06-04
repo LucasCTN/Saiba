@@ -16,7 +16,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h2>Modificar imagem - <a href="{% url 'gallery:image_detail' image.pk %}">{{image.title}}</a></h2>
+                    <h2>Modificar imagem - <a href="{% url 'gallery:image_detail' image.pk '' %}">{{image.title}}</a></h2>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}

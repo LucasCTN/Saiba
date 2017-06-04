@@ -17,11 +17,14 @@ from feedback.models import Action, View
 def index(request):
     return render(request, 'entry/index.html')
 
-def image_detail(request, image_id):
+def image_detail(request, image_id, slug=''):
     image = get_object_or_404(Image, pk=image_id)
 
     if image.hidden and not request.user.is_staff:
         return redirect('home:index')
+
+    if slug != '-'+image.entry.slug:
+        return redirect('gallery:image_detail', image_id=image_id, slug='-'+image.entry.slug)
 
     utils.register_view(request, image)
 
@@ -35,10 +38,10 @@ def image_detail(request, image_id):
 
     context = { 'image'             : image,
                 'type'              : 'image',
-                'id'                : image.pk,
                 'related_images'    : related_images,
                 'trending_galleries': trending_galleries,
                 'target'            : image,
+                'image_slug'        : slug,
                 'views'             : views }
 
     return render(request, 'gallery/image.html', context)
@@ -61,7 +64,6 @@ def video_detail(request, video_id):
 
     context = { 'video'             : video,
                 'type'              : 'video',
-                'id'                : video.pk,
                 'related_videos'    : related_videos,
                 'trending_galleries': trending_galleries,
                 'target'            : video,
@@ -167,7 +169,7 @@ def upload_video(request):
 
     return render(request, 'gallery/upload-video.html', {"form": video_form, "errors": error_messages})
 
-def image_edit(request, image_id):
+def image_edit(request, image_id, slug=''):
     if not request.user.is_authenticated():
         return redirect('home:login')
     else:

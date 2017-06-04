@@ -243,7 +243,7 @@
     <Content Include="gallery\templates\gallery\upload-video.html" />
     <Content Include="gallery\templates\gallery\upload-image.html" />
     <Content Include="home\static\home\base.css" />
-    <Content Include="home\static\home\entry.css" />
+    <Content Include="entry\static\entry\entry.css" />
     <Content Include="home\static\home\index.css" />
     <Content Include="home\static\home\navbar.css" />
     <Content Include="home\static\home\navbar.js" />
@@ -272,7 +272,6 @@
     <Content Include="home\templates\home\search.html" />
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
-    <Content Include="requirements - old.txt" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="staff\templates\staff\index.html" />

@@ -15,7 +15,7 @@
         {% if post.entry != None %}
             <a href="{% url 'entry:detail' post.entry.slug %}">
         {% else %}
-            <a href="{% url 'gallery:image_detail' post.image.pk %}">
+            <a href="{% url 'gallery:image_detail' post.image.pk '' %}">
         {% endif %}
         <img id='imagem' class='media-object img-thumbnail image-from-post' src='{{ post.image.file.url }}'>
     {% else %}
