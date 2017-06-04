@@ -10,3 +10,4 @@ six==1.10.0
 textile==2.3.5
 whitenoise==3.3.0
 dj-database-url==0.2.1
+gunicorn==19.7.1
