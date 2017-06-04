@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 from django.utils.html import escape
 
-import Saiba
+import saiba
 from feedback.models import TrendingVote, View
 from gallery.models import Image, Video
 from home.models import SaibaSettings, Tag
@@ -44,7 +44,7 @@ def detail(request, entry_slug):
     last_images = Image.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
     last_videos = Video.objects.filter(hidden=False, entry=entry).order_by('-id')[:10]
 
-    Saiba.utils.register_view(request, entry)
+    saiba.utils.register_view(request, entry)
 
     related_entries = Entry.objects.filter(hidden=False, tags__in=entry.tags.all()).\
                         annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=entry.pk)[:5]
@@ -54,9 +54,9 @@ def detail(request, entry_slug):
     else:
         can_see_editorship = False
 
-    last_revision.content = Saiba.parser.parse(last_revision.content)
+    last_revision.content = saiba.parser.parse(last_revision.content)
 
-    trending_galleries  = Saiba.utils.get_popular_galleries(request)
+    trending_galleries  = saiba.utils.get_popular_galleries(request)
 
     can_lock_gallery = False
     if request.user.is_authenticated():
@@ -113,8 +113,8 @@ def edit(request, entry_slug):
         entry_form = EntryForm(request.POST or None, request.FILES or None, initial=model_to_dict(entry), instance=entry)
 
     if entry_form.is_valid() and revision_form.is_valid() and is_editor:
-        all_tags = Saiba.utils.string_tags_to_list(request.POST.get('tags-selected'))
-        set_tags = Saiba.utils.generate_tags(all_tags, Tag)
+        all_tags = saiba.utils.string_tags_to_list(request.POST.get('tags-selected'))
+        set_tags = saiba.utils.generate_tags(all_tags, Tag)
 
         trending_weight = int(SaibaSettings.objects.get(type="trending_weight_entry_edit").value)
         entry.trending_points += trending_weight
@@ -171,7 +171,7 @@ def revision(request, entry_slug, revision_id):
 
 @login_required
 def create_entry(request):
-    trending_gallery = Saiba.utils.get_popular_galleries(request)
+    trending_gallery = saiba.utils.get_popular_galleries(request)
 
     user = request.user
     entry_form = EntryForm(request.POST or None, request.FILES)
@@ -191,10 +191,10 @@ def create_entry(request):
     if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:            
         entry = entry_form.save(commit=False) 
 
-        all_tags = Saiba.utils.string_tags_to_list(request.POST.get('tags-selected'))
-        set_tags = Saiba.utils.generate_tags(all_tags, Tag)
+        all_tags = saiba.utils.string_tags_to_list(request.POST.get('tags-selected'))
+        set_tags = saiba.utils.generate_tags(all_tags, Tag)
 
-        date_origin = Saiba.utils.verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
+        date_origin = saiba.utils.verify_and_format_date(request.POST.get('date-day'), request.POST.get('date-month'), request.POST.get('date-year'))
 
         if date_origin != False:
             entry.date_origin = date_origin
@@ -215,10 +215,10 @@ def create_entry(request):
 
             return redirect('entry:detail', entry_slug=entry.slug)
         else:
-            errors['date_origin'] = Saiba.custom_messages.get_custom_error_message('invalid_date')
+            errors['date_origin'] = saiba.custom_messages.get_custom_error_message('invalid_date')
 
     elif entry_duplicate_title != None:
-        errors['title'] = Saiba.custom_messages.get_custom_error_message('duplicated_entry')
+        errors['title'] = saiba.custom_messages.get_custom_error_message('duplicated_entry')
 
     context =  {"entry_form"        : entry_form,
                 "revision_form"     : revision_form,

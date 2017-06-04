@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 
 from home.models import Tag
-from Saiba import utils, parser
+from saiba import utils, parser
 
 from .forms import BPostForm
 from .models import BPost

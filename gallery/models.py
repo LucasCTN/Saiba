@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.contrib.contenttypes.fields import GenericRelation
 
-import Saiba.image_utils
+import saiba.image_utils
 from feedback.models import Action
 from home.models import SaibaSettings
 
@@ -48,7 +48,7 @@ class Image(models.Model):
     
     def save(self, *args, **kwargs):        
         if self.file_url and not self.file:
-            image_name, image_content = Saiba.image_utils.download_external_image(self.file_url)
+            image_name, image_content = saiba.image_utils.download_external_image(self.file_url)
             self.file.save(image_name, ContentFile(image_content), save=False)
         super(Image, self).save(*args, **kwargs)
 

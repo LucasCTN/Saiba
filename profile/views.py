@@ -5,7 +5,7 @@ from.forms import EditProfileForm
 from entry.models import Entry
 from gallery.models import Image, Video
 from feedback.models import Action
-import Saiba.parser
+import saiba.parser
 
 def index(request, name_slug):
     profile = get_object_or_404(Profile, slug=name_slug)
@@ -16,7 +16,7 @@ def index(request, name_slug):
 def detail(request, name_slug):
     current_page = "mural"
     profile = get_object_or_404(Profile, slug=name_slug)
-    about = Saiba.parser.parse(profile.about)
+    about = saiba.parser.parse(profile.about)
 
     context = {"profile": profile, 'type': 'profile', "id": profile.user.id, "about": about,
                "hide_top_comments": True, "current_page": current_page}

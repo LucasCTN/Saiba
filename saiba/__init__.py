@@ -1,3 +1,3 @@
 """
-Package for Saiba.
+Package for saiba.
 """

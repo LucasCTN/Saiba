@@ -2,7 +2,7 @@
 from django import forms
 from .models import Entry, Revision
 
-from Saiba import custom_messages
+from saiba import custom_messages
 
 class EntryForm(forms.ModelForm):
     icon_url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Coloque aqui um link para uma imagem.',

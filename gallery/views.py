@@ -11,7 +11,7 @@ from .models import Image, Video
 from .forms import ImageForm, VideoForm, StaffImageForm, StaffVideoForm
 from home.models import Tag
 from entry.models import Entry
-from Saiba import utils, custom_messages
+from saiba import utils, custom_messages
 from feedback.models import Action, View
 
 def index(request):

@@ -10,7 +10,7 @@ from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import Saiba
+import saiba
 from entry.models import Entry, Revision
 from entry.serializers import EntrySerializer, RevisionSerializer
 from feedback.models import Comment, TrendingVote, Vote
@@ -181,7 +181,7 @@ class VoteDetail(APIView):
                                 "image": ContentType.objects.get_for_model(Image).id,
                                 "video": ContentType.objects.get_for_model(Video).id}
 
-        if type and id and Saiba.utils.is_valid_direction(direction):
+        if type and id and saiba.utils.is_valid_direction(direction):
             past_vote = Vote.objects.filter(target_id=id, target_content_type=content_type_mapping[type],
                                             author=request.user).first()
 
@@ -337,7 +337,7 @@ class PreviewDetail(APIView):
         content = request.POST.get('content')
 
         if content:
-            result = Saiba.parser.parse(content)
+            result = saiba.parser.parse(content)
             return Response(result, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)

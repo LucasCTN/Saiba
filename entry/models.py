@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 from django.db import models
 from django.template.defaultfilters import slugify
 
-import Saiba.image_utils
+import saiba.image_utils
 from feedback.models import Action
 
 class Status(models.Model):
@@ -55,7 +55,7 @@ class Entry(models.Model):
         if not self.id:
             self.slug = slugify(self.title)
         if self.icon_url and not self.icon:
-            image_name, image_content = Saiba.image_utils.download_external_image(self.icon_url)
+            image_name, image_content = saiba.image_utils.download_external_image(self.icon_url)
             self.icon.save(image_name, ContentFile(image_content), save=False)
 
         super(Entry, self).save(*args, **kwargs)
