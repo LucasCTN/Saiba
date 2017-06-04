@@ -1,5 +1,6 @@
 ﻿<section id="ads">
-    <img src="/media/ad_test.png" class='media-object'/>
+    {% load staticfiles %}
+    <img src="{% static 'home/images/ad_test.png' %}" class='media-object'/>
 </section>
 
 {% if entry.editorship.all %}
