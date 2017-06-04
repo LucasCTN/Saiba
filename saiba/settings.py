@@ -27,8 +27,9 @@ SECRET_KEY = '5bf35afd-fed9-40b1-8119-6a7a621b79b0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -146,6 +147,7 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
