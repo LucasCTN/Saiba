@@ -24,7 +24,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = '5bf35afd-fed9-40b1-8119-6a7a621b79b0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -98,8 +98,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'saiba',
-        'USER': 'postgres',
-        'PASSWORD': 'campos369',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
@@ -130,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'BR'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
