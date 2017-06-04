@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <Name>Saiba</Name>
+    <Name>saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
     <InterpreterId>{086cdf49-2ba7-4623-82f6-ec4b76184c3c}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
@@ -11,7 +11,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7609d2a4-0d2f-41c7-bab3-5b7e4e15af36</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>
+    </ProjectHome>
     <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <StartupFile>manage.py</StartupFile>
     <SearchPath>
@@ -46,10 +47,6 @@
     <Compile Include="content\apps.py" />
     <Compile Include="content\forms.py" />
     <Compile Include="content\managers.py" />
-    <Compile Include="content\migrations\0001_initial.py" />
-    <Compile Include="content\migrations\0002_auto_20170527_1956.py" />
-    <Compile Include="content\migrations\0003_auto_20170527_2004.py" />
-    <Compile Include="content\migrations\0004_auto_20170527_2139.py" />
     <Compile Include="content\migrations\__init__.py" />
     <Compile Include="content\models.py" />
     <Compile Include="content\serializers.py" />
@@ -62,6 +59,7 @@
     <Compile Include="entry\forms.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="entry\migrations\__init__.py" />
     <Compile Include="entry\models.py" />
     <Compile Include="entry\serializers.py" />
     <Compile Include="entry\tests.py" />
@@ -131,19 +129,19 @@
     </Compile>
     <Compile Include="profile\views.py" />
     <Compile Include="profile\__init__.py" />
-    <Compile Include="Saiba\custom_messages.py">
+    <Compile Include="saiba\custom_messages.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Saiba\saibadown.py">
+    <Compile Include="saiba\image_utils.py" />
+    <Compile Include="saiba\local_settings.py" />
+    <Compile Include="saiba\parser.py" />
+    <Compile Include="saiba\utils.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Saiba\utils.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Saiba\__init__.py" />
-    <Compile Include="Saiba\settings.py" />
-    <Compile Include="Saiba\urls.py" />
-    <Compile Include="Saiba\wsgi.py" />
+    <Compile Include="saiba\__init__.py" />
+    <Compile Include="saiba\settings.py" />
+    <Compile Include="saiba\urls.py" />
+    <Compile Include="saiba\wsgi.py" />
     <Compile Include="staff\admin.py" />
     <Compile Include="staff\apps.py" />
     <Compile Include="staff\migrations\__init__.py" />
@@ -191,13 +189,14 @@
     <Folder Include="home\migrations\" />
     <Folder Include="home\static\" />
     <Folder Include="home\static\home\" />
+    <Folder Include="home\static\home\css\" />
     <Folder Include="home\templates\" />
     <Folder Include="home\templates\home\" />
     <Folder Include="profile\" />
     <Folder Include="profile\migrations\" />
     <Folder Include="profile\templates\" />
     <Folder Include="profile\templates\profile\" />
-    <Folder Include="Saiba\" />
+    <Folder Include="saiba\" />
     <Folder Include="staff\" />
     <Folder Include="staff\fixtures\" />
     <Folder Include="staff\migrations\" />
@@ -211,6 +210,7 @@
     <Content Include="content\templates\content\content_create.html" />
     <Content Include="content\templates\content\content_detail.html" />
     <Content Include="content\templates\content\content_edit.html" />
+    <Content Include="db.sqlite3" />
     <Content Include="entry\templates\entry\create_entry.html" />
     <Content Include="entry\templates\entry\detail.html" />
     <Content Include="entry\templates\entry\edit.html" />
@@ -220,6 +220,7 @@
     <Content Include="feedback\templates\feedback\comment_page.html" />
     <Content Include="gallery\templates\gallery\edit-video.html" />
     <Content Include="gallery\templates\gallery\edit-image.html" />
+    <Content Include="home\static\home\css\footer.css" />
     <Content Include="home\static\home\file-script.js" />
     <Content Include="home\static\home\search-scripts.js" />
     <Content Include="home\static\home\search-style.css" />
@@ -255,13 +256,18 @@
     <Content Include="home\templates\home\post_content.html" />
     <Content Include="entry\templates\entry\manage_editorship.html" />
     <Content Include="home\templates\home\trending_list.html" />
+    <Content Include="profile\templates\profile\activity.html" />
+    <Content Include="profile\templates\profile\profile_edit.html" />
     <Content Include="profile\templates\profile\profile_information.html" />
     <Content Include="profile\templates\profile\videos.html" />
     <Content Include="profile\templates\profile\images.html" />
     <Content Include="profile\templates\profile\editorship.html" />
     <Content Include="profile\templates\profile\profile_menu.html" />
+    <Content Include="staff\fixtures\categories.json" />
     <Content Include="staff\fixtures\groups.json" />
     <Content Include="staff\fixtures\permissions.json" />
+    <Content Include="staff\fixtures\states.json" />
+    <Content Include="staff\fixtures\status.json" />
     <Content Include="staff\fixtures\trending.json" />
     <Content Include="staff\templates\staff\create_post.html" />
     <Content Include="home\templates\home\register.html" />
@@ -273,7 +279,7 @@
     <Content Include="home\templates\home\trending.html" />
     <Content Include="profile\templates\profile\detail.html" />
     <Content Include="requirements.txt" />
-    <Content Include="db.sqlite3" />
+    <Content Include="staff\templates\staff\entry_redirect.html" />
     <Content Include="staff\templates\staff\index.html" />
     <Content Include="staff\templates\staff\search_user.html" />
   </ItemGroup>
