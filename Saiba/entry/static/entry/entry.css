@@ -23,3 +23,9 @@
 .infocard-visualizacoes{
     text-align: right;
 }
+
+.section-title{
+    background-color: #ececec;
+    padding-left: 0.5%;
+    margin-bottom: 1.75%;
+}
