@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 from django.contrib.sites.models import Site
 
 media_video_width = "640"
-media_video_height = "390"
-origin = Site.objects.get_current().domain()
+media_video_height = "360"
+origin = Site.objects.get_current().domain
 
 def generate_tweet(tweet_match):
     tweet_url = tweet_match.group(1)

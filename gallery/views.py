@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q, Count, Max
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -67,7 +68,8 @@ def video_detail(request, video_id):
                 'related_videos'    : related_videos,
                 'trending_galleries': trending_galleries,
                 'target'            : video,
-                'views'             : views }
+                'views'             : views,
+                'origin'            : get_current_site(request).domain }
 
     return render(request, 'gallery/video.html', context)
 

@@ -56,7 +56,9 @@ class Entry(models.Model):
             self.slug = slugify(self.title)
         if self.icon_url and not self.icon:
             image_name, image_content = saiba.image_utils.download_external_image(self.icon_url)
-            self.icon.save(image_name, ContentFile(image_content), save=False)
+            
+            if image_name and image_content != None:
+                self.icon.save(image_name, ContentFile(image_content), save=False)
 
         super(Entry, self).save(*args, **kwargs)
 

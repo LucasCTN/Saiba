@@ -227,6 +227,9 @@
     <Content Include="home\static\home\search.css">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="home\templates\home\403.html" />
+    <Content Include="home\templates\home\418.html" />
+    <Content Include="home\templates\home\500.html" />
     <Content Include="home\templates\home\404.html" />
     <Content Include="home\templates\home\footer.html" />
     <Content Include="home\templates\home\form_template.html" />

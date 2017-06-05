@@ -2,7 +2,7 @@
 {% block title %}{{ video.title }} | {{ video.entry.title }} | Saiba{% endblock %}
 {% block body %}
     <section id="conteudo" class="container col-md-9">
-        <iframe id="vídeo" class='media-object' width="560" height="315" src="https://www.youtube.com/embed/{{ video.link }}" frameborder="0" allowfullscreen></iframe>
+        <iframe id="vídeo" class='media-object' width="640" height="360" src="https://www.youtube.com/embed/{{ video.link }}?origin={{origin}}" frameborder="0" allowfullscreen></iframe>
     </section>
 
     {% if video.hidden %}
@@ -31,7 +31,7 @@
         <hr>
         <div class="btn-group btn-group-justified" role="group" aria-label="...">
             <div class="btn-group" role="group">
-                <a href='{% url 'gallery:video_edit' video.pk %}'><button type='button' class='btn btn-default'>Editar</button></a>
+                <a href='{% url 'gallery:video_edit' video.pk %}'><span type='button' class='btn btn-default'>Editar</span></a>
             </div>
         </div>
         <hr>

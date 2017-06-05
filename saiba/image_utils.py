@@ -29,6 +29,11 @@ def save_image_link( link ):
 
 def download_external_image(url):
     '''Downloads an image from the url and returns, in order, the file name and the actual file.'''
-    img_file = urllib2.urlopen(url).read()
+
+    try:
+        img_file = urllib2.urlopen(url).read()
+    except:
+        return (None, None)
+    
     file_name = get_random_string(length=15) + os.path.splitext(url)[1]
     return (file_name, img_file)
