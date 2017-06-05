@@ -13,7 +13,10 @@ from django.conf.urls import include
 from django.contrib import admin
 admin.autodiscover()
 
+handler403 = 'home.views.custom_403'
 handler404 = 'home.views.custom_404'
+handler418 = 'home.views.custom_418'
+handler500 = 'home.views.custom_500'
 
 urlpatterns = [
     # Entry database

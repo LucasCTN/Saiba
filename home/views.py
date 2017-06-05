@@ -15,8 +15,17 @@ from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
 from profile.models import Profile
 from rest_framework.reverse import reverse
 
+def custom_403(request):
+    return render(request, 'home/403.html', status=403)
+
 def custom_404(request):
     return render(request, 'home/404.html', status=404)
+
+def custom_418(request):
+    return render(request, 'home/418.html', status=418)
+
+def custom_500(request):
+    return render(request, 'home/500.html', status=500)
 
 def index(request):
     entries = Entry.objects.all()

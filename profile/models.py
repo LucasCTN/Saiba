@@ -7,7 +7,7 @@ class Profile(models.Model):
     user        = models.OneToOneField(User, blank=True, null=True, default=None, on_delete=models.CASCADE)
     title       = models.CharField(max_length = 500, blank=True)
     slug        = models.SlugField(max_length=250, default="", blank=True)
-    avatar      = models.ImageField(blank=True, upload_to='avatars/', default='assets/avatar_default.svg')
+    avatar      = models.ImageField(blank=True, upload_to='avatars/', default='home/images/assets/avatar_default.svg')
     gender      = models.CharField(max_length = 500, blank=True)
     location    = models.CharField(max_length = 500, blank=True)
     about       = models.TextField(max_length = 1500, blank=True)

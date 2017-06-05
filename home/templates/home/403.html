@@ -1,6 +1,6 @@
 ﻿{% extends 'home/base.html' %}
 
-{% block title %}Erro 404 | Saiba{% endblock %}
+{% block title %}Erro 403 | Saiba{% endblock %}
 
 {% block css %}
     {% load staticfiles %}
@@ -10,9 +10,9 @@
 {% block body %}
     <section id="message" class="container col-md-12">
         <div class="http-error-message col-md-12">
-            <h1>Erro 404: Página não encontrada.</h1>
+            <h1>Erro 403: Proibido.</h1>
 
-            <span>Aparentemente você tentou acessar uma página que não existe clicando num link inválido ou digitando incorretamente a url.</span>
+            <span>Você não possui permissão para acessar esta página.</span>
             <br><br>
             <span>Você pode tentar retornar à página anterior ou <a href="{% url 'home:index' %}">clicar aqui</a> para ir à página inicial.</span>
             <br><br>

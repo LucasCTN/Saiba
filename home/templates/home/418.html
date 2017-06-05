@@ -1,0 +1,20 @@
+﻿{% extends 'home/base.html' %}
+
+{% block title %}Erro 418 | Saiba{% endblock %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    <section id="message" class="container col-md-12">
+        <div class="http-error-message col-md-12">
+            <h1>Erro 418: I'm a Teapot.</h1>
+
+            <span>The requested entity body is short and stout.</span>
+            <br><br>
+            <span>Tip me over and pour me out.</span>
+        </div>
+    </section>
+{% endblock %}

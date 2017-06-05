@@ -1,10 +1,11 @@
 import re
 import urllib, json, textile
 from bs4 import BeautifulSoup
+from django.contrib.sites.models import Site
 
-youtube_video_width = "640"
-youtube_video_height = "390"
-origin = "localhost"
+media_video_width = "640"
+media_video_height = "390"
+origin = Site.objects.get_current().domain()
 
 def generate_tweet(tweet_match):
     tweet_url = tweet_match.group(1)
@@ -23,7 +24,7 @@ def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
 
     for term in terms:
         counter += 1
-        result += '{' + '"keyword":"{}","geo":"","time":"{} {}"'.format(term, initial_date, final_date) + '}'
+        result += '{' + '"keyword":"' + term + '","geo":"","time":"' + initial_date + ' ' + final_date + '"' + '}'
         if counter != len(terms):
             result += ","
 
@@ -44,7 +45,7 @@ def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
 
 def generate_youtube_video(yt_match):
     video_url = yt_match.group(1)
-    result = '<iframe id="ytplayer" type="text/html" width={} height={} src="http://www.youtube.com/embed/{}?origin={}" frameborder="0"></iframe>'.format(youtube_video_width, youtube_video_height, video_url, origin)
+    result = '<iframe id="ytplayer" type="text/html" width=' + media_video_width + ' height=' + media_video_height + ' src="http://www.youtube.com/embed/' + video_url + '?origin=' + origin + '" frameborder="0"></iframe>'
     return result
 
 def resize_image(image_match):
