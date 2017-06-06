@@ -17,7 +17,7 @@ def generate_tweet(tweet_match):
 
 def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
     terms = term_match.group(1)
-    terms = [item.strip() for item in terms.split(',')]
+    terms = [item.strip() for item in terms.split('|')]
 
     result = '<script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/760_RC01/embed_loader.js"></script> <script type="text/javascript"> trends.embed.renderExploreWidget("TIMESERIES", {"comparisonItem":['
 
@@ -35,7 +35,7 @@ def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
     for term in terms:
         counter += 1
 
-        term = urllib.quote_plus(term)
+        term = urllib.quote_plus(term.encode('utf8'))
 
         result += term
         if counter != len(terms):
@@ -57,13 +57,13 @@ def resize_image(image_match):
 def parse(text):
     '''Parse the text with textile, removes meta and script tags and apply custom rules.'''
     soup = BeautifulSoup(text, "html.parser")
-    [s.extract() for s in soup('script')]
-    [s.extract() for s in soup('meta')]
+    [s.extract() for s in soup('script')] # Removes <script/> tags 
+    [s.extract() for s in soup('meta')] # Removes <meta/> tags 
 
     text = soup.text
     text = textile.textile(text)
 
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
-    text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text) # Capturing Google Trends embeds
+    text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text, re.UNICODE) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds
     return text
