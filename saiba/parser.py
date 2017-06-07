@@ -1,6 +1,10 @@
+import json
 import re
-import urllib, json, textile
+import urllib
+
+import textile
 from bs4 import BeautifulSoup
+
 #from django.contrib.sites.models import Site
 
 media_video_width = "640"
@@ -56,14 +60,17 @@ def resize_image(image_match):
 
 def parse(text):
     '''Parse the text with textile, removes meta and script tags and apply custom rules.'''
+
     soup = BeautifulSoup(text, "html.parser")
     [s.extract() for s in soup('script')] # Removes <script/> tags 
     [s.extract() for s in soup('meta')] # Removes <meta/> tags 
 
-    text = soup.text
+    text = str(soup)
+    print text
     text = textile.textile(text)
 
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text, re.UNICODE) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds
+
     return text
