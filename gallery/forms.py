@@ -86,9 +86,9 @@ class StaffImageForm(ModelForm):
 class VideoForm(ModelForm):
     class Meta:
         model = Video
-        fields = [ "title", "date_origin", "description", "link", "state", "link" ]
+        fields = [ "title", "date_origin", "description", "media", "state" ]
 
 class StaffVideoForm(ModelForm):
     class Meta:
         model = Video
-        fields = [ "title", "date_origin", "description", "link", "state", "link", "comments_locked", "hidden" ]
+        fields = [ "title", "date_origin", "description", "media", "state", "comments_locked", "hidden" ]
