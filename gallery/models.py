@@ -5,9 +5,9 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.files.base import ContentFile
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.contrib.contenttypes.fields import GenericRelation
 
 import saiba.image_utils
 from feedback.models import Action
@@ -45,7 +45,7 @@ class Image(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
-    
+
     def save(self, *args, **kwargs):        
         if self.file_url and not self.file:
             image_name, image_content = saiba.image_utils.download_external_image(self.file_url)
@@ -54,6 +54,9 @@ class Image(models.Model):
                 self.file.save(image_name, ContentFile(image_content), save=False)
 
         super(Image, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('gallery:image_detail', kwargs={'image_id': self.id, 'slug': '-'+self.entry.slug})
 
 class Video(models.Model):
     author          = models.ForeignKey(User, blank=True)
@@ -76,3 +79,6 @@ class Video(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
+
+    def get_absolute_url(self):
+        return reverse('gallery:video_detail', kwargs={'video_id': self.id})

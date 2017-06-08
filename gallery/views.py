@@ -52,7 +52,7 @@ def video_detail(request, video_id):
 
     if video.hidden and not request.user.is_staff:
         return redirect('home:index')
-    
+
     utils.register_view(request, video)
 
     related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\

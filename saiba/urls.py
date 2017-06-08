@@ -3,20 +3,26 @@ Definition of urls for Saiba.
 """
 
 from datetime import datetime
-from django.conf.urls import url
+
 import django.contrib.auth.views
 from django.conf import settings
+from django.conf.urls import include, url
 from django.conf.urls.static import static
-
-# Uncomment the next lines to enable the admin:
-from django.conf.urls import include
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+from home.sitemaps import PostSitemap
+
 admin.autodiscover()
 
 handler403 = 'home.views.custom_403'
 handler404 = 'home.views.custom_404'
 handler418 = 'home.views.custom_418'
 handler500 = 'home.views.custom_500'
+
+sitemaps = { 
+    'post': PostSitemap,
+}
+
 
 urlpatterns = [
     # Entry database
@@ -34,6 +40,9 @@ urlpatterns = [
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+        name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 if settings.DEBUG == True:
