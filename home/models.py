@@ -30,6 +30,15 @@ class Post(models.Model):
         else:
             return self.title
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        if self.entry:
+            return self.entry.get_absolute_url()
+        elif self.image:
+            return self.image.get_absolute_url()
+        elif self.video:
+            return self.video.get_absolute_url()
+
 class Tag(models.Model):
     label   = models.CharField(max_length=2500, blank=True)
     hidden  = models.BooleanField(default=False)

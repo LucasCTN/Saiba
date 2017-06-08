@@ -56,7 +56,7 @@ class Entry(models.Model):
             self.slug = slugify(self.title)
         if self.icon_url and not self.icon:
             image_name, image_content = saiba.image_utils.download_external_image(self.icon_url)
-            
+
             if image_name and image_content != None:
                 self.icon.save(image_name, ContentFile(image_content), save=False)
 
@@ -68,6 +68,14 @@ class Entry(models.Model):
     def create_action(self, action_type_number = "0"):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
+
+    def last_revision(self):
+        revision = Revision.objects.all().last()
+        return revision
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('entry:entry_detail', kwargs={'entry_slug': self.slug})        
 
     class Meta:
         verbose_name_plural = "entries"
