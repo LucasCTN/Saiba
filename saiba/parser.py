@@ -62,12 +62,10 @@ def parse(text):
     '''Parse the text with textile, removes meta and script tags and apply custom rules.'''
 
     soup = BeautifulSoup(text, "html.parser")
-    [s.extract() for s in soup('script')] # Removes <script/> tags 
-    [s.extract() for s in soup('meta')] # Removes <meta/> tags 
+    [s.extract() for s in soup('script')] # Removes <script/> tags
+    [s.extract() for s in soup('meta')] # Removes <meta/> tags
 
-    text = str(soup)
-    print text
-    text = textile.textile(text)
+    text = textile.textile(soup.decode('ascii'))
 
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text, re.UNICODE) # Capturing Google Trends embeds
