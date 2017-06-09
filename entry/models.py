@@ -89,7 +89,7 @@ class Revision(models.Model):
     hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "#{} - {}".format(str(self.pk), self.entry.title)
+        return "#" + str(self.pk) + " - " + self.entry.title
 
 class EntryRedirect(models.Model):
     entry = models.ForeignKey(Entry, default=1)
