@@ -19,7 +19,8 @@ class FacebookBackend(VideoBackend):
         (?P<code>[0-9]+)                    # capturing the video code
         ''', re.I, re.X)
 
-    pattern_url = '{protocol}://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{page}%2Fvideos%2F{code}%2F&width={width}&show_text=false&height={height}&appId'
+    #pattern_url = '{protocol}://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{page}%2Fvideos%2F{code}%2F&width={width}&show_text=false&height={height}&appId'
+    pattern_url = '{protocol}://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{page}%2Fvideos%2F{code}%2F&show_text=false&appId'
     pattern_thumbnail_url = '{protocol}://graph.facebook.com/{code}/picture/type={resolution}'
 
     resolutions = [
@@ -66,6 +67,6 @@ class FacebookBackend(VideoBackend):
         """
         Returns URL folded from :py:data:`pattern_url` and parsed code.
         """
-        url = self.pattern_url.format(code=self.code, protocol=self.protocol, page=self.page, width=self.width, height=self.height)
+        url = self.pattern_url.format(code=self.code, protocol=self.protocol, page=self.page)
         url += '?' + self.query.urlencode() if self.query else ''
         return mark_safe(url)
