@@ -1,7 +1,7 @@
+https://pypi.python.org/packages/fc/cb/748dcabb152fbc7eceaf585d052b8bc11cf028b917a7d2343cf1e0c092c3/setuptools-36.0.1-py2.py3-none-any.whl#md5=7a52500dcfd7c4f37f5d20e462c93560
 beautifulsoup4==4.6.0
 chardet==3.0.3
 Django==1.10.1
-setuptools==36.0.1
 django-ipware==1.1.6
 djangorestframework==3.4.7
 ghdiff==0.4
