@@ -164,7 +164,7 @@ def upload_video(request):
             return redirect('gallery:video_detail', video_id=video.id)
 
     video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    video_form.fields['link'].widget.attrs['class'] = 'form-control form-link'
+    video_form.fields['media'].widget.attrs['class'] = 'form-control form-media'
     video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
     video_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
     video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'

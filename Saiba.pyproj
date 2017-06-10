@@ -95,6 +95,7 @@
     <Compile Include="forum\__init__.py" />
     <Compile Include="gallery\admin.py" />
     <Compile Include="gallery\apps.py" />
+    <Compile Include="gallery\backends.py" />
     <Compile Include="gallery\forms.py" />
     <Compile Include="gallery\migrations\__init__.py" />
     <Compile Include="gallery\models.py" />
@@ -220,6 +221,7 @@
     <Content Include="feedback\templates\feedback\comment_page.html" />
     <Content Include="gallery\templates\gallery\edit-video.html" />
     <Content Include="gallery\templates\gallery\edit-image.html" />
+    <Content Include="gallery\templates\gallery\facebookbackend_embed_code.html" />
     <Content Include="home\static\home\css\footer.css" />
     <Content Include="home\static\home\file-script.js" />
     <Content Include="home\static\home\search-scripts.js" />

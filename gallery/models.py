@@ -8,11 +8,12 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.contrib.contenttypes.fields import GenericRelation
+from embed_video.fields import EmbedVideoField
 
 import saiba.image_utils
 from feedback.models import Action
 from home.models import SaibaSettings
-
 
 class State(models.Model):
     label = models.CharField(max_length=250)
@@ -66,7 +67,7 @@ class Video(models.Model):
     tags            = models.ManyToManyField('home.Tag', blank=True)
     entry           = models.ForeignKey('entry.Entry', on_delete=models.CASCADE)
     hidden          = models.BooleanField(default=False)
-    link            = models.CharField(max_length=250)
+    media           = EmbedVideoField(max_length=250)
     description     = models.TextField(max_length=250, blank=True)
     state           = models.ForeignKey(State, on_delete=models.CASCADE, default=1)
     trending_points = models.IntegerField(default=0)
