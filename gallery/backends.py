@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from embed_video.backends import VideoBackend
+import re
 
 class FacebookBackend(VideoBackend):
     """
@@ -17,7 +20,7 @@ class FacebookBackend(VideoBackend):
         (/videos|video.php\?v|%2Fvideos)
         (/|%2F|=)
         (?P<code>[0-9]+)                    # capturing the video code
-        ''', re.I, re.X)
+        ''', re.I | re.X)
 
     #pattern_url = '{protocol}://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{page}%2Fvideos%2F{code}%2F&width={width}&show_text=false&height={height}&appId'
     pattern_url = '{protocol}://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{page}%2Fvideos%2F{code}%2F&show_text=false&appId'
@@ -31,7 +34,7 @@ class FacebookBackend(VideoBackend):
         'square',
     ]
 
-    template_name = 'embed_video/custombackend_embed_code.html'  # added in v0.9
+    template_name = 'gallery/facebookbackend_embed_code.html'  # added in v0.9
 
     @cached_property
     def width(self):
@@ -67,6 +70,7 @@ class FacebookBackend(VideoBackend):
         """
         Returns URL folded from :py:data:`pattern_url` and parsed code.
         """
+
         url = self.pattern_url.format(code=self.code, protocol=self.protocol, page=self.page)
         url += '?' + self.query.urlencode() if self.query else ''
         return mark_safe(url)

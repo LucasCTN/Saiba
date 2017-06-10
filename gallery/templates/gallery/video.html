@@ -2,7 +2,10 @@
 {% block title %}{{ video.title }} | {{ video.entry.title }} | Saiba{% endblock %}
 {% block body %}
     <section id="conteudo" class="container col-md-9">
-        <iframe id="vídeo" class='media-object' width="640" height="360" src="https://www.youtube.com/embed/{{ video.link }}?origin={{origin}}" frameborder="0" allowfullscreen></iframe>
+        {% load embed_video_tags %}
+
+        {% video video.media '640x360' %}
+        <!-- <iframe id="vídeo" class='media-object' width="640" height="360" src="https://www.youtube.com/embed/{{ video.link }}?origin={{origin}}" frameborder="0" allowfullscreen></iframe> -->
     </section>
 
     {% if video.hidden %}
