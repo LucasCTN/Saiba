@@ -5,7 +5,6 @@
         {% load embed_video_tags %}
 
         {% video video.media '640x360' %}
-        <!-- <iframe id="vídeo" class='media-object' width="640" height="360" src="https://www.youtube.com/embed/{{ video.link }}?origin={{origin}}" frameborder="0" allowfullscreen></iframe> -->
     </section>
 
     {% if video.hidden %}
@@ -43,10 +42,12 @@
     <section id="relacionados" class="container media col-md-12"><hr/>
         <h2 class="section-title">Vídeos relacionados <small>({{ related_videos|length }})</small></h2>
         {% for related_video in related_videos %}
-            <div class='inline-block col-md-4'>
-                <a href="{% url 'gallery:video_detail' related_video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ related_video.link }}/mqdefault.jpg' alt='video.title' height='100'/></a>
-                <a href="{% url 'gallery:video_detail' related_video.id %}">{{ related_video.title }}</a>
-            </div>
+        <div class='inline-block col-md-4'>
+            {% video video.media as video_media %}
+            <a href="{% url 'gallery:video_detail' related_video.id %}"><img class='media-object' src='{{video_media.thumbnail}}' alt='{{video.title}}' height='100'/></a>
+            <a href="{% url 'gallery:video_detail' related_video.id %}">{{ related_video.title }}</a>
+            {% endvideo %}                
+        </div>
         {% endfor %}
     </section>
 

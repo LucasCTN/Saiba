@@ -72,16 +72,19 @@
         <span class="col-md-12" style="text-align:center;">
             <a href="#" class="btn btn-success">Ver todas</a>
         </span>
-        {% endif %}        
+        {% endif %}
     </section>
 
     <section id="galeria-video" class="container media col-md-12">
         <h1 class="section-title">Vídeos recentes <small>({{ videos|length }})</small></h1>
-        {% for video in videos %}
-            <div class='inline-block col-md-3'>
-                <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='https://img.youtube.com/vi/{{ video.media }}/mqdefault.jpg' alt='video.title' height='100'/></a>
-                <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
-            </div>
+        {% load embed_video_tags %}
+        {% for video in videos %}            
+        <div class='inline-block col-md-3'>
+            {% video video.media as video_media %}
+            <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='{{video_media.thumbnail}}' alt='{{video.title}}' height='100'/></a>
+            <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
+            {% endvideo %}
+        </div>
         {% endfor %}
         {% if videos|length == 0 %}
         <span class="col-md-12" style="text-align:center;">Não há vídeos disponíveis</span>

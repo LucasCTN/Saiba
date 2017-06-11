@@ -10,15 +10,17 @@
         <h3>Vídeos de {{profile.user.username}}</h3>
 
         <div class="container media col-md-12">
-            {% for video in videos %}            
-            <a href="{% url 'gallery:video_detail' video.id %}" class="trending-entry col-md-3">
-                <span class="trending-container col-md-12" style="text-align: center;">
-                    <img class="trending-image col-md-12 col-centered" src="https://img.youtube.com/vi/{{ video.link }}/mqdefault.jpg" 
-                         style="height:80px; width:auto; border:1px;"/>
-                    <span class="trending-title col-md-12">{{video.title}}</span>
-                </span>
-            </a>
-            {% endfor %}
+        {% load embed_video_tags %}
+        {% for video in videos %}
+        <a href="{% url 'gallery:video_detail' video.id %}" class="trending-entry col-md-3">
+            {% video video.media as video_media %}
+            <span class="trending-container col-md-12" style="text-align: center;">
+                <img class="trending-image col-md-12 col-centered" src="{{video_media.thumbnail}}" style="height:80px; width:auto; border:1px;"/>
+                <span class="trending-title col-md-12">{{video.title}}</span>
+            </span>
+            {% endvideo %}
+        </a>
+        {% endfor %}
         </div>
     </section>
 {% endblock %}

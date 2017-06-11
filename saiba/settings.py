@@ -28,7 +28,10 @@ SITE_ID = 1
 SECRET_KEY = '5bf35afd-fed9-40b1-8119-6a7a621b79b0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ['DEBUG'] == "1") or False
+if 'DEBUG' in os.environ:
+    DEBUG = (os.environ['DEBUG'] == "1") or False
+else:
+    DEBUG = False
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
