@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import re
+
+import requests
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from embed_video.backends import VideoBackend
-import re
+
 
 class FacebookBackend(VideoBackend):
     """
@@ -74,3 +77,16 @@ class FacebookBackend(VideoBackend):
         url = self.pattern_url.format(code=self.code, protocol=self.protocol, page=self.page)
         url += '?' + self.query.urlencode() if self.query else ''
         return mark_safe(url)
+
+    def get_thumbnail_url(self):
+        """
+        Returns thumbnail URL folded from :py:data:`pattern_thumbnail_url` and
+        parsed code.
+        :rtype: str
+        """
+        for resolution in self.resolutions:
+            temp_thumbnail_url = self.pattern_thumbnail_url.format(
+                code=self.code, protocol=self.protocol, resolution=resolution)
+            if int(requests.head(temp_thumbnail_url).status_code) < 400:
+                return temp_thumbnail_url
+        return None
