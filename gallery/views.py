@@ -30,14 +30,15 @@ def image_detail(request, image_id, slug=''):
     utils.register_view(request, image)
 
     related_images = Image.objects.filter(hidden=False, tags__in=image.tags.all()).\
-                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=image.pk)[:5]
+                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').\
+                        exclude(pk=image.pk)[:5]
 
     trending_galleries = utils.get_popular_galleries(request)
 
     type = ContentType.objects.get_for_model(Image)
     views = View.objects.filter(target_content_type=type, target_id=image_id).count()
 
-    context = { 'image'             : image,
+    context = {'image'             : image,
                 'type'              : 'image',
                 'related_images'    : related_images,
                 'trending_galleries': trending_galleries,
@@ -56,33 +57,23 @@ def video_detail(request, video_id):
     utils.register_view(request, video)
 
     related_videos = Video.objects.filter(hidden=False, tags__in=video.tags.all()).\
-                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').exclude(pk=video.pk)[:5]
+                        annotate(num_common_tags=Count('pk')).order_by('-num_common_tags').\
+                        exclude(pk=video.pk)[:5]
 
     trending_galleries = utils.get_popular_galleries(request)
 
     type = ContentType.objects.get_for_model(Video)
     views = View.objects.filter(target_content_type=type, target_id=video_id).count()
 
-    context = { 'video'             : video,
-                'type'              : 'video',
-                'related_videos'    : related_videos,
-                'trending_galleries': trending_galleries,
-                'target'            : video,
-                'views'             : views,
-                'origin'            : get_current_site(request).domain }
+    context = {'video'             : video,
+               'type'              : 'video',
+               'related_videos'    : related_videos,
+               'trending_galleries': trending_galleries,
+               'target'            : video,
+               'views'             : views,
+               'origin'            : get_current_site(request).domain}
 
     return render(request, 'gallery/video.html', context)
-
-def historic(request, entry_slug):
-    trending_galleries = utils.get_popular_galleries(request)
-    entry = get_object_or_404(Entry, slug=entry_slug)
-    revisions = Revision.objects.filter(entry=entry, hidden=False)
-    return render(request, 'entry/historic.html', {'revisions': revisions, 'entry_name':entry.title })
-
-def revision(request, revision_id):
-    trending_galleries = utils.get_popular_galleries(request)
-    revision = get_object_or_404(Revision, hidden=False, pk=revision_id)
-    return render(request, 'entry/revision.html', {'revision': revision})
 
 def upload_image(request):
     if not request.user.is_authenticated():
@@ -120,7 +111,7 @@ def upload_image(request):
             image.tags = Tag.objects.filter(label__in=set_tags)
             image.create_action("4")
             image.save()
-            return redirect('gallery:image_detail', image_id=image.pk)
+            return redirect('gallery:image_detail', image_id=image.pk, slug=image.get_slug())
 
     image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     image_form.fields['file'].widget.attrs['class'] = 'form-control-file form-file'
@@ -235,10 +226,10 @@ def video_edit(request, video_id):
             all_tags = string_tags_to_list(request.POST.get('tags-selected'))
             set_tags = generate_tags(all_tags)
 
-            video_form = VideoForm(request_post, instance = video)
+            video_form = VideoForm(request_post, instance=video)
 
             if user.is_staff:
-                video_form = StaffVideoForm(request_post, instance = video)
+                video_form = StaffVideoForm(request_post, instance=video)
 
             video = video_form.save(commit=False)
             video.entry = Entry.objects.filter(title=entry_name, hidden=False).first()

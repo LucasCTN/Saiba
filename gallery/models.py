@@ -8,12 +8,12 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.contrib.contenttypes.fields import GenericRelation
 from embed_video.fields import EmbedVideoField
 
 import saiba.image_utils
 from feedback.models import Action
 from home.models import SaibaSettings
+
 
 class State(models.Model):
     label = models.CharField(max_length=250)
@@ -47,7 +47,7 @@ class Image(models.Model):
         new_action = Action.objects.create(author=self.author, target=self, target_id=self.id, action_type=action_type_number)
         new_action.save()
 
-    def save(self, *args, **kwargs):        
+    def save(self, *args, **kwargs):
         if self.file_url and not self.file:
             image_name, image_content = saiba.image_utils.download_external_image(self.file_url)
 

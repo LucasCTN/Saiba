@@ -75,7 +75,7 @@ class Entry(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('entry:entry_detail', kwargs={'entry_slug': self.slug})        
+        return reverse('entry:entry_detail', kwargs={'entry_slug': self.slug})
 
     class Meta:
         verbose_name_plural = "entries"
