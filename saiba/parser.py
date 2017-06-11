@@ -61,12 +61,13 @@ def resize_image(image_match):
 def parse(text):
     '''Parse the text with textile, removes meta and script tags and apply custom rules.'''
 
-    soup = BeautifulSoup(text, "html.parser")
-    [s.extract() for s in soup('script')] # Removes <script/> tags
-    [s.extract() for s in soup('meta')] # Removes <meta/> tags
+    text = textile.textile(text)
 
-    text = textile.textile(soup.decode('ascii'))
+    parsed_text = BeautifulSoup(text, "html.parser", from_encoding='unicode')
+    [s.extract() for s in parsed_text('script')] # Removes <script/> tags
+    [s.extract() for s in parsed_text('meta')] # Removes <meta/> tags
 
+    text = unicode(parsed_text)
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text, re.UNICODE) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds
