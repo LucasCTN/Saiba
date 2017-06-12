@@ -35,7 +35,7 @@
     "model": "entry.Category",
     "pk": 5,
     "fields": {
-      "label": "Subcultura",
+      "label": "Evento",
       "description": ""
     }
   }
