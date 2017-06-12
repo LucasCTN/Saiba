@@ -1,4 +1,4 @@
-import urllib2, urllib, json
+import urllib, json
 import copy
 
 from .models import Post, Label, Tag

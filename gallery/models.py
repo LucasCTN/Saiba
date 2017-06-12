@@ -1,5 +1,4 @@
 import os
-import urllib2
 
 from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.fields import GenericRelation

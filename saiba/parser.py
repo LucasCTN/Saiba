@@ -1,16 +1,17 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import json
 import re
 import urllib
 
 import textile
 from bs4 import BeautifulSoup
-
-#from django.contrib.sites.models import Site
+from django.contrib.sites.models import Site
 
 media_video_width = "640"
 media_video_height = "360"
-#origin = Site.objects.get_current().domain
-origin = ''
+video_origin = Site.objects.get_current().domain
 
 def generate_tweet(tweet_match):
     tweet_url = tweet_match.group(1)
@@ -39,7 +40,7 @@ def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
     for term in terms:
         counter += 1
 
-        term = urllib.quote_plus(term.encode('utf8'))
+        term = urllib.parse.quote_plus(term.encode('utf8'))
 
         result += term
         if counter != len(terms):
@@ -50,7 +51,7 @@ def generate_trends(term_match, initial_date = "today", final_date = "3-m"):
 
 def generate_youtube_video(yt_match):
     video_url = yt_match.group(1)
-    result = '<iframe id="ytplayer" type="text/html" width=' + media_video_width + ' height=' + media_video_height + ' src="http://www.youtube.com/embed/' + video_url + '?origin=' + origin + '" frameborder="0"></iframe>'
+    result = '<iframe id="ytplayer" type="text/html" width=' + media_video_width + ' height=' + media_video_height + ' src="http://www.youtube.com/embed/' + video_url + '?origin=' + video_origin + '" frameborder="0"></iframe>'
     return result
 
 def resize_image(image_match):
@@ -60,14 +61,13 @@ def resize_image(image_match):
 
 def parse(text):
     '''Parse the text with textile, removes meta and script tags and apply custom rules.'''
-
     text = textile.textile(text)
 
     parsed_text = BeautifulSoup(text, "html.parser", from_encoding='unicode')
     [s.extract() for s in parsed_text('script')] # Removes <script/> tags
     [s.extract() for s in parsed_text('meta')] # Removes <meta/> tags
 
-    text = unicode(parsed_text)
+    text = str(parsed_text)
     text = re.sub(r'\?{twitter}\((.+?)\)'   , generate_tweet        , text) # Capturing Twitter embeds
     text = re.sub(r'\?{trends}\((.+?)\)'    , generate_trends       , text, re.UNICODE) # Capturing Google Trends embeds
     text = re.sub(r'\?{youtube}\((.+?)\)'   , generate_youtube_video, text) # Capturing YouTube embeds

@@ -178,7 +178,7 @@ if 'AWS_ACCESS_KEY_ID' in os.environ:
     AWS_STORAGE_BUCKET_NAME = 'saiba'
 
 try:
-    from local_settings import *
+    from saiba.local_settings import *
 except ImportError as e:
     pass
 

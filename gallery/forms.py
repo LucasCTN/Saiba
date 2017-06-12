@@ -6,7 +6,6 @@ from django import forms
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files.base import ContentFile
-import urllib2
 
 from PIL import Image as ImagePIL
 
@@ -25,14 +24,13 @@ class ImageForm(ModelForm):
             )
 
         if file_url and not self.image_validity(file_url):
-            print "estou aqui"
             raise forms.ValidationError(
                 "A imagem inserida é inválida."
             )
 
     def image_validity(self, file_url):
         img_temp = NamedTemporaryFile()
-        img_temp.write(urllib2.urlopen(file_url).read())
+        img_temp.write(urllib.request.urlopen(file_url).read())
         img_temp.flush()
 
         image_file = File(img_temp)
@@ -68,7 +66,7 @@ class StaffImageForm(ModelForm):
 
     def image_validity(self, file_url):
         img_temp = NamedTemporaryFile()
-        img_temp.write(urllib2.urlopen(file_url).read())
+        img_temp.write(urllib.request.urlopen(file_url).read())
         img_temp.flush()
 
         image_file = File(img_temp)

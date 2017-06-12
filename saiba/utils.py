@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework.reverse import reverse
-import urllib, urllib2, json
+import urllib, json
 from django.core.files import File
 from django.core.files.base import ContentFile
 from datetime import datetime, timedelta
@@ -64,7 +64,7 @@ def save_image_link( link ):
 
     # Trying to access the image url and storing the content. If succeeds continue the operations or else set the content to None
     try:
-        content = ContentFile(urllib2.urlopen(link).read())
+        content = ContentFile(urllib.request.urlopen(link).read())
 
         # Verify if the content captured is a valid image format based on 'accepted_image_files'
         valid_file = imghdr.what(content) in accepted_image_files
