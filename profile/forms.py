@@ -9,17 +9,20 @@ class LoginForm(forms.Form):
     password    = forms.CharField(widget=forms.PasswordInput(render_value = True))
 
 class RegisterProfileForm(ModelForm):
+    '''Form for registering, with Profile-specific fields.'''
     class Meta:
         model = Profile
         fields = ["gender"]
 
 class RegisterUserForm(ModelForm):
-    email       = models.EmailField(max_length = 500, blank = False)
-    password    = forms.CharField(widget=forms.PasswordInput(render_value = True))
+    '''Form for registering, with User-specific fields.'''
+    username = forms.CharField(max_length=500, widget=forms.TextInput(attrs={'class': 'form-control form-username'}))
+    password = forms.CharField(widget=forms.PasswordInput(render_value=True, attrs={'class': 'form-control form-password'}))
+    email = forms.EmailField(max_length=500, widget=forms.EmailInput(attrs={'class': 'form-control form-email'}))
 
     class Meta:
         model = User
-        fields = [ "username", "password", "email"]
+        fields = ["username", "password", "email"]
 
 class EditProfileForm(ModelForm):
     class Meta:

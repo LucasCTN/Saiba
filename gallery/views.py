@@ -1,19 +1,22 @@
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.shortcuts import get_current_site
-from django.db.models import Q, Count, Max
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.html import escape
-from django.forms.models import model_to_dict
 from django.core.urlresolvers import reverse
-from .models import Image, Video
-from .forms import ImageForm, VideoForm, StaffImageForm, StaffVideoForm
-from home.models import Tag
+from django.db.models import Count, Max, Q
+from django.forms.models import model_to_dict
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.html import escape
+
 from entry.models import Entry
-from saiba import utils, custom_messages
 from feedback.models import Action, View
+from home.models import Tag
+from saiba import custom_messages, utils
+
+from .forms import ImageForm, StaffImageForm, StaffVideoForm, VideoForm
+from .models import Image, Video
+
 
 def index(request):
     return render(request, 'entry/index.html')
@@ -237,10 +240,8 @@ def video_edit(request, video_id):
             video.create_action("8")
             video.save()
             return redirect('gallery:video_detail', video_id=video.pk)
-        else:
-            print video_form.errors
-        
-        context = { "video_form": video_form, "video": video, "user": user }
+
+        context = {"video_form": video_form, "video": video, "user": user}
 
     video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
     video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'

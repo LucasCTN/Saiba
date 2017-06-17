@@ -188,8 +188,8 @@ def create_entry(request):
         for error in revision_form.errors:
             errors[error] = revision_form.errors[error].as_text
 
-    if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:            
-        entry = entry_form.save(commit=False) 
+    if entry_form.is_valid() and revision_form.is_valid() and entry_duplicate_title == None:
+        entry = entry_form.save(commit=False)
 
         all_tags = saiba.utils.string_tags_to_list(request.POST.get('tags-selected'))
         set_tags = saiba.utils.generate_tags(all_tags, Tag)

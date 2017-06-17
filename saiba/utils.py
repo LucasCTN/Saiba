@@ -1,16 +1,47 @@
 # -*- coding: utf-8 -*-
-from rest_framework.reverse import reverse
-import urllib, urllib2, json
+import copy
+import imghdr
+import json
+import urllib
+from datetime import datetime, timedelta
+
+from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.files import File
 from django.core.files.base import ContentFile
-from datetime import datetime, timedelta
-import imghdr
-import copy
-from api.views import TrendingDetail
+from django.core.mail import send_mail
 from ipware.ip import get_ip
+from rest_framework.reverse import reverse
+
+import saiba.settings
+from api.views import TrendingDetail
 from feedback.models import View
-from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
+from django.http import HttpRequest
+
+
+def send_activation_email(request, user, token):
+    '''Sends a email to the user with a token. It uses the settings.py email.'''
+    title = "Saiba - Ative sua conta"
+    email_activation_url = request.build_absolute_uri(reverse('home:email_activation',
+                                   kwargs={'username_slug': user.profile.slug,
+                                           'token_code': token.code}))
+    message = '''Olá, {0}.
+Para poder se autenticar, você precisa ativar sua conta, clicando no seguinte link:
+    
+{1}
+
+Caso você não tenha se registrado, ou esta mensagem é um engano, ignore-a.
+
+Obrigado!
+
+Equipe Saiba.
+{2}
+'''.format(user.username, email_activation_url,
+           get_current_site(request).domain)
+
+    send_mail(subject=title, message=message, from_email=saiba.settings.EMAIL_HOST_USER,
+              recipient_list=[user.email], fail_silently=False)
 
 def is_valid_direction(direction):
     return int(direction) in [-1, 0, 1]
@@ -64,7 +95,7 @@ def save_image_link( link ):
 
     # Trying to access the image url and storing the content. If succeeds continue the operations or else set the content to None
     try:
-        content = ContentFile(urllib2.urlopen(link).read())
+        content = ContentFile(urllib.request.urlopen(link).read())
 
         # Verify if the content captured is a valid image format based on 'accepted_image_files'
         valid_file = imghdr.what(content) in accepted_image_files

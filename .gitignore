@@ -336,6 +336,7 @@ env1/
 .venv/
 venv/
 ENV/
+env_py3/
 
 # Spyder project settings
 .spyderproject
