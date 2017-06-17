@@ -19,6 +19,7 @@ class RegisterUserForm(ModelForm):
     username = forms.CharField(max_length=500, widget=forms.TextInput(attrs={'class': 'form-control form-username'}))
     password = forms.CharField(widget=forms.PasswordInput(render_value=True, attrs={'class': 'form-control form-password'}))
     email = forms.EmailField(max_length=500, widget=forms.EmailInput(attrs={'class': 'form-control form-email'}))
+    terms = forms.BooleanField(required=True)
 
     class Meta:
         model = User

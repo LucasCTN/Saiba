@@ -23,9 +23,10 @@ from django.http import HttpRequest
 def send_activation_email(request, user, token):
     '''Sends a email to the user with a token. It uses the settings.py email.'''
     title = "Saiba - Ative sua conta"
-    email_activation_url = request.build_absolute_uri(reverse('home:email_activation',
-                                   kwargs={'username_slug': user.profile.slug,
-                                           'token_code': token.code}))
+    email_activation_url = request.\
+                            build_absolute_uri(reverse('home:email_activation',
+                                                       kwargs={'username_slug': user.profile.slug,
+                                                               'token_code': token.code}))
     message = '''Olá, {0}.
 Para poder se autenticar, você precisa ativar sua conta, clicando no seguinte link:
     

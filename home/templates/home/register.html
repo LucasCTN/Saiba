@@ -36,6 +36,10 @@
                 <div class="col-md-3">{{ user_form.email }}</div>
             </div>
 
+            <div class="form-group">
+            	<div class="control-label col-sm-6">{{ user_form.terms }} Eu concordo com os <a href="{% url 'content:bpost_detail' 'termos' %}">Termos de Uso</a>.</div>
+            </div>
+
             <div class="control-group col-md-12 col-md-offset-1">
                 <button type="submit" class="btn btn-success col-md-2">Registrar-se</button> <span class="col-md-4" style="line-height:30px;">ou <a style="font-size:small;" href="{% url "home:login" %}">Já tenho uma conta</a></span>
             </div>
