@@ -1,0 +1,12 @@
+{% extends 'home/base.html' %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    <section id="email-activated" class="container col-md-12">
+        Sua conta foi ativada. <a href="{% url 'home:login' %}">Clique aqui</a> para se autenticar.
+    </section>
+{% endblock %}

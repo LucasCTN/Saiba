@@ -1,7 +1,17 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.models import Permission, User
-from django.template.defaultfilters import slugify
 from django.db import models
+from django.template.defaultfilters import slugify
+from django.utils.crypto import get_random_string
+
 from staff.models import UserGroup, UserPermission
+
+from .managers import ProfileManager, TokenManager
+
+def generate_code():
+    '''Returns a random 32 character string for Tokens.'''
+    return get_random_string(length=32)
 
 class Profile(models.Model):
     user        = models.OneToOneField(User, blank=True, null=True, default=None, on_delete=models.CASCADE)
@@ -12,6 +22,10 @@ class Profile(models.Model):
     location    = models.CharField(max_length = 500, blank=True)
     about       = models.TextField(max_length = 1500, blank=True)
     groups      = models.ManyToManyField(UserGroup, blank=True)
+    is_email_activated = models.BooleanField(default=False)
+    is_banned = models.BooleanField(default=False)
+
+    objects = ProfileManager()
 
     def save(self, *args, **kwargs):
         new_user = False
@@ -23,8 +37,11 @@ class Profile(models.Model):
         if new_user:
             self.groups.add(UserGroup.objects.get(id=3))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.username
+
+    def __unicode__(self): # For Python 2
+        return self.__str__
 
     def HasPermission(self, permission_code):
         permission = UserPermission.objects.filter(code_name=permission_code).first()
@@ -50,11 +67,29 @@ class Profile(models.Model):
             self.groups.remove(group)
 
         is_staff = False
-        
+
         for group in self.groups.all():
             if group.assign_to_staff:
                 is_staff = True
 
         self.user.is_staff = is_staff
         self.save()
-                
+
+class Token(models.Model):
+    '''Multi-purpose model for confirmations Tokens. Used for activating e-mail.'''
+    related_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    code = models.CharField(max_length=32, default=generate_code, unique=True)
+    expiration_date = models.DateTimeField(default=datetime.now() + timedelta(days=7))
+
+    objects = TokenManager()
+
+    def __str__(self):
+        return self.code
+
+    def __unicode__(self): # For Python 2
+        return self.__str__
+
+    def change_expiration_date(self, days):
+        '''Defines how many days since now the token should expire.'''
+        self.expiration_date = datetime.now() + timedelta(days=days)
+        self.save()

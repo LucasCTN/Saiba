@@ -1,0 +1,12 @@
+{% extends 'home/base.html' %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    <section id="email-check-activation" class="container col-md-12">
+        Um e-mail foi enviado a você para ativar a sua conta.
+    </section>
+{% endblock %}

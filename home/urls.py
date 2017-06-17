@@ -16,4 +16,7 @@ urlpatterns = [
     url(r'^trending_list/$', views.trending_list, name='api_trending_list'),
     url(r'^imagens-populares/$', views.popular_images, name='popular_images'),
     url(r'^teapot/$', views.custom_418, name='custom_418'),
+    url(r'^ativar/(?P<username_slug>[\w-]+)/(?P<token_code>.+|)/$',
+        views.email_activation, name='email_activation'),
+    url(r'^checar-registro/$', views.email_check_activation, name='email_check_activation'),
 ]

@@ -21,6 +21,15 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 SITE_ID = 1
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'saiba.noreply@gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = ''
+
+if 'EMAIL_HOST_PASSWORD' in os.environ:
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 

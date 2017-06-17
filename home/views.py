@@ -1,19 +1,24 @@
-import urllib, json
+# -*- coding: utf-8 -*-
 import copy
+from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
+from profile.models import Profile, Token
 
-from .models import Post, Label, Tag
-from .forms import PostForm
-from api.views import TrendingDetail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, User
+from django.core.mail import send_mail
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404, redirect, render_to_response
+from django.shortcuts import (get_object_or_404, redirect, render,
+                              render_to_response)
 from django.utils.html import escape
+from rest_framework.reverse import reverse
+
+from api.views import TrendingDetail
 from entry.models import Entry, Revision
 from gallery.models import Image, Video
-from profile.forms import LoginForm, RegisterProfileForm, RegisterUserForm
-from profile.models import Profile
-from rest_framework.reverse import reverse
+
+from .forms import PostForm
+from .models import Label, Post, Tag
+import saiba.utils
 
 def custom_403(request):
     return render(request, 'home/403.html', status=403)
@@ -47,18 +52,24 @@ def user_login(request):
     if request.user.is_authenticated():
         return redirect('home:index')
     else:
-        username = password = ''
-
         profile_form = LoginForm(request.POST or None)
 
         if profile_form.is_valid():
-            if initialize_authentification(request):
-                return redirect('home:index')
-            else:
-                if len(User.objects.filter(username=request.POST['username'])) <= 0:
-                    errors_list.append("Este nome de usuario nao esta registrado no sistema.")
+            login_data = profile_form.cleaned_data
+
+            profile = Profile()
+            profile = get_object_or_404(User, username=login_data['username']).profile
+
+            if profile.is_email_activated:
+                if initialize_authentification(request):
+                    return redirect('home:index')
                 else:
-                    errors_list.append("A senha digitada esta incorreta.")
+                    if len(User.objects.filter(username=profile.user.username)) <= 0:
+                        errors_list.append("Este nome de usuário não está registrado no sistema.")
+                    else:
+                        errors_list.append("A senha digitada está incorreta.")
+            else:
+                errors_list.append("Esta conta não está ativada por e-mail.")
 
         profile_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
         profile_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
@@ -93,8 +104,7 @@ def user_register(request):
     else:
         register_profile_form = RegisterProfileForm(request.POST or None)
         register_user_form = RegisterUserForm(request.POST or None)
-        register_user_form.fields['email'].required = True
-        
+
         custom_error = []
         original_errors = {}
         original_errors["Enter a valid email address."] = "Digite um endereco de email valido."
@@ -111,7 +121,7 @@ def user_register(request):
                 if request.POST['repeat_password'] != request.POST['password']:
                     custom_error.append("As senhas nao sao iguais.")
                 else:
-                    if register_user_form.is_valid() and register_profile_form.is_valid():                
+                    if register_user_form.is_valid() and register_profile_form.is_valid():
                         user = register_user_form.save()
                         user.set_password(user.password)
                         user.save()
@@ -120,13 +130,11 @@ def user_register(request):
                         profile.user = user
                         profile.save()
 
-                        if initialize_authentification(request):
-                            return redirect('home:index')
-
-        register_user_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
-        register_user_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
-        register_user_form.fields['email'].widget.attrs['class'] = 'form-control form-email'
-        register_profile_form.fields['gender'].widget.attrs['class'] = 'form-control form-gender'
+                        # For activating the account via e-mail
+                        token = Token(related_profile=profile)
+                        token.save()
+                        saiba.utils.send_activation_email(request, user, token)
+                        return redirect('home:email_check_activation')
 
         args = {'user_form': register_user_form,
                 'profile_form': register_profile_form,
@@ -281,3 +289,16 @@ def trending_list(request):
     trending_list = TrendingDetail.as_view()(new_request, trending_type).data
 
     return render(request, 'home/trending_list.html', {'trending_list': trending_list})
+
+def email_activation(request, username_slug, token_code):
+    token = Token.objects.active().filter(code=token_code, related_profile__slug=username_slug).first()
+
+    if token:
+        token.related_profile.is_email_activated = True
+        token.related_profile.save()
+        return render(request, 'home/email_activation.html', {'token': token})
+        
+    return redirect('home:index')
+
+def email_check_activation(request):
+    return render(request, 'home/email_check_activation.html')
