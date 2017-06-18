@@ -1,9 +1,9 @@
-﻿<div id="trending-entries" class="col-md-offset-1">
+﻿<div id="trending-entries" class="col-md-offset-1 content-list">
     {% for entry in trending_entries %}
-        <a href="{% url 'entry:detail' entry.slug %}" class="trending-entry col-md-2">
+        <a href="{% url 'entry:detail' entry.slug %}" class="trending-entry col-md-2 content-item">
             <span class="trending-container col-md-12" style="text-align: center;">
-                <img class="trending-image col-md-12 col-centered" src="{{entry.icon}}"/>
-                <span class="trending-title col-md-12">{{entry.title}}</span>
+                <img class="trending-image content-thumbnail" src="{{entry.icon}}"/>
+                <span class="trending-title content-title col-md-12">{{entry.title}}</span>
             </span>            
         </a>
     {% endfor %}

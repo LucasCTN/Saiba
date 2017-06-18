@@ -15,7 +15,7 @@
             {% endif %}
         </div>
         <div class="col-md-8">
-            <span class="infocard-titulo col-md-12"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></span>
+            <h1 class="infocard-titulo col-md-12"><a href="{% url 'entry:detail' entry.slug %}">{{ entry.title }}</a></h1>
             <span class="infocard-data col-md-12">{{entry.date_origin}}</span>
             <span class="infocard-campo col-md-12">Criado <time class="saiba-date">{{ first_revision.date|date:"c" }}</time> por <a href="{% url 'profile:detail' first_revision.author.profile.slug %}">{{ first_revision.author.username }}</a></span><br/>
             <span class="infocard-campo col-md-12">Atualizado <time class="saiba-date">{{ last_revision.date|date:"c" }}</time> por <a href="{% url 'profile:detail' last_revision.author.profile.slug %}">{{ last_revision.author.username }}</a></span>
@@ -56,10 +56,10 @@
         </div>
     </section>
 
-    <section id="relacionados" class="container media col-md-12">
+    <section id="relacionados" class="container media col-md-12 content-list">
         <h1 class="section-title">Entradas relacionadas <small>({{ related_entries|length }})</small></h1>
         {% for related_entry in related_entries %}
-            <a class="col-md-2" href="{% url 'entry:detail' related_entry.slug %}" style="width:12%;">
+            <a class="col-md-2 content-item" href="{% url 'entry:detail' related_entry.slug %}" style="width:12%;">
                 <span class="col-md-12" style="text-align: center;">
                     {% if related_entry.icon %}<img class="col-md-12 col-centered" src="{{related_entry.icon.url}}" style="width:110%; padding: 0 10% 0 10%;"/>{% endif %}
                     <span class="col-md-12">{{ related_entry.title }}</span>
@@ -75,13 +75,13 @@
         {% endif %}
     </section>
 
-    <section id="galeria-video" class="container media col-md-12">
+    <section id="galeria-video" class="container media col-md-12 content-list">
         <h1 class="section-title">Vídeos recentes <small>({{ videos|length }})</small></h1>
         {% load embed_video_tags %}
         {% for video in videos %}            
-        <div class='inline-block col-md-3'>
+        <div class='inline-block col-md-3 content-item'>
             {% video video.media as video_media %}
-            <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object' src='{{video_media.thumbnail}}' alt='{{video.title}}' height='100'/></a>
+            <a href="{% url 'gallery:video_detail' video.id %}"><img class='media-object col-centered' src='{{video_media.thumbnail}}' alt='{{video.title}}' height='100'/></a>
             <a href="{% url 'gallery:video_detail' video.id %}">{{ video.title }}</a>
             {% endvideo %}
         </div>
@@ -95,11 +95,11 @@
         {% endif %}
     </section>
 
-    <section id="galeria-imagem" class="container media col-md-12">
+    <section id="galeria-imagem" class="container media col-md-12 content-list">
         <h1 class="section-title">Imagens recentes <small>({{ images|length }})</small></h1>
         {% for image in images %}
-            <div class='inline-block col-md-4'>
-                <a href="{% url 'gallery:image_detail' image.id image_slug %}"><img class='media-object' src='{{ image.file.url }}' alt='image.title' height='100'/></a>
+            <div class='inline-block col-md-4 content-item'>
+                <a href="{% url 'gallery:image_detail' image.id image_slug %}"><img class='media-object col-centered' src='{{ image.file.url }}' alt='image.title' height='100'/></a>
                 <a href="{% url 'gallery:image_detail' image.id image_slug %}">{{ image.title }}</a>
             </div>
         {% endfor %}
