@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from .models import Entry, Revision
+from .models import Entry, Revision, Category
 
 from saiba import custom_messages
 
 class EntryForm(forms.ModelForm):
-    icon_url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Coloque aqui um link para uma imagem.',
-        'class': 'form-control form-state'}), required=False)
-    icon = forms.ImageField(widget=forms.FileInput(attrs={'id': 'id_entry_icon'}), required=False)
-
     def clean(self):
         cleaned_data = super(EntryForm, self).clean()
         icon = cleaned_data.get("icon")
@@ -31,6 +27,15 @@ class EntryForm(forms.ModelForm):
             'icon': ('Ícone'),
             'icon_url': ('Link do ícone'),
             'tags': ('Marcações'),
+        }
+
+        widgets = {
+          'title': forms.TextInput(attrs={'class': 'form-control form-title'}),
+          'category': forms.Select(attrs={'class': 'form-control form-category'}),
+          'origin': forms.TextInput(attrs={'class': 'form-control form-origin'}),
+          'date_origin': forms.Textarea(attrs={'class': 'form-control form-date_origin'}),
+          'icon': forms.FileInput(attrs={'class': 'form-control-file form-icon', 'id': 'id_entry_icon'}),
+          'icon_url': forms.TextInput(attrs={'class': 'form-control form-state', 'placeholder': 'Coloque aqui um link para uma imagem.'}),
         }
 
         error_messages = custom_messages.get_all_error_messages(fields, labels)
@@ -77,7 +82,7 @@ class RevisionForm(forms.ModelForm):
         fields = [ "content" ]
 
         widgets = {
-          'content': forms.Textarea(attrs={'rows':50}),
+          'content': forms.Textarea(attrs={'class': 'form-control form-content', 'rows': 50}),
         }
 
         labels = {

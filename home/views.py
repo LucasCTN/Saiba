@@ -71,9 +71,6 @@ def user_login(request):
             else:
                 errors_list.append("Esta conta não está ativada por e-mail.")
 
-        profile_form.fields['username'].widget.attrs['class'] = 'form-control form-username'
-        profile_form.fields['password'].widget.attrs['class'] = 'form-control form-password'
-
         args = {'form': profile_form,
                 'errors_list': errors_list}
 

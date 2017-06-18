@@ -4,7 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
-    <InterpreterId>MSBuild|{086cdf49-2ba7-4623-82f6-ec4b76184c3c}|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env3|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -295,6 +295,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Interpreter Include="env3\">
+      <Id>env3</Id>
+      <Version>3.6</Version>
+      <Description>env3 (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
     <Interpreter Include="env\">
       <Id>{086cdf49-2ba7-4623-82f6-ec4b76184c3c}</Id>
       <Version>2.7</Version>

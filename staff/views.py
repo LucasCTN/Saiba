@@ -22,26 +22,6 @@ def create_post(request):
 
     text_form = PostForm(request.POST or None)
 
-    text_form.fields['label'].widget.attrs['class'] = 'form-control form-label'
-    text_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    text_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
-    text_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
-    text_form.fields['image'].widget.attrs['class'] = 'form-control form-image'
-    text_form.fields['video'].widget.attrs['class'] = 'form-control form-video'
-
-    text_form.fields['content'].widget.attrs['rows'] = '4'
-
-    text_form = PostForm(request.POST or None)
-
-    text_form.fields['label'].widget.attrs['class'] = 'form-control form-label'
-    text_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    text_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
-    text_form.fields['entry'].widget.attrs['class'] = 'form-control form-entry'
-    text_form.fields['image'].widget.attrs['class'] = 'form-control form-image'
-    text_form.fields['video'].widget.attrs['class'] = 'form-control form-video'
-
-    text_form.fields['content'].widget.attrs['rows'] = '4'
-
     if text_form.is_valid():
         post = text_form.save(commit=False)
         post.author = request.user

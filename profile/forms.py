@@ -5,8 +5,8 @@ from profile.models import Profile
 from django.contrib.auth.models import User
 
 class LoginForm(forms.Form):
-    username    = forms.CharField(max_length = 500)
-    password    = forms.CharField(widget=forms.PasswordInput(render_value = True))
+    username    = forms.CharField(max_length = 500, widget=forms.TextInput(attrs={'class': 'form-control form-username'}))
+    password    = forms.CharField(widget=forms.PasswordInput(render_value = True, attrs={'class': 'form-control form-password'}))
 
 class RegisterProfileForm(ModelForm):
     '''Form for registering, with Profile-specific fields.'''

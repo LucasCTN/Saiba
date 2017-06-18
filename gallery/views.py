@@ -114,17 +114,10 @@ def upload_image(request):
             image.tags = Tag.objects.filter(label__in=set_tags)
             image.create_action("4")
             image.save()
-            return redirect('gallery:image_detail', image_id=image.pk, slug=image.get_slug())
+            return redirect(image.get_absolute_url())
 
-    image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    image_form.fields['file'].widget.attrs['class'] = 'form-control-file form-file'
-    image_form.fields['source'].widget.attrs['class'] = 'form-control form-source'
-    image_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    image_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
-    image_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
-
-    args = {    "form"      : image_form,
-                "errors"    : error_messages }
+    args = {"form": image_form,
+            "errors": error_messages }
 
     return render(request, 'gallery/upload-image.html', args)
 
@@ -156,12 +149,6 @@ def upload_video(request):
             video.save()
 
             return redirect('gallery:video_detail', video_id=video.id)
-
-    video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    video_form.fields['media'].widget.attrs['class'] = 'form-control form-media'
-    video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    video_form.fields['description'].widget.attrs['class'] = 'form-control form-description'
-    video_form.fields['state'].widget.attrs['class'] = 'form-control form-state'
 
     return render(request, 'gallery/upload-video.html', {"form": video_form, "errors": error_messages})
 
@@ -197,11 +184,6 @@ def image_edit(request, image_id, slug=''):
             return redirect('gallery:image_detail', image_id=image.pk)
 
         context = { "image_form": image_form, "image": image, "user": user }
-
-    image_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    image_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    image_form.fields['source'].widget.attrs['class'] = 'form-control form-source'
-    image_form.fields['description'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'gallery/edit-image.html', context)
 
@@ -242,10 +224,6 @@ def video_edit(request, video_id):
             return redirect('gallery:video_detail', video_id=video.pk)
 
         context = {"video_form": video_form, "video": video, "user": user}
-
-    video_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    video_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    video_form.fields['description'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'gallery/edit-video.html', context)
 

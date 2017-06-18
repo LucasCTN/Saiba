@@ -8,6 +8,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.core.files.base import ContentFile
 
 from PIL import Image as ImagePIL
+import urllib
 
 class ImageForm(ModelForm):
     file_url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Coloque aqui um link para uma imagem.',
@@ -45,6 +46,15 @@ class ImageForm(ModelForm):
         model = Image
         fields = [ "title", "source", "date_origin", "description", "file", "file_url", "state" ]
 
+        widgets = {
+          'title': forms.TextInput(attrs={'class': 'form-control form-title'}),
+          'file': forms.FileInput(attrs={'class': 'form-control-file form-file'}),
+          'source': forms.TextInput(attrs={'class': 'form-control form-source'}),
+          'date_origin': forms.TextInput(attrs={'class': 'form-control form-date_origin'}),
+          'description': forms.Textarea(attrs={'class': 'form-control form-description'}),
+          'state': forms.Select(attrs={'class': 'form-control form-state'}),
+        }
+
 class StaffImageForm(ModelForm):
     file_url = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Coloque aqui um link para uma imagem.',
         'class': 'form-control form-state'}), required=False)
@@ -81,12 +91,33 @@ class StaffImageForm(ModelForm):
         model = Image
         fields = [ "title", "source", "date_origin", "description", "file", "file_url", "state", "comments_locked", "hidden" ]
 
+        widgets = {
+          'title': forms.TextInput(attrs={'class': 'form-control form-title'}),
+          'source': forms.TextInput(attrs={'class': 'form-control form-source'}),
+          'date_origin': forms.TextInput(attrs={'class': 'form-control form-date_origin'}),
+          'description': forms.Textarea(attrs={'class': 'form-control form-description'}),
+        }
+
 class VideoForm(ModelForm):
     class Meta:
         model = Video
         fields = [ "title", "date_origin", "description", "media", "state" ]
 
+        widgets = {
+          'title': forms.TextInput(attrs={'class': 'form-control form-title'}),
+          'media': forms.TextInput(attrs={'class': 'form-control-file form-media'}),
+          'date_origin': forms.TextInput(attrs={'class': 'form-control form-date_origin'}),
+          'description': forms.Textarea(attrs={'class': 'form-control form-description'}),
+          'state': forms.Select(attrs={'class': 'form-control form-state'}),
+        }
+
 class StaffVideoForm(ModelForm):
     class Meta:
         model = Video
         fields = [ "title", "date_origin", "description", "media", "state", "comments_locked", "hidden" ]
+
+        widgets = {
+          'title': forms.TextInput(attrs={'class': 'form-control form-title'}),
+          'date_origin': forms.TextInput(attrs={'class': 'form-control form-date_origin'}),
+          'description': forms.Textarea(attrs={'class': 'form-control form-description'}),
+        }

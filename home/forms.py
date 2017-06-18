@@ -9,3 +9,12 @@ class PostForm(ModelForm):
     class Meta:
         model = Post
         fields = [ "label", "title", "content", "hidden", "entry", "image", "video", "fixed"]
+
+        widgets = {
+          'label': forms.Select(attrs={'class': 'form-control form-label'}),
+          'title': forms.TextInput(attrs={'class': 'form-control form-title'}),
+          'content': forms.Textarea(attrs={'class': 'form-control form-content', 'rows': '4'}),
+          'entry': forms.Select(attrs={'class': 'form-control form-entry'}),
+          'image': forms.Select(attrs={'class': 'form-control form-image'}),
+          'video': forms.Select(attrs={'class': 'form-control form-video'}),
+        }

@@ -146,13 +146,6 @@ def edit(request, entry_slug):
                 "user"              : user,
                 "redirects"         : redirects}
 
-    entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
-    entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
-    entry_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
-    revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
-
     return render(request, 'entry/edit.html', context)
 
 def revision(request, entry_slug, revision_id):
@@ -224,13 +217,6 @@ def create_entry(request):
                 "revision_form"     : revision_form,
                 "trending_gallery"  : trending_gallery,
                 "error_messages"    : errors}
-
-    entry_form.fields['title'].widget.attrs['class'] = 'form-control form-title'
-    entry_form.fields['category'].widget.attrs['class'] = 'form-control form-category'
-    entry_form.fields['origin'].widget.attrs['class'] = 'form-control form-origin'
-    entry_form.fields['date_origin'].widget.attrs['class'] = 'form-control form-date_origin'
-    #entry_form.fields['icon'].widget.attrs['class'] = 'form-control-file form-icon'
-    revision_form.fields['content'].widget.attrs['class'] = 'form-control form-content'
 
     return render(request, 'entry/create_entry.html', context)
 
