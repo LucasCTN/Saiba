@@ -21,7 +21,7 @@ class Vote(models.Model):
     update_date         = models.DateTimeField(auto_now=True, blank=True)
     direction           = models.IntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         text = "#{} - {}".format(self.id, self.author.username)
         return text
 
@@ -41,7 +41,7 @@ class Comment(models.Model):
                                             related_name="replies") # the immediate response (may not be the main comment)
     points              = models.IntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         text = "#{} - {}".format(self.id, self.author.username)
         if self.parent: 
             text += " (child of #{})".format(self.parent.id)
@@ -96,7 +96,7 @@ class Action(models.Model):
     is_public           = models.BooleanField(default=True)
     is_staff_only       = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         text = "#{} by {} (Operation: {})".format(self.id, self.author.username, self.action_type)
         return text
 
@@ -110,7 +110,7 @@ class View(models.Model):
     date                = models.DateTimeField(auto_now_add=True, blank=True)
     session             = models.CharField(max_length=50, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.author:
             name = self.author.username
         else:
@@ -128,7 +128,7 @@ class TrendingVote(models.Model):
     image               = models.ForeignKey('gallery.Image', related_name="trending_votes", blank=True, null=True)
     video               = models.ForeignKey('gallery.Video', related_name="trending_votes", blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         text = "#{} by {}".format(self.id, self.author.username)        
         return text
     

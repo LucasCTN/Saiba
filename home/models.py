@@ -9,7 +9,7 @@ class Label(models.Model):
     color       = models.CharField(max_length=300, blank=False)
     icon        = models.ImageField(blank=True, upload_to='label/')
 
-    def __unicode__(self):
+    def __str__(self):
         return "[ {} ] {}".format(self.color, self.name)
 
 class Post(models.Model):
@@ -24,7 +24,7 @@ class Post(models.Model):
     video       = models.ForeignKey('gallery.Video', blank=True, null=True)
     fixed       = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         if(self.fixed):
             return "[Fixed] " + self.title
         else:
@@ -43,14 +43,14 @@ class Tag(models.Model):
     label   = models.CharField(max_length=2500, blank=True)
     hidden  = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
 class SaibaSettings(models.Model):
     value = models.FloatField()
     type  = models.CharField(unique=True, max_length=300)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.type
 
     class Meta:

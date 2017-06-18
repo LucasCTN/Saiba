@@ -22,7 +22,7 @@ class Content(models.Model):
     tags = models.ManyToManyField('home.Tag', blank=True)
     update_date = models.DateTimeField(auto_now=True, auto_now_add=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:
@@ -33,7 +33,7 @@ class BPostCategory(models.Model):
     description = models.CharField(max_length=2500, blank=True)
     label = models.CharField(max_length=2500)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:
@@ -46,7 +46,7 @@ class BPost(Content):
 
     objects = BPostManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):

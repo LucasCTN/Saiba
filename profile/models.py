@@ -13,6 +13,10 @@ def generate_code():
     '''Returns a random 32 character string for Tokens.'''
     return get_random_string(length=32)
 
+def generate_expiration_date():
+    '''Returns the date of 7 days from now.'''
+    return datetime.now() + timedelta(days=7)
+
 class Profile(models.Model):
     user        = models.OneToOneField(User, blank=True, null=True, default=None, on_delete=models.CASCADE)
     title       = models.CharField(max_length = 500, blank=True)
@@ -39,9 +43,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-    def __unicode__(self): # For Python 2
-        return self.__str__
 
     def HasPermission(self, permission_code):
         permission = UserPermission.objects.filter(code_name=permission_code).first()
@@ -79,15 +80,12 @@ class Token(models.Model):
     '''Multi-purpose model for confirmations Tokens. Used for activating e-mail.'''
     related_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     code = models.CharField(max_length=32, default=generate_code, unique=True)
-    expiration_date = models.DateTimeField(default=datetime.now() + timedelta(days=7))
+    expiration_date = models.DateTimeField(default=generate_expiration_date)
 
     objects = TokenManager()
 
     def __str__(self):
         return self.code
-
-    def __unicode__(self): # For Python 2
-        return self.__str__
 
     def change_expiration_date(self, days):
         '''Defines how many days since now the token should expire.'''

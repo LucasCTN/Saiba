@@ -19,7 +19,7 @@ class State(models.Model):
     code_name = models.CharField(max_length=250, default="")
     description = models.CharField(max_length=250)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
 class Image(models.Model):
@@ -39,7 +39,7 @@ class Image(models.Model):
     views           = GenericRelation('feedback.View')
     comments_locked = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.entry.title + ' - ' + self.title
 
     def create_action(self, action_type_number = "0"):
@@ -73,7 +73,7 @@ class Video(models.Model):
     views           = GenericRelation('feedback.View')
     comments_locked = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.entry.title + ' - ' + self.title
 
     def create_action(self, action_type_number = "0"):

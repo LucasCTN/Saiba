@@ -15,7 +15,7 @@ class Status(models.Model):
     code_name = models.CharField(max_length=2500, blank=True)
     description = models.CharField(max_length=2500, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:
@@ -25,7 +25,7 @@ class Category(models.Model):
     label = models.CharField(max_length=2500, blank=True)
     description = models.CharField(max_length=2500, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:
@@ -62,7 +62,7 @@ class Entry(models.Model):
 
         super(Entry, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def create_action(self, action_type_number = "0"):
@@ -88,12 +88,12 @@ class Revision(models.Model):
     date = models.DateTimeField(auto_now_add=True, blank=True)
     hidden = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "#" + str(self.pk) + " - " + self.entry.title
 
 class EntryRedirect(models.Model):
     entry = models.ForeignKey(Entry, default=1)
     slug = models.SlugField(max_length=250, default="", blank=True, unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.slug + " (" + self.entry.title + ")"

@@ -4,8 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>saiba</Name>
     <RootNamespace>Saiba</RootNamespace>
-    <InterpreterId>{086cdf49-2ba7-4623-82f6-ec4b76184c3c}</InterpreterId>
-    <InterpreterVersion>2.7</InterpreterVersion>
+    <InterpreterId>MSBuild|{086cdf49-2ba7-4623-82f6-ec4b76184c3c}|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,6 +19,7 @@
     <WorkingDirectory>.</WorkingDirectory>
     <LaunchProvider>Django launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
@@ -121,6 +121,7 @@
     <Compile Include="profile\admin.py" />
     <Compile Include="profile\apps.py" />
     <Compile Include="profile\forms.py" />
+    <Compile Include="profile\managers.py" />
     <Compile Include="profile\migrations\__init__.py" />
     <Compile Include="profile\models.py" />
     <Compile Include="feedback\serializers.py" />

@@ -51,6 +51,15 @@ LOGIN_URL = reverse_lazy('home:login')
 # Application definition
 
 INSTALLED_APPS = [
+    # Django apps
+    'django.contrib.sites',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     # Dependency apps
     'rest_framework',
     'storages',
@@ -64,16 +73,7 @@ INSTALLED_APPS = [
     'feedback.apps.feedbackConfig',
     'profile.apps.profileConfig',
     'staff.apps.staffConfig',
-    'content.apps.contentConfig',
-    # Django apps
-    'django.contrib.sites',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
+    'content.apps.contentConfig',    
 ]
 
 MIDDLEWARE_CLASSES = [
